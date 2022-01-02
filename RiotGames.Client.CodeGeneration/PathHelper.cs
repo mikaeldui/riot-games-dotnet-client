@@ -14,10 +14,7 @@ namespace RiotGames.Client.CodeGeneration
     {
         static PathHelper()
         {
-            //Vocabularies.Default.AddPlural("deck", "decks");
-            //Vocabularies.Default.AddPlural("match", "matches");
             Vocabularies.Default.AddUncountable("data");
-            Vocabularies.Default.AddSingular("leagues", "league");
         }
 
         private static readonly IReadOnlyDictionary<string, string> _knownWords = new Dictionary<string, string>

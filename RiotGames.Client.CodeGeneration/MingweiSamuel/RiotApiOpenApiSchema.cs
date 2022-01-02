@@ -13,6 +13,8 @@ namespace MingweiSamuel
         internal class PathObject
         {
             public MethodObject? Get { get; set; }
+            public PostMethodObject? Post { get; set; }
+            public PutMethodObject? Put { get; set; }
 
             public string? XEndpoint { get; set; }
             public string[]? XPlatformsAvailable { get; set; }
@@ -51,7 +53,10 @@ namespace MingweiSamuel
                         {
                             [JsonPropertyName("$ref")]
                             public string? Ref { get; set; }
+                            [JsonPropertyName("x-type")]
                             public string? XType { get; set; }
+                            public string? Format { get; set; }
+                            public string? Type { get; set; }
                         }
                     }
                 }
@@ -70,6 +75,21 @@ namespace MingweiSamuel
                         public string? XType { get; set; }
                     }
                 }
+            }
+
+            internal class PostMethodObject : MethodObject
+            {
+                public RequestBodyObject? RequestBody { get; set; }
+
+                internal class RequestBodyObject : ResponseObject
+                {
+                    public bool? Required { get; set; }
+                }
+            }
+
+            internal class PutMethodObject : PostMethodObject
+            {
+
             }
         }
 

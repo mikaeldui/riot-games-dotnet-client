@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiotGames.Client", "RiotGames.Client\RiotGames.Client.csproj", "{F6A8C9C8-DEF9-4B19-90A5-7262F0962882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiotGames.CodeGeneration", "RiotGames.CodeGeneration\RiotGames.CodeGeneration.csproj", "{54B3AAED-ED09-4093-8287-62A249D9496B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6A8C9C8-DEF9-4B19-90A5-7262F0962882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A8C9C8-DEF9-4B19-90A5-7262F0962882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A8C9C8-DEF9-4B19-90A5-7262F0962882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A8C9C8-DEF9-4B19-90A5-7262F0962882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54B3AAED-ED09-4093-8287-62A249D9496B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B3AAED-ED09-4093-8287-62A249D9496B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B3AAED-ED09-4093-8287-62A249D9496B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B3AAED-ED09-4093-8287-62A249D9496B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4F8469C-F8B7-4FD3-A97F-A766D9AD9A05}
+	EndGlobalSection
+EndGlobal

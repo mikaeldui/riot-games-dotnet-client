@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MingweiSamuel
 {
-    internal static class RiotApiSchemaDownloader
+    internal static class RiotApiSchemaClient
     {
         public static async Task<RiotApiOpenApiSchema> GetOpenApiSchemaAsync(string version = "3.0.0")
         {

@@ -18,24 +18,48 @@ if (pathsGrouping != null)
 
     foreach (var group in pathsGrouping)
     {
+        ClientGenerator cg;
         switch (group.Key)
         {
             case "riot":
-                var cg = new ClientGenerator(Client.RiotGames);
+                cg = new ClientGenerator(Client.RiotGames);
                 foreach (var path in group)
                 {
                     cg.AddPathAsEndpoints(path);
                 }
                 Console.WriteLine(cg.GenerateCode());
-
                 break;
             case "lol":
+                cg = new ClientGenerator(Client.LeagueOfLegends);
+                foreach (var path in group)
+                {
+                    cg.AddPathAsEndpoints(path);
+                }
+                Console.WriteLine(cg.GenerateCode());
                 break;
             case "lor":
+                cg = new ClientGenerator(Client.LegendsOfRuneterra);
+                foreach (var path in group)
+                {
+                    cg.AddPathAsEndpoints(path);
+                }
+                Console.WriteLine(cg.GenerateCode());
                 break;
             case "tft":
+                cg = new ClientGenerator(Client.TeamfightTactics);
+                foreach (var path in group)
+                {
+                    cg.AddPathAsEndpoints(path);
+                }
+                Console.WriteLine(cg.GenerateCode());
                 break;
             case "val":
+                cg = new ClientGenerator(Client.Valorant);
+                foreach (var path in group)
+                {
+                    cg.AddPathAsEndpoints(path);
+                }
+                Console.WriteLine(cg.GenerateCode());
                 break;
         }
 

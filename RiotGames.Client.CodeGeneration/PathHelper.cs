@@ -30,7 +30,7 @@ namespace RiotGames.Client.CodeGeneration
                 bool isArrayReponse = responseSchema?.XType == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
 
-                cg.AddEndpoint(nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema));
+                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema));
             }
         }
 
@@ -65,17 +65,19 @@ namespace RiotGames.Client.CodeGeneration
         private static string _responseType(RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)
         {
             if (schema.Ref != null)
-                return schema.XType.Remove("Dto");
+                return schema.XType.Remove("Dto").Remove("DTO");
 
-            if (schema.Format == null || schema.XType == null)
+            if (schema.Format == null && schema.XType == null)
                 Debugger.Break();
             else
                 switch (schema.Type)
                 {
                     case "array":
-                        return schema.Format.Substring(6, schema.Format.Length - 6) + "[]";
+                        return schema.XType.Remove("Set[").Remove("List[").TrimEnd(']').Remove("Dto").Remove("DTO") + "[]";
                     case "integer":
                         return schema.XType;
+                    case "string":
+                        return schema.Type;
                     default:
                         Debugger.Break();
                         break;

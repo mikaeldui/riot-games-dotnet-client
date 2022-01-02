@@ -2,7 +2,8 @@
 
 namespace RiotGames
 {
-    public abstract class RiotGamesClientBase : IDisposable
+    public abstract class RiotGamesClientBase<TObjectBase> : IDisposable
+        where TObjectBase : RiotGamesObject
     {
         protected HttpClient _httpClient;
         protected string _apiKey;
@@ -13,22 +14,19 @@ namespace RiotGames
             _apiKey = apiKey;
         }
 
-        protected async Task<TResult?> GetAsync<TResult>(string? requestUrl) where TResult : RiotGamesObject =>
-            await _httpClient.GetFromJsonAsync<TResult>(requestUrl);
+        protected async Task<TResult?> GetAsync<TResult>(string? requestUri) 
+            where TResult : TObjectBase =>
+            await _httpClient.GetFromJsonAsync<TResult>(requestUri);
 
-        protected async Task<TResult?> PostAsync<TValue, TResult>(string? requestUrl, TValue value) where TValue : RiotGamesObject where TResult : RiotGamesObject
-        {
-            var response = await _httpClient.PostAsJsonAsync(requestUrl, value);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<TResult>();
-        }
+        protected async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
+            where TValue : TObjectBase
+            where TResult : TObjectBase =>
+            await _httpClient.PostAsJsonAsync<TValue, TResult>(requestUri, value);
 
-        protected async Task<TResult?> PutAsync<TValue, TResult>(string? requestUrl, TValue value) where TValue: RiotGamesObject where TResult : RiotGamesObject
-        {
-            var response = await _httpClient.PutAsJsonAsync(requestUrl, value);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<TResult>();
-        }
+        protected async Task<TResult?> PutAsync<TValue, TResult>(string? requestUri, TValue value)
+            where TValue : TObjectBase
+            where TResult : TObjectBase =>
+            await _httpClient.PutAsJsonAsync<TValue, TResult>(requestUri, value);
 
         public void Dispose() => _httpClient.Dispose();
     }

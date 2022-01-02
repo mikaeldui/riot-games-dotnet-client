@@ -28,22 +28,29 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string ToPascalCase(this string input)
         {
-            if (input.Contains("-")) // kebab
+            if (input.Contains('-')) // kebab
             {
                 return String.Join("", input.SplitAndRemoveEmptyEntries('-').Select(p => p.FirstCharToUpper()));
             }
-            else if (input.Contains("_"))
+            else if (input.Contains('_')) // snake
             {
                 return String.Join("", input.SplitAndRemoveEmptyEntries('_').Select(p => p.FirstCharToUpper()));
             }
-            else if (input[0].ToString() == input[0].ToString().ToLower())
+            else if (input[0].IsLower()) // camel
             {
                 return input.FirstCharToUpper();
             }
-            else return input;
+            else if (input.IsScreaming()) // scream
+            {
+                return input.ToLower().FirstCharToUpper();
+            }
+            else return input; // No idea, just return it.
         }
 
-        public static string Remove(this string input, string toRemove) =>
-            input.Replace(toRemove, "");
+        public static string Remove(this string input, string toRemove) => input.Replace(toRemove, "");
+
+        public static bool IsLower(this char input) => input.ToString() == input.ToString().ToLower();
+
+        public static bool IsScreaming(this string input) => input.All(c => c.ToString() == c.ToString().ToUpper());
     }
 }

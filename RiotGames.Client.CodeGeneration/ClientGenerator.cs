@@ -51,7 +51,7 @@ namespace RiotGames.Client.CodeGeneration
             // Create a stament with the body of a method.
             StatementSyntax syntax;
             {
-                string baseMethod = httpMethod.ToString() + "Async";
+                string baseMethod = httpMethod.ToString().ToPascalCase() + "Async";
 
                 if (httpMethod == HttpMethod.Get)
                     syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{returnType}>(\"{requestUri}\");");

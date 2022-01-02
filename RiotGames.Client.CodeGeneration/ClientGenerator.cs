@@ -41,7 +41,7 @@ namespace RiotGames.Client.CodeGeneration
             //    SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("IHaveIdentity")));
         }
 
-        public void AddEndpoint(string name, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? parameters = null)
+        public void AddEndpoint(string name, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
         {
             // Long time since I did an XOR, this might not work.
             if (httpMethod == HttpMethod.Get ^ requestType == null)
@@ -53,10 +53,12 @@ namespace RiotGames.Client.CodeGeneration
             {
                 string baseMethod = httpMethod.ToString().ToPascalCase() + "Async";
 
+                string requestUriArgument = pathParameters == null ? $"\"{requestUri}\"" : $"$\"{requestUri}\"";
+
                 if (httpMethod == HttpMethod.Get)
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{returnType}>(\"{requestUri}\");");
+                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{returnType}>({requestUriArgument});");
                 else
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{requestType}, {returnType}>(\"{requestUri}\", value);");
+                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{requestType}, {returnType}>({requestUriArgument}, value);");
             }
 
             // Create a method
@@ -64,8 +66,8 @@ namespace RiotGames.Client.CodeGeneration
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
                 .WithBody(SyntaxFactory.Block(syntax));
 
-            if (parameters != null)
-                foreach (var parameter in parameters)
+            if (pathParameters != null)
+                foreach (var parameter in pathParameters)
                 {
                     methodDeclaration = methodDeclaration.AddParameterListParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameter.Key)).WithType(SyntaxFactory.ParseTypeName(parameter.Value)));
                 }

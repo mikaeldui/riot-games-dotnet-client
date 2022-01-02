@@ -72,6 +72,7 @@ namespace MingweiSamuel
                     internal class SchemaObject
                     {
                         public string? Type { get; set; }
+                        [JsonPropertyName("x-type")]
                         public string? XType { get; set; }
                     }
                 }

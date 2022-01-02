@@ -39,7 +39,17 @@ namespace RiotGames.Client.CodeGeneration
                 bool isArrayReponse = responseSchema?.Type == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
 
-                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema));
+                Dictionary<string, string>? pathParameters = null;
+
+                if (poGet.Parameters != null && poGet.Parameters.Length > 0)
+                {
+                    if (!poGet.Parameters.All(p => p.In == "path" || p.In == "header" || p.In == "query"))
+                        Debugger.Break();
+
+                    pathParameters = poGet.Parameters.Where(p => p.In != "header" && p.In != "query").ToDictionary(p => p.Name, p => p.Schema.Type);
+                }
+
+                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema), pathParameters: pathParameters);
             }
         }
 

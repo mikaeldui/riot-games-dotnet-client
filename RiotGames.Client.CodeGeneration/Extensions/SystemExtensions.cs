@@ -53,4 +53,10 @@ namespace RiotGames.Client.CodeGeneration
 
         public static bool IsScreaming(this string input) => input.All(c => c.ToString() == c.ToString().ToUpper());
     }
+
+    public static class ArrayExtensions
+    {
+        public static T[] Concat<T>(this T[] source, T[] secondArray) =>
+            source.Concat(secondArray).ToArray();
+    }
 }

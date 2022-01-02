@@ -6,58 +6,93 @@ using System.Text;
 using System.Threading.Tasks;
 using Humanizer;
 using MingweiSamuel;
+using Humanizer.Inflections;
 
 namespace RiotGames.Client.CodeGeneration
 {
     internal static class PathHelper
     {
+        static PathHelper()
+        {
+            //Vocabularies.Default.AddPlural("deck", "decks");
+            //Vocabularies.Default.AddPlural("match", "matches");
+            Vocabularies.Default.AddUncountable("data");
+            Vocabularies.Default.AddSingular("leagues", "league");
+        }
+
         private static readonly IReadOnlyDictionary<string, string> _knownWords = new Dictionary<string, string>
         {
             {"challengerleagues", "challenger-leagues" },
             {"grandmasterleagues", "grand-master-leagues" },
             {"masterleagues", "master-leagues" },
-            {"grandmaster", "grand-master" }
+            {"grandmaster", "grand-master" },
+            {"matchlist", "match-list" }
         };
 
         public static void AddPathAsEndpoints(this ClientGenerator cg, KeyValuePair<string, RiotApiOpenApiSchema.PathObject> path)
         {
+            // if (path.Key == "/lol/league/v4/challengerleagues/by-queue/{queue}") Debugger.Break();
+
             var po = path.Value;
             var poGet = po.Get;
             if (poGet != null)
             {
                 var operationId = poGet.OperationId;
                 var responseSchema = poGet?.Responses?["200"]?.Content?.First().Value.Schema;
-                bool isArrayReponse = responseSchema?.XType == "array";
+                bool isArrayReponse = responseSchema?.Type == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
 
                 cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema));
             }
         }
 
-        private static string _getNameFromPath(string path, bool isPlural)
+        private static string _getNameFromPath(string path, bool? isPlural)
         {
-            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
-                .Skip(1).ToArray(); // Skip "riot" or "lol"
-
-            var apiEnd = parts[0].SplitAndRemoveEmptyEntries('-').Last();
-            // [1] is "v1" or similiar.
-            var dtoEnd = parts[2].SplitAndRemoveEmptyEntries('-').Last();
-
-            if (apiEnd == dtoEnd.Singularize())
-                return _toName(parts[0]);
-
-            parts[2] = parts[2].Replace(_knownWords);
-
+            string firstPart;
+            string secondPart;
             {
-                var dtoParts = parts[2].SplitAndRemoveEmptyEntries('-');
-                if (isPlural)                
-                    dtoParts[dtoParts.Length - 1] = dtoParts[dtoParts.Length - 1].Pluralize();                
-                else
-                    dtoParts[dtoParts.Length - 1] = dtoParts[dtoParts.Length - 1].Singularize();
-                parts[2] = String.Join("-", parts[2]);
+                var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
+                    .Skip(1).ToArray(); // Skip "riot" or "lol"
+                firstPart = parts[0];
+                // [1] is "v1" or similiar.
+                secondPart = parts[2];
+                if (parts.Length <= 3)
+                    isPlural = null;
             }
 
-            return _toName(parts[0]) + _toName(parts[2]);                
+            // Make sure the secondPart is kebabed.
+            secondPart = secondPart.Replace(_knownWords);
+
+            // Check if we just need the first part
+            {
+                var firstParts = firstPart.SplitAndRemoveEmptyEntries('-');
+                var secondParts = secondPart.SplitAndRemoveEmptyEntries('-');
+
+                if (firstParts.Any(fp => secondParts.Select(sp => sp.Singularize()).Contains(fp)))
+                {
+                    if (isPlural != null)
+                    {
+                        if (isPlural.Value) secondParts.PluralizeLast();
+                        else secondParts.SingularizeLast();
+                    }
+                    return _toName(String.Join('-', secondParts));
+                }
+            }
+
+            // Pluralize it
+            {
+                var dtoParts = secondPart.SplitAndRemoveEmptyEntries('-');
+                if (isPlural != null)
+                {
+                    if (isPlural.Value)
+                        dtoParts.PluralizeLast();
+                    else
+                        dtoParts.SingularizeLast();
+                }
+                secondPart = String.Join("-", dtoParts);
+            }
+
+            return _toName(firstPart) + _toName(secondPart);                
         }
 
         private static string _toName(string name) => name.Replace(_knownWords).ToPascalCase();
@@ -67,7 +102,7 @@ namespace RiotGames.Client.CodeGeneration
             if (schema.Ref != null)
                 return schema.XType.Remove("Dto").Remove("DTO");
 
-            if (schema.Format == null && schema.XType == null)
+            if (schema.XType == null && schema.Type == null)
                 Debugger.Break();
             else
                 switch (schema.Type)

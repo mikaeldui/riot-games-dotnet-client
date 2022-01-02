@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends.DataDragon
 {
-    internal class DataDragonClient : IDisposable
+    public class DataDragonClient : IDisposable
     {
         private HttpClient _httpClient = new HttpClient();
 

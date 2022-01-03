@@ -3,6 +3,10 @@ An unofficial .NET Client for Riot Games and their games League of Legends, Lege
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
+## Download
+
+You can find the latest alpha releases under [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
+
 ## Examples
 
 ### Getting League of Legends masteries

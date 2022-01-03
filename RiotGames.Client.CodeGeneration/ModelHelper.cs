@@ -11,6 +11,17 @@ namespace RiotGames.Client.CodeGeneration
 {
     internal static class ModelHelper
     {
+        private static Dictionary<string, string> _duplicatePrefixes = new Dictionary<string, string>()
+        {
+            { "league-exp-v4.", "LeagueExp" },
+            { "tournament-stub-v4.", "TournamentStub"},
+            { "spectator-v4.", "Spectator" },
+            { "clash-v1.Team", "Clash" },
+            { "lor-ranked-v1.Player", "Ranked" },
+            { "val-ranked-v1.Player", "Ranked" },
+            { "val-status-v1.Content", "Status" }
+        };
+
         private static string _removeDtoSuffix(string dtoName) =>
             dtoName.Remove("Dto").Remove("DTO");
 
@@ -18,16 +29,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string GetTypeNameFromRef(string @ref)
         {
-            if (@ref.Contains("league-exp-v4."))
-                return "LeagueExp" + _removeDtoSuffix(@ref?.Split('.')?.Last());
-            else if (@ref.Contains("tournament-stub-v4."))
-                return "TournamentStub" + _removeDtoSuffix(@ref?.Split('.')?.Last());
-            else if (@ref.Contains("spectator-v4."))
-                return "Spectator" + _removeDtoSuffix(@ref?.Split('.')?.Last());
-            else if (@ref.Contains("clash-v1.Team"))
-                return "Clash" + _removeDtoSuffix(@ref?.Split('.')?.Last());
-            else
-                return _removeDtoSuffix(@ref?.Split('.')?.Last());
+            return _duplicatePrefixes.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
         }
 
         public static string GetTypeName(this RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)

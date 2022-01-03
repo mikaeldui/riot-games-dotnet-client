@@ -5,10 +5,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>RiotGames</RootNamespace>
+    <PackageId>MikaelDui.RiotGames.Client</PackageId>
+    <Authors>Mikael Dúi Bolinder</Authors>
+    <Description>An unofficial .NET client for Riot Games.</Description>
+    <PackageProjectUrl>https://github.com/mikaeldui/riot-games-dotnet-client</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
+    <PackageTags>riot games; league of legends; legends of runeterra; teamfight tactics; valorant</PackageTags>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

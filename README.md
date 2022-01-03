@@ -68,7 +68,7 @@ using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD"))
 ```
 
 ### Doing multi-game stuff
-Using the `RiotGamesClient` class gives you easy access to multiple game clients at once.
+Using the [`RiotGamesClient`](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/RiotGames.Client/RiotGamesClient.cs) class gives you easy access to multiple game clients at once.
 
 ```C#
 using RiotGames;

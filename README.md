@@ -3,8 +3,7 @@
 
 ![image](https://user-images.githubusercontent.com/3706841/147928421-b25b3ddd-c774-4240-bf10-863321b05bb4.png)
 
-
-An unofficial .NET Client for Riot Games and their games League of Legends, Legends of Runeterra, Teamfight Tactics and Valorant.
+An unofficial [.NET][dotnet] Client for Riot Games and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
@@ -16,7 +15,7 @@ You can find the latest alpha releases [here on GitHub](https://github.com/mikae
 
 ## Examples
 
-### Getting League of Legends masteries
+### Getting [League of Legends][lol] masteries
 
 ```C#
 using RiotGames.LeagueOfLegends;
@@ -29,7 +28,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting Legends of Runeterra leadersboard
+### Getting [Legends of Runeterra][lor] leadersboard
 
 ```C#
 using RiotGames.LegendsOfRuneterra;
@@ -42,7 +41,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting Teamfight Tactics league entires
+### Getting [Teamfight Tactics][tft] league entires
 
 ```C#
 using RiotGames.TeamfightTactics;
@@ -55,7 +54,7 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting a Valorant match
+### Getting a [Valorant][val] match
 
 ```C#
 using RiotGames.Valorant;
@@ -85,3 +84,10 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
         Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
 }
 ```
+
+    [riot]:   https://www.riotgames.com/
+    [lol]:    https://www.leagueoflegends.com/
+    [lor]:    https://playruneterra.com/
+    [tft]:    https://teamfighttactics.leagueoflegends.com/
+    [val]:    https://playvalorant.com/    
+    [dotnet]: https://dotnet.microsoft.com/

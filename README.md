@@ -36,3 +36,21 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
         Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
 }
 ```
+
+
+### Doing multi-game stuff
+
+```
+using RiotGames;
+
+using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync("some-summoner-ID");
+    foreach(var mastery in lolMasteries)
+        Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
+
+    var lorLeaderboards = await client.LegendsOfRuneterra.GetRankedLeaderboardsAsync();
+    foreach(var player in lorLeaderboards.Players)
+        Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
+}
+```

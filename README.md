@@ -12,7 +12,7 @@ It's easily extendible. You can leverage it's type safety and inherit the client
 
 ## Download
 
-You can find the latest alpha releases under [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
+You can find the latest alpha releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
 
 ## Examples
 

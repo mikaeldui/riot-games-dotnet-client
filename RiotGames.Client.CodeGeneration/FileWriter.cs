@@ -17,7 +17,7 @@ namespace RiotGames.Client.CodeGeneration
     {
         public static void WriteFile(Client client, FileType fileType, string contents)
         {
-            string folder = Path.Combine(GetAssemblyDirectory(), @"..\..\..\..\", "RiotGames.Client");
+            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client");
 
             if (client != Client.RiotGames)
                 folder = Path.Combine(folder, client.ToString());

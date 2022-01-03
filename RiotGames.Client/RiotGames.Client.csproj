@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
     <PackageTags>riot games; league of legends; legends of runeterra; teamfight tactics; valorant</PackageTags>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <Version>0.0.1-alpha</Version>
   </PropertyGroup>
 
   <ItemGroup>

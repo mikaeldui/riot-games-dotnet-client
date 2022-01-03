@@ -16,9 +16,9 @@ namespace RiotGames.Client.CodeGeneration
     using Schema = KeyValuePair<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
     using Schemas = Dictionary<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
 
-    internal static class PathHelper
+    internal static class ClientHelper
     {
-        static PathHelper()
+        static ClientHelper()
         {
             Vocabularies.Default.AddUncountable("data");
         }

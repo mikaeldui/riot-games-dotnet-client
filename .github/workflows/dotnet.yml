@@ -36,6 +36,13 @@ jobs:
       run: dotnet restore
     - name: Build    
       working-directory: ./RiotGames.Client
+      run: dotnet build --no-restore      
+    - name: Restore dependencies
+      working-directory: ./RiotGames.Client.Tests
+      run: dotnet restore
+    - name: Build    
+      working-directory: ./RiotGames.Client.Tests
       run: dotnet build --no-restore
-    - name: Test
+    - name: Test    
+      working-directory: ./RiotGames.Client.Tests
       run: dotnet test --no-build --verbosity normal

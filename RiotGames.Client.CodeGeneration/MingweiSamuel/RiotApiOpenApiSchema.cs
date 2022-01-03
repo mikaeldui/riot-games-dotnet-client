@@ -18,6 +18,7 @@ namespace MingweiSamuel
 
             public string? XEndpoint { get; set; }
             public string[]? XPlatformsAvailable { get; set; }
+            [JsonPropertyName("x-route-enum")]
             public string? XRouteEnum { get; set; }
 
             internal class MethodObject

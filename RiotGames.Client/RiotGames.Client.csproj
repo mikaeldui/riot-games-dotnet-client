@@ -24,4 +24,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Camille.Enums" Version="3.0.0-nightly-2021-12-30-6d67c5d9bd" />
+  </ItemGroup>
+
 </Project>

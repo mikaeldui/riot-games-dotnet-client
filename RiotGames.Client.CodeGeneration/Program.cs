@@ -3,7 +3,6 @@ using MingweiSamuel;
 using RiotGames.Client.CodeGeneration;
 using Schema = System.Collections.Generic.KeyValuePair<string, MingweiSamuel.RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
 
-
 Console.WriteLine("Welcome to the RiotGames.Client.CodeGeneration program!");
 
 Console.WriteLine("Downloading the Open API specification");

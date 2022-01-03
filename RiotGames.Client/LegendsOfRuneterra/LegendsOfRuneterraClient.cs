@@ -1,8 +1,10 @@
-﻿namespace RiotGames.LegendsOfRuneterra
+﻿using Camille.Enums;
+
+namespace RiotGames.LegendsOfRuneterra
 {
     public partial class LegendsOfRuneterraClient : RiotGamesClientBase<LegendsOfRuneterraObject>
     {
-        public LegendsOfRuneterraClient(string apiKey) : base(apiKey)
+        public LegendsOfRuneterraClient(string apiKey, RegionalRoute region) : base(apiKey, region)
         {
 
         }

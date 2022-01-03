@@ -1,46 +1,80 @@
-﻿using System.Net.Http.Json;
+﻿using Camille.Enums;
 
 namespace RiotGames
 {
     public abstract class RiotGamesClientBase<TObjectBase> : IDisposable
         where TObjectBase : RiotGamesObject
     {
-        protected HttpClient _httpClient;
-        protected string _apiKey;
+        private RegionalRoute? _region;
+        private PlatformRoute? _platform;
+        private ValPlatformRoute? _valPlatform;
+        private RiotGamesHttpClient<TObjectBase>? _regionalClient;
+        private RiotGamesHttpClient<TObjectBase>? _platformClient;
 
-        public RiotGamesClientBase(string apiKey)
+        //// Will have to investigate if the RiotGamesClient can give its HttpClient to its children.
+        //internal RiotGamesClientBase(RiotHttpClient<TObjectBase>? regionalClient, RiotHttpClient<TObjectBase>? platformClient)
+        //{
+        //    _regionalClient = regionalClient;
+        //    _platformClient = platformClient;
+        //}
+
+        internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
-            _httpClient = new HttpClient();
-            _apiKey = apiKey;
+            _region = region;
+            _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, region);
         }
 
-        public async Task<TResult?> GetAsync<TResult>(string? requestUri) 
-            where TResult : TObjectBase =>
-            await _httpClient.GetFromJsonAsync<TResult>(requestUri);
+        internal RiotGamesClientBase(string apiKey, PlatformRoute platform, bool createRegionalClient = true)
+        {
+            _platform = platform;
+            _platformClient = new RiotGamesHttpClient<TObjectBase>(apiKey, platform);
 
-        protected async Task<TResult[]?> GetArrayAsync<TResult>(string? requestUri)
-            where TResult : TObjectBase =>
-            await _httpClient.GetFromJsonAsync<TResult[]>(requestUri);
+            if (createRegionalClient)
+            {
+                _region = RouteUtils.ToRegional(platform);
+                _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
+            }
+        }
 
-        protected async Task<string> GetStringAsync(string? requestUri) =>
-            await _httpClient.GetStringAsync(requestUri);
+        /// <summary>
+        /// Does NOT create a region client as Valorant doesn't use that yet.
+        /// </summary>
+        internal RiotGamesClientBase(string apiKey, ValPlatformRoute platform)
+        {
+            _valPlatform = platform;
+            _platformClient = new RiotGamesHttpClient<TObjectBase>(apiKey, platform);
+        }
 
-        protected async Task<int> GetIntAsync(string? requestUri) =>
-            int.Parse(await GetStringAsync(requestUri));
+        public RegionalRoute? Region => _region;
+        public PlatformRoute? Platform => _platform;
+        public ValPlatformRoute? ValPlatform => _valPlatform;
 
-        protected async Task<string[]?> GetStringArrayAsync(string? requestUri) =>
-            await _httpClient.GetFromJsonAsync<string[]>(requestUri);
+        internal RiotGamesHttpClient<TObjectBase> RegionalClient            
+        {
+            get
+            {
+                if (_regionalClient == null)
+                    throw new RiotGamesRouteException("region");
 
-        public async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
-            where TValue : TObjectBase
-            where TResult : TObjectBase =>
-            await _httpClient.PostAsJsonAsync<TValue, TResult>(requestUri, value);
+                return _regionalClient;
+            }        
+        }
 
-        public async Task<TResult?> PutAsync<TValue, TResult>(string? requestUri, TValue value)
-            where TValue : TObjectBase
-            where TResult : TObjectBase =>
-            await _httpClient.PutAsJsonAsync<TValue, TResult>(requestUri, value);
+        internal RiotGamesHttpClient<TObjectBase> PlatformClient
+        {
+            get
+            {
+                if (_platformClient == null)
+                    throw new RiotGamesRouteException("platform");
 
-        public virtual void Dispose() => _httpClient.Dispose();
+                return _platformClient;
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            _regionalClient?.Dispose();
+            _platformClient?.Dispose();
+        }
     }
 }

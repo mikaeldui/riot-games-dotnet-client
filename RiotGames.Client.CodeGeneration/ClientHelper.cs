@@ -40,6 +40,7 @@ namespace RiotGames.Client.CodeGeneration
                 var responseSchema = poGet?.Responses?["200"]?.Content?.First().Value.Schema;
                 bool isArrayReponse = responseSchema?.Type == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
+                bool isPlatform = path.Value.XRouteEnum != "regional";
 
                 Dictionary<string, string?>? pathParameters = null;
 
@@ -51,7 +52,7 @@ namespace RiotGames.Client.CodeGeneration
                     pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema?.XType ?? p.Schema?.Type);
                 }
 
-                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
+                cg.AddEndpoint("Get" + nameFromPath, isPlatform, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
             }
         }
 

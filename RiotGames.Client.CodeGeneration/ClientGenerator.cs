@@ -34,7 +34,7 @@ namespace RiotGames.Client.CodeGeneration
             _classDeclaration = _classDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.PartialKeyword));
         }
 
-        public void AddEndpoint(string name, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
+        public void AddEndpoint(string name, bool isPlatform, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
         {
             // Long time since I did an XOR, this might not work.
             if (httpMethod == HttpMethod.Get ^ requestType == null)
@@ -44,6 +44,7 @@ namespace RiotGames.Client.CodeGeneration
             // Create a stament with the body of a method.
             StatementSyntax syntax;
             {
+                string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
                 string? typeArgument = httpMethod == HttpMethod.Get ? $"<{returnType.Remove("[]")}>" : $"<{requestType}, {returnType}>";
                 string? specificMethod = null;
 
@@ -71,9 +72,9 @@ namespace RiotGames.Client.CodeGeneration
                 string requestUriArgument = pathParameters == null ? $"\"{requestUri}\"" : $"$\"{requestUri}\"";
 
                 if (httpMethod == HttpMethod.Get)
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}{typeArgument}({requestUriArgument});");
+                    syntax = SyntaxFactory.ParseStatement($"return await {clientName}.{baseMethod}{typeArgument}({requestUriArgument});");
                 else
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}{typeArgument}({requestUriArgument}, value);");
+                    syntax = SyntaxFactory.ParseStatement($"return await {clientName}.{baseMethod}{typeArgument}({requestUriArgument}, value);");
             }
 
             // Create a method

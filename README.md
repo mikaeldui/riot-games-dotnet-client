@@ -55,6 +55,18 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
+### Getting a Valorant match
+
+```C#
+using RiotGames.Valorant;
+
+using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var match = await client.GeMatchAsync("some-match-ID");
+    foreach(var player in match.Players)
+        Console.PrintLine($"Player #{player.Title} played champion #{player.ChampionId}");
+}
+```
 
 ### Doing multi-game stuff
 Using the `RiotGamesClient` class gives you easy access to multiple game clients at once.

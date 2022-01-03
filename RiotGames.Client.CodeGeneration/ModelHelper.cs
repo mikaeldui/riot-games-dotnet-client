@@ -11,17 +11,6 @@ namespace RiotGames.Client.CodeGeneration
 {
     internal static class ModelHelper
     {
-        private static Dictionary<string, string> _duplicatePrefixes = new Dictionary<string, string>()
-        {
-            { "league-exp-v4.", "LeagueExp" },
-            { "tournament-stub-v4.", "TournamentStub"},
-            { "spectator-v4.", "Spectator" },
-            { "clash-v1.Team", "Clash" },
-            { "lor-ranked-v1.Player", "Ranked" },
-            { "val-ranked-v1.Player", "Ranked" },
-            { "val-status-v1.Content", "Status" }
-        };
-
         private static string _removeDtoSuffix(string dtoName) =>
             dtoName.Remove("Dto").Remove("DTO");
 
@@ -29,7 +18,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string GetTypeNameFromRef(string @ref)
         {
-            return _duplicatePrefixes.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
+            return Hacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
         }
 
         public static string GetTypeName(this RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)

@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Humanizer;
 using MingweiSamuel;
-using Humanizer.Inflections;
 
 namespace RiotGames.Client.CodeGeneration
 {
@@ -15,19 +14,7 @@ namespace RiotGames.Client.CodeGeneration
 
     internal static class ClientHelper
     {
-        static ClientHelper()
-        {
-            Vocabularies.Default.AddUncountable("data");
-        }
-
-        private static readonly IReadOnlyDictionary<string, string> _knownWords = new Dictionary<string, string>
-        {
-            {"challengerleagues", "challenger-leagues" },
-            {"grandmasterleagues", "grand-master-leagues" },
-            {"masterleagues", "master-leagues" },
-            {"grandmaster", "grand-master" },
-            {"matchlist", "match-list" }
-        };
+        static ClientHelper() => Hacks.Activate();
 
         public static void AddPathAsEndpoints(this ClientGenerator cg, Path path)
         {
@@ -80,7 +67,7 @@ namespace RiotGames.Client.CodeGeneration
             }
 
             // Make sure the secondPart is kebabed.
-            secondPart = secondPart.Replace(_knownWords);
+            secondPart = secondPart.Replace(Hacks.EndpointWordCompilations);
 
             // Check if we just need the first part
             if (lastPart == null)
@@ -138,7 +125,7 @@ namespace RiotGames.Client.CodeGeneration
         {
             if (name == null)
                 return null;
-            return name.Replace(_knownWords).ToPascalCase();
+            return name.Replace(Hacks.EndpointWordCompilations).ToPascalCase();
         }
 
         public static string? GetGame(this Path path) =>

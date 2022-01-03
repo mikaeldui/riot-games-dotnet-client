@@ -85,6 +85,11 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
+## Notice from Riot
+
+Riot Games .NET Client (unofficial) isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+
     [riot]: https://www.riotgames.com/ "Riot Games"
     [lol]: https://www.leagueoflegends.com/ "League of Legends"
     [lor]: https://playruneterra.com/ "Legends of Runeterra"

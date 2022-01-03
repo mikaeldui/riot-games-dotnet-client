@@ -15,7 +15,7 @@ You can find the latest alpha releases [here on GitHub](https://github.com/mikae
 
 ## Examples
 
-### Getting [League of Legends][lol] masteries
+### Getting [League of Legends][lol] [masteries](https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore)
 
 ```C#
 using RiotGames.LeagueOfLegends;
@@ -28,7 +28,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting [Legends of Runeterra][lor] leadersboard
+### Getting [Legends of Runeterra][lor] [leadersboard](https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards)
 
 ```C#
 using RiotGames.LegendsOfRuneterra;
@@ -41,7 +41,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting [Teamfight Tactics][tft] league entires
+### Getting [Teamfight Tactics][tft] [league entires](https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner)
 
 ```C#
 using RiotGames.TeamfightTactics;
@@ -54,7 +54,7 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting a [Valorant][val] match
+### Getting a [Valorant][val] [match](https://developer.riotgames.com/apis#val-match-v1/GET_getMatch)
 
 ```C#
 using RiotGames.Valorant;

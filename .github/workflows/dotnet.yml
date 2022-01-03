@@ -37,3 +37,5 @@ jobs:
     - name: Build    
       working-directory: ./RiotGames.Client
       run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal

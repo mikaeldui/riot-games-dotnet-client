@@ -3,7 +3,7 @@
 
 ![image](https://user-images.githubusercontent.com/3706841/147928421-b25b3ddd-c774-4240-bf10-863321b05bb4.png)
 
-An unofficial [.NET][dotnet] Client for Riot Games and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
+An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
@@ -85,11 +85,11 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-## Notice from Riot
+## Notice from Riot Games
 
-Riot Games .NET Client (unofficial) isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing Riot Games properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].
+[Riot Games .NET Client (unofficial)][rgdc] isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing Riot Games properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].
 
-
+[rgdc]: https://github.com/mikaeldui/riot-games-dotnet-client "Riot Games .NET Client (unofficial)"
 [riot]: https://www.riotgames.com/ "Riot Games"
 [lol]: https://www.leagueoflegends.com/ "League of Legends"
 [lor]: https://playruneterra.com/ "Legends of Runeterra"

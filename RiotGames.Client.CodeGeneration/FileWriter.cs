@@ -27,10 +27,7 @@ namespace RiotGames.Client.CodeGeneration
 
         private static string GetAssemblyDirectory()
         {
-            string codeBase = Assembly.GetExecutingAssembly().Location;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string? path = Uri.UnescapeDataString(uri.Path);
-            path = Path.GetDirectoryName(path);
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             if (path == null)
                 throw new Exception("No idea why executing assembly path is null.");
             return path;

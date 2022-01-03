@@ -1,5 +1,8 @@
-# Riot Games .NET Client
+# Riot Games .NET Client (unofficial)
 [![.NET](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml)
+
+![image](https://user-images.githubusercontent.com/3706841/147928421-b25b3ddd-c774-4240-bf10-863321b05bb4.png)
+
 
 An unofficial .NET Client for Riot Games and their games League of Legends, Legends of Runeterra, Teamfight Tactics and Valorant.
 
@@ -9,7 +12,7 @@ It's easily extendible. You can leverage it's type safety and inherit the client
 
 ## Download
 
-You can find the latest alpha releases under [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
+You can find the latest alpha releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
 
 ## Examples
 
@@ -36,6 +39,19 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
     var leaderboards = await client.GetRankedLeaderboardsAsync();
     foreach(var player in leaderboards.Players)
         Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
+}
+```
+
+### Getting Teamfight Tactics league entires
+
+```C#
+using RiotGames.TeamfightTactics;
+
+using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
+    foreach(var entry in leagueEntries)
+        Console.PrintLine($"Player #{entry.SummonerName}: {player.LeaguePoints} LP");
 }
 ```
 

@@ -13,7 +13,7 @@ You can find the latest alpha releases under [here on GitHub](https://github.com
 
 ### Getting League of Legends masteries
 
-```
+```C#
 using RiotGames.LeagueOfLegends;
 
 using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
@@ -26,7 +26,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 
 ### Getting Legends of Runeterra leadersboard
 
-```
+```C#
 using RiotGames.LegendsOfRuneterra;
 
 using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
@@ -41,7 +41,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 ### Doing multi-game stuff
 Using the `RiotGamesClient` class gives you easy access to multiple game clients at once.
 
-```
+```C#
 using RiotGames;
 
 using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))

@@ -42,6 +42,19 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
+### Getting Teamfight Tactics league entires
+
+```C#
+using RiotGames.TeamfightTactics;
+
+using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
+    foreach(var entry in leagueEntries)
+        Console.PrintLine($"Player #{entry.SummonerName}: {player.LeaguePoints} LP");
+}
+```
+
 
 ### Doing multi-game stuff
 Using the `RiotGamesClient` class gives you easy access to multiple game clients at once.

@@ -14,16 +14,29 @@ namespace RiotGames
             _apiKey = apiKey;
         }
 
-        protected async Task<TResult?> GetAsync<TResult>(string? requestUri) 
+        public async Task<TResult?> GetAsync<TResult>(string? requestUri) 
             where TResult : TObjectBase =>
             await _httpClient.GetFromJsonAsync<TResult>(requestUri);
 
-        protected async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
+        protected async Task<TResult[]?> GetArrayAsync<TResult>(string? requestUri)
+            where TResult : TObjectBase =>
+            await _httpClient.GetFromJsonAsync<TResult[]>(requestUri);
+
+        protected async Task<string> GetStringAsync(string? requestUri) =>
+            await _httpClient.GetStringAsync(requestUri);
+
+        protected async Task<int> GetIntAsync(string? requestUri) =>
+            int.Parse(await GetStringAsync(requestUri));
+
+        protected async Task<string[]?> GetStringArrayAsync(string? requestUri) =>
+            await _httpClient.GetFromJsonAsync<string[]>(requestUri);
+
+        public async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
             where TValue : TObjectBase
             where TResult : TObjectBase =>
             await _httpClient.PostAsJsonAsync<TValue, TResult>(requestUri, value);
 
-        protected async Task<TResult?> PutAsync<TValue, TResult>(string? requestUri, TValue value)
+        public async Task<TResult?> PutAsync<TValue, TResult>(string? requestUri, TValue value)
             where TValue : TObjectBase
             where TResult : TObjectBase =>
             await _httpClient.PutAsJsonAsync<TValue, TResult>(requestUri, value);

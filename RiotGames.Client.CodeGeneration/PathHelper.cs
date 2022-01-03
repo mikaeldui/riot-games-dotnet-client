@@ -10,6 +10,12 @@ using Humanizer.Inflections;
 
 namespace RiotGames.Client.CodeGeneration
 {
+    using Path = KeyValuePair<string, RiotApiOpenApiSchema.PathObject>;
+    using Paths = IEnumerable<KeyValuePair<string, RiotApiOpenApiSchema.PathObject>>;
+    using SchemaObject = RiotApiOpenApiSchema.ComponentsObject.SchemaObject;
+    using Schema = KeyValuePair<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
+    using Schemas = Dictionary<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
+
     internal static class PathHelper
     {
         static PathHelper()
@@ -26,9 +32,9 @@ namespace RiotGames.Client.CodeGeneration
             {"matchlist", "match-list" }
         };
 
-        public static void AddPathAsEndpoints(this ClientGenerator cg, KeyValuePair<string, RiotApiOpenApiSchema.PathObject> path)
+        public static void AddPathAsEndpoints(this ClientGenerator cg, Path path)
         {
-            // if (path.Key == "/lol/league/v4/challengerleagues/by-queue/{queue}") Debugger.Break();
+            //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
 
             var po = path.Value;
             var poGet = po.Get;
@@ -46,17 +52,24 @@ namespace RiotGames.Client.CodeGeneration
                     if (!poGet.Parameters.All(p => p.In == "path" || p.In == "header" || p.In == "query"))
                         Debugger.Break();
 
-                    pathParameters = poGet.Parameters.Where(p => p.In != "header" && p.In != "query").ToDictionary(p => p.Name, p => p.Schema.Type);
+                    pathParameters = poGet.Parameters.Where(p => p.In != "header" && p.In != "query").ToDictionary(p => p.Name, p => p.Schema.XType ?? p.Schema.Type);
                 }
 
                 cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema), pathParameters: pathParameters);
             }
         }
 
+        public static void AddPathsAsEndpoints(this ClientGenerator cg, Paths paths)
+        {
+            foreach (var path in paths)
+                cg.AddPathAsEndpoints(path);
+        }
+
         private static string _getNameFromPath(string path, bool? isPlural)
         {
             string firstPart;
             string secondPart;
+            string? lastPart = null;
             {
                 var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
                     .Skip(1).ToArray(); // Skip "riot" or "lol"
@@ -65,12 +78,15 @@ namespace RiotGames.Client.CodeGeneration
                 secondPart = parts[2];
                 if (parts.Length <= 3)
                     isPlural = null;
+                else if (!parts.Last().StartsWith('{'))
+                    lastPart = parts.Last();
             }
 
             // Make sure the secondPart is kebabed.
             secondPart = secondPart.Replace(_knownWords);
 
             // Check if we just need the first part
+            if (lastPart == null)
             {
                 var firstParts = firstPart.SplitAndRemoveEmptyEntries('-');
                 var secondParts = secondPart.SplitAndRemoveEmptyEntries('-');
@@ -91,23 +107,40 @@ namespace RiotGames.Client.CodeGeneration
                 var dtoParts = secondPart.SplitAndRemoveEmptyEntries('-');
                 if (isPlural != null)
                 {
-                    if (isPlural.Value)
+                    if (isPlural.Value && lastPart == null)
                         dtoParts.PluralizeLast();
                     else
                         dtoParts.SingularizeLast();
                 }
                 secondPart = String.Join("-", dtoParts);
             }
+            {
+                if (lastPart != null && isPlural != null)
+                {
+                    if (isPlural.Value)
+                        lastPart = lastPart.Pluralize();
+                    else
+                        lastPart = lastPart.Singularize();
+                }
+            }
 
-            return _toName(firstPart) + _toName(secondPart);                
+            if (lastPart != null && firstPart == secondPart)
+                return _toName(firstPart) + _toName(lastPart);
+
+            return _toName(firstPart) + _toName(secondPart) + _toName(lastPart);                
         }
 
-        private static string _toName(string name) => name.Replace(_knownWords).ToPascalCase();
+        private static string _toName(string name)
+        {
+            if (name == null)
+                return null;
+            return name.Replace(_knownWords).ToPascalCase();
+        }
 
         private static string _responseType(RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)
         {
             if (schema.Ref != null)
-                return schema.XType.Remove("Dto").Remove("DTO");
+                return ModelHelper.RemoveDtoSuffix(schema.XType);
 
             if (schema.XType == null && schema.Type == null)
                 Debugger.Break();
@@ -115,7 +148,7 @@ namespace RiotGames.Client.CodeGeneration
                 switch (schema.Type)
                 {
                     case "array":
-                        return schema.XType.Remove("Set[").Remove("List[").TrimEnd(']').Remove("Dto").Remove("DTO") + "[]";
+                        return ModelHelper.RemoveDtoSuffix(schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')) + "[]";
                     case "integer":
                         return schema.XType;
                     case "string":
@@ -127,5 +160,46 @@ namespace RiotGames.Client.CodeGeneration
 
             return "bla";
         }
+
+        public static string? GetGame(this Path path) =>
+            path.Key?.SplitAndRemoveEmptyEntries('/')?.First();
+
+        public static Paths WhereReferencesSchema(this Paths paths, Schema schema) =>
+            paths.Where(p =>
+                {
+                    var cSchema = p.Value?.Get?.Responses?["200"].Content.First().Value.Schema;
+                    if (cSchema == null) return false;
+                    string @ref;
+                    if (cSchema.Type == "array")
+                        @ref = cSchema.Items?.Ref;
+                    else
+                        @ref = cSchema.Ref;
+                    return @ref.Remove("#/components/schemas/") == schema.Key;
+                });
+
+        public static IEnumerable<Schema> WhereReferencesSchema(this Schemas schemas, Schema schema) =>
+            schemas.Where(s =>
+
+                s.Value.Properties.Any(p =>
+                {
+                    string @ref;
+                    if (p.Value.Type == "array")
+                        @ref = p.Value.Items.Ref;
+                    else
+                        @ref = p.Value.Ref;
+
+                    return @ref?.Remove("#/components/schemas/") == schema.Key;
+                })
+            );
+
+        public static Paths WhereReferenceNotNull(this Paths paths) =>
+            paths.Where(p => 
+                p.Value.Get?.Responses?["200"]?.Content?.First().Value?.Schema?.Ref != null || 
+                p.Value.Get?.Responses?["200"]?.Content?.First().Value?.Schema?.Items?.Ref != null);
+
+        public static IEnumerable<IGrouping<string, Path>> GroupByGame(this Paths paths) =>
+            paths.GroupBy(p => p.Key.SplitAndRemoveEmptyEntries('/').First());
+
+
     }
 }

@@ -26,19 +26,11 @@ namespace RiotGames.Client.CodeGeneration
         {
             _namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(string.Join('.', new string[] { "RiotGames", client.ToString() }.Distinct()))).NormalizeWhitespace();
 
-            // Add System using statement: (using System)
-            _namespace = _namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")));
-
             //  Create a class: (class RiotGamesClient)
             _classDeclaration = SyntaxFactory.ClassDeclaration($"{client}Client");
 
             // Add the public modifier: (public partial class RiotGamesClient)
             _classDeclaration = _classDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.PartialKeyword));
-
-            //// Inherit BaseEntity<T> and implement IHaveIdentity: (public class Order : BaseEntity<T>, IHaveIdentity)
-            //classDeclaration = classDeclaration.AddBaseListTypes(
-            //    SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("BaseEntity<Order>")),
-            //    SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("IHaveIdentity")));
         }
 
         public void AddEndpoint(string name, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
@@ -51,14 +43,36 @@ namespace RiotGames.Client.CodeGeneration
             // Create a stament with the body of a method.
             StatementSyntax syntax;
             {
-                string baseMethod = httpMethod.ToString().ToPascalCase() + "Async";
+                string? typeArgument = httpMethod == HttpMethod.Get ? $"<{returnType.Remove("[]")}>" : $"<{requestType}, {returnType}>";
+                string? specificMethod = null;
+
+                if (returnType.EndsWith("[]"))
+                    if (returnType.StartsWith("string"))
+                    {
+                        specificMethod = "StringArray";
+                        typeArgument = null;
+                    }
+                    else
+                        specificMethod = "Array";
+                else if (returnType == "int")
+                {
+                    specificMethod = "Int";
+                    typeArgument = null;
+                }
+                else if (returnType == "string")
+                {
+                    specificMethod = "String";
+                    typeArgument = null;
+                }
+
+                string baseMethod = httpMethod.ToString().ToPascalCase() + specificMethod + "Async";
 
                 string requestUriArgument = pathParameters == null ? $"\"{requestUri}\"" : $"$\"{requestUri}\"";
 
                 if (httpMethod == HttpMethod.Get)
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{returnType}>({requestUriArgument});");
+                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}{typeArgument}({requestUriArgument});");
                 else
-                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}<{requestType}, {returnType}>({requestUriArgument}, value);");
+                    syntax = SyntaxFactory.ParseStatement($"return await {baseMethod}{typeArgument}({requestUriArgument}, value);");
             }
 
             // Create a method

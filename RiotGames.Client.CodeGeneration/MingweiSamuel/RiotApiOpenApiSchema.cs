@@ -57,6 +57,10 @@ namespace MingweiSamuel
                             public string? XType { get; set; }
                             public string? Format { get; set; }
                             public string? Type { get; set; }
+                            /// <summary>
+                            /// Set if XType if array.
+                            /// </summary>
+                            public SchemaObject? Items { get; set; }
                         }
                     }
                 }
@@ -103,13 +107,17 @@ namespace MingweiSamuel
             {
                 public string? Type { get; set; }
                 public string? Title { get; set; }
+                public string? Name { get; set; }
                 public Dictionary<string, PropertyObject>? Properties { get; set; }
 
                 internal class PropertyObject
                 {
+                    [JsonPropertyName("$ref")]
+                    public string? Ref { get; set; }
                     public string? Type { get; set; }
                     public string? Format { get; set; }
-                    public Dictionary<string, string>? Items { get; set; }
+                    public PropertyObject? Items { get; set; }
+                    [JsonPropertyName("x-type")]
                     public string? XType { get; set; }
                     public string[]? Enum { get; set; }
                     public string? Description { get; set; }

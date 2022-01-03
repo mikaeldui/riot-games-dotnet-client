@@ -5,12 +5,13 @@ using RiotGames.Valorant;
 
 namespace RiotGames
 {
-    public partial class RiotGamesClient : RiotGamesClientBase
+    public partial class RiotGamesClient : RiotGamesClientBase<RiotGamesObject>
     {
         private LeagueOfLegendsClient? _leagueOfLegends;
         private LegendsOfRuneterraClient? _legendsOfRuneterra;
         private TeamfightTacticsClient? _teamfightTactics;
         private ValorantClient? _valorant;
+
         public RiotGamesClient(string apiKey) : base(apiKey)
         {
 

@@ -62,7 +62,7 @@ using RiotGames.Valorant;
 
 using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD"))
 {
-    var match = await client.GeMatchAsync("some-match-ID");
+    var match = await client.GetMatchAsync("some-match-ID");
     foreach(var player in match.Players)
         Console.PrintLine($"Player #{player.Title} played champion #{player.ChampionId}");
 }

@@ -1,4 +1,5 @@
 # Riot Games .NET Client
+[![.NET](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml)
 An unofficial .NET Client for Riot Games and their games League of Legends, Legends of Runeterra, Teamfight Tactics and Valorant.
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.

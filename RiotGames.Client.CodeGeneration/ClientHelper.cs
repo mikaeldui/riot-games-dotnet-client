@@ -37,19 +37,18 @@ namespace RiotGames.Client.CodeGeneration
             var poGet = po.Get;
             if (poGet != null)
             {
-                var operationId = poGet.OperationId;
                 var responseSchema = poGet?.Responses?["200"]?.Content?.First().Value.Schema;
                 bool isArrayReponse = responseSchema?.Type == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
 
                 Dictionary<string, string>? pathParameters = null;
 
-                if (poGet.Parameters != null && poGet.Parameters.Length > 0)
+                if (poGet is { Parameters: not null, Parameters: { Length: > 0 } })
                 {
-                    if (!poGet.Parameters.All(p => p.In == "path" || p.In == "header" || p.In == "query"))
+                    if (!poGet.Parameters.All(p => p.In is "path" or "header" or "query"))
                         Debugger.Break();
 
-                    pathParameters = poGet.Parameters.Where(p => p.In != "header" && p.In != "query").ToDictionary(p => p.Name, p => p.Schema.XType ?? p.Schema.Type);
+                    pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema.XType ?? p.Schema.Type);
                 }
 
                 cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema), pathParameters: pathParameters);
@@ -62,14 +61,14 @@ namespace RiotGames.Client.CodeGeneration
                 cg.AddPathAsEndpoints(path);
         }
 
-        private static string _getNameFromPath(string path, bool? isPlural)
+        private static string? _getNameFromPath(string path, bool? isPlural)
         {
+            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
+                .Skip(1).ToArray(); // Skip "riot" or "lol"
             string firstPart;
             string secondPart;
             string? lastPart = null;
-            {
-                var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
-                    .Skip(1).ToArray(); // Skip "riot" or "lol"
+            {                
                 firstPart = parts[0];
                 // [1] is "v1" or similiar.
                 secondPart = parts[2];
@@ -95,6 +94,10 @@ namespace RiotGames.Client.CodeGeneration
                         if (isPlural.Value) secondParts.PluralizeLast();
                         else secondParts.SingularizeLast();
                     }
+
+                    if (firstPart == "summoner" && parts.Length > 3 && parts[3].StartsWith("by-"))
+                        return _toName(firstPart) + _toName(parts[3]);
+
                     return _toName(String.Join('-', secondParts));
                 }
             }
@@ -121,13 +124,16 @@ namespace RiotGames.Client.CodeGeneration
                 }
             }
 
-            if (lastPart != null && firstPart == secondPart)
-                return _toName(firstPart) + _toName(lastPart);
+            if (firstPart == secondPart || firstPart == secondPart.Singularize())
+            {
+                if (lastPart != null)
+                    return _toName(firstPart) + _toName(lastPart);
+            }
 
             return _toName(firstPart) + _toName(secondPart) + _toName(lastPart);                
         }
 
-        private static string _toName(string name)
+        private static string? _toName(string name)
         {
             if (name == null)
                 return null;
@@ -138,8 +144,7 @@ namespace RiotGames.Client.CodeGeneration
         {
             if (schema.Ref != null)
                 return ModelHelper.RemoveDtoSuffix(schema.XType);
-
-            if (schema.XType == null && schema.Type == null)
+            else if (schema.XType == null && schema.Type == null)
                 Debugger.Break();
             else
                 switch (schema.Type)

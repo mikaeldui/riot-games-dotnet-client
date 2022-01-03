@@ -16,18 +16,13 @@ namespace RiotGames.Client.CodeGeneration
         {
             var name = ModelHelper.RemoveDtoSuffix(property.XType ?? property.Ref?.Split('.')?.Last() ?? property.Format ?? property.Type);
 
-            switch (name)
+            return name switch
             {
-                case "int32":
-                    return "int";
-                case "int64":
-                    return "long";
-                case "boolean":
-                    return "bool";
-                default:
-                    return name;
-            }
-        }
-    
+                "int32" => "int",
+                "int64" => "long",
+                "boolean" => "bool",
+                _ => name,
+            };
+        }    
     }
 }

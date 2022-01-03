@@ -17,6 +17,7 @@ namespace RiotGames.Client.CodeGeneration
         TeamfightTactics,
         Valorant
     }
+
     internal class ClientGenerator
     {
         NamespaceDeclarationSyntax _namespace;

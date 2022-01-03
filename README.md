@@ -3,7 +3,7 @@ An unofficial .NET Client for Riot Games and their games League of Legends, Lege
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
-It's easily extendible. You can leverage it's type safety and inherit the clients or just use it GetAsync/PostAsync/PutAsync methods if you need to do something that's not supported.
+It's easily extendible. You can leverage it's type safety and inherit the clients or just use its GetAsync/PostAsync/PutAsync methods if you need to do something that's not supported.
 
 ## Download
 

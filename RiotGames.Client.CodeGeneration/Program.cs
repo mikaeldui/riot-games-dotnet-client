@@ -55,7 +55,7 @@ if (pathsGrouping != null)
 
 var pathsWithSchema = schema.Paths.WhereReferenceNotNull().ToArray();
 
-var groupedSchemas = schema.Components.Schemas.GroupBy(s =>
+var groupedSchemas = schema.Components?.Schemas.GroupBy(s =>
 {
     // We sometimes have to find the parents parent etc.
     Schema current = s;

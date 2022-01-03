@@ -41,17 +41,17 @@ namespace RiotGames.Client.CodeGeneration
                 bool isArrayReponse = responseSchema?.Type == "array";
                 var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
 
-                Dictionary<string, string>? pathParameters = null;
+                Dictionary<string, string?>? pathParameters = null;
 
                 if (poGet is { Parameters: not null, Parameters: { Length: > 0 } })
                 {
                     if (!poGet.Parameters.All(p => p.In is "path" or "header" or "query"))
                         Debugger.Break();
 
-                    pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema.XType ?? p.Schema.Type);
+                    pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema?.XType ?? p.Schema?.Type);
                 }
 
-                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, _responseType(responseSchema), pathParameters: pathParameters);
+                cg.AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
             }
         }
 
@@ -138,29 +138,6 @@ namespace RiotGames.Client.CodeGeneration
             if (name == null)
                 return null;
             return name.Replace(_knownWords).ToPascalCase();
-        }
-
-        private static string _responseType(RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)
-        {
-            if (schema.Ref != null)
-                return ModelHelper.RemoveDtoSuffix(schema.XType);
-            else if (schema.XType == null && schema.Type == null)
-                Debugger.Break();
-            else
-                switch (schema.Type)
-                {
-                    case "array":
-                        return ModelHelper.RemoveDtoSuffix(schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')) + "[]";
-                    case "integer":
-                        return schema.XType;
-                    case "string":
-                        return schema.Type;
-                    default:
-                        Debugger.Break();
-                        break;
-                }
-
-            return "bla";
         }
 
         public static string? GetGame(this Path path) =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Humanizer;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel;
@@ -18,16 +19,15 @@ namespace RiotGames.Client.CodeGeneration
 
             _namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(string.Join('.', new string[] { "RiotGames", client.ToString() }.Distinct()))).NormalizeWhitespace();
 
-            // Add System using statement: (using System)
-            _namespace = _namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")));
             _namespace = _namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Text.Json.Serialization")));
         }
 
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
+            var className = ModelHelper.GetTypeNameFromRef(schema.Key);
             //  Create a class: (class RiotGamesClient)
-            var classDeclaration = SyntaxFactory.ClassDeclaration(ModelHelper.RemoveDtoSuffix(schema.Key.Split('.').Last()));
+            var classDeclaration = SyntaxFactory.ClassDeclaration(className);
 
             // Add the public modifier: (public partial class RiotGamesClient)
             classDeclaration = classDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
@@ -39,6 +39,8 @@ namespace RiotGames.Client.CodeGeneration
             var properties = schemaObject.Properties.Select(kv =>
             {
                 string identifier = kv.Key.ToPascalCase();
+                if (identifier == className)
+                    identifier = identifier.Pluralize();
                 string? jsonProperty = null;
                 if (identifier.All(char.IsDigit))
                 {
@@ -47,7 +49,7 @@ namespace RiotGames.Client.CodeGeneration
                 }
 
                 if (kv.Value.Type == "array" || kv.Value.XType == "array")                
-                    return _simpleProperty(ModelHelper.RemoveDtoSuffix(kv.Value.Items.GetTypeName()) + "[]?", identifier, jsonProperty);                
+                    return _simpleProperty(kv.Value.Items.GetTypeName() + "[]?", identifier, jsonProperty);                
 
                 return _simpleProperty(kv.Value.GetTypeName() + "?", identifier, jsonProperty);
             }).ToArray();

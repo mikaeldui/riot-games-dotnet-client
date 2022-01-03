@@ -20,7 +20,7 @@ namespace RiotGames.Client.CodeGeneration
             {
                 var cSchema = p.Value?.Get?.Responses?["200"].Content.First().Value.Schema;
                 if (cSchema == null) return false;
-                string @ref;
+                string? @ref;
                 if (cSchema.Type == "array")
                     @ref = cSchema.Items?.Ref;
                 else
@@ -33,9 +33,9 @@ namespace RiotGames.Client.CodeGeneration
 
                 s.Value.Properties.Any(p =>
                 {
-                    string @ref;
+                    string? @ref;
                     if (p.Value.Type == "array")
-                        @ref = p.Value.Items.Ref;
+                        @ref = p.Value.Items?.Ref;
                     else
                         @ref = p.Value.Ref;
 

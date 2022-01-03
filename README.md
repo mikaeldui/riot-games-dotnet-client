@@ -85,9 +85,9 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-    [riot]:   https://www.riotgames.com/
-    [lol]:    https://www.leagueoflegends.com/
-    [lor]:    https://playruneterra.com/
-    [tft]:    https://teamfighttactics.leagueoflegends.com/
-    [val]:    https://playvalorant.com/    
-    [dotnet]: https://dotnet.microsoft.com/
+    [riot]: https://www.riotgames.com/ "Riot Games"
+    [lol]: https://www.leagueoflegends.com/ "League of Legends"
+    [lor]: https://playruneterra.com/ "Legends of Runeterra"
+    [tft]: https://teamfighttactics.leagueoflegends.com/ "Teamfight Tactics"
+    [val]: https://playvalorant.com/ "Valorant"
+    [dotnet]: https://dotnet.microsoft.com/ ".NET"

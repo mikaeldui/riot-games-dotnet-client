@@ -17,3 +17,16 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
         Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
 }
 ```
+
+### Getting Legends of Runeterra leadersboard
+
+```
+using RiotGames.LeagueOfLegends;
+
+using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var leaderboards = await client.GetRankedLeaderboardsAsync();
+    foreach(var player in leaderboards.Players)
+        Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
+}
+```

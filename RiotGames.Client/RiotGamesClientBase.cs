@@ -41,6 +41,6 @@ namespace RiotGames
             where TResult : TObjectBase =>
             await _httpClient.PutAsJsonAsync<TValue, TResult>(requestUri, value);
 
-        public void Dispose() => _httpClient.Dispose();
+        public virtual void Dispose() => _httpClient.Dispose();
     }
 }

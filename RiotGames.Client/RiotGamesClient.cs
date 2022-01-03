@@ -53,5 +53,14 @@ namespace RiotGames
                 return _valorant;
             }
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _leagueOfLegends?.Dispose();
+            _legendsOfRuneterra?.Dispose();
+            _teamfightTactics?.Dispose();
+            _valorant?.Dispose();
+        }
     }
 }

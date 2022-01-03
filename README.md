@@ -39,6 +39,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 
 
 ### Doing multi-game stuff
+Using the `RiotGamesClient` class gives you easy access to multiple game clients at ones.
 
 ```
 using RiotGames;

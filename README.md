@@ -3,12 +3,11 @@
 
 ![image](https://user-images.githubusercontent.com/3706841/147928421-b25b3ddd-c774-4240-bf10-863321b05bb4.png)
 
-
-An unofficial .NET Client for Riot Games and their games League of Legends, Legends of Runeterra, Teamfight Tactics and Valorant.
+An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
-It's easily extendible. You can leverage it's type safety and inherit the clients or just use its GetAsync/PostAsync/PutAsync methods if you need to do something that's not supported.
+It's easily extendible. You can leverage its type safety and inherit the clients or just use its GetAsync/PostAsync/PutAsync methods if you need to do something that's not supported.
 
 ## Download
 
@@ -16,7 +15,7 @@ You can find the latest alpha releases [here on GitHub](https://github.com/mikae
 
 ## Examples
 
-### Getting League of Legends masteries
+### Getting [League of Legends][lol] [masteries](https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore)
 
 ```C#
 using RiotGames.LeagueOfLegends;
@@ -29,7 +28,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting Legends of Runeterra leadersboard
+### Getting [Legends of Runeterra][lor] [leadersboard](https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards)
 
 ```C#
 using RiotGames.LegendsOfRuneterra;
@@ -42,7 +41,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
-### Getting Teamfight Tactics league entires
+### Getting [Teamfight Tactics][tft] [league entires](https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner)
 
 ```C#
 using RiotGames.TeamfightTactics;
@@ -55,9 +54,21 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
 }
 ```
 
+### Getting a [Valorant][val] [match](https://developer.riotgames.com/apis#val-match-v1/GET_getMatch)
+
+```C#
+using RiotGames.Valorant;
+
+using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD"))
+{
+    var match = await client.GetMatchAsync("some-match-ID");
+    foreach(var player in match.Players)
+        Console.PrintLine($"Player #{player.Title} played champion #{player.ChampionId}");
+}
+```
 
 ### Doing multi-game stuff
-Using the `RiotGamesClient` class gives you easy access to multiple game clients at once.
+Using the [`RiotGamesClient`](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/RiotGames.Client/RiotGamesClient.cs) class gives you easy access to multiple game clients at once.
 
 ```C#
 using RiotGames;
@@ -73,3 +84,15 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
         Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
 }
 ```
+
+## Notice from [Riot Games][riot]
+
+[Riot Games .NET Client (unofficial)][rgdc] isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing [Riot Games][riot] properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].
+
+[rgdc]: https://github.com/mikaeldui/riot-games-dotnet-client "Riot Games .NET Client (unofficial)"
+[riot]: https://www.riotgames.com/ "Riot Games"
+[lol]: https://www.leagueoflegends.com/ "League of Legends"
+[lor]: https://playruneterra.com/ "Legends of Runeterra"
+[tft]: https://teamfighttactics.leagueoflegends.com/ "Teamfight Tactics"
+[val]: https://playvalorant.com/ "Valorant"
+[dotnet]: https://dotnet.microsoft.com/ ".NET"

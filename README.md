@@ -21,7 +21,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 ### Getting Legends of Runeterra leadersboard
 
 ```
-using RiotGames.LeagueOfLegends;
+using RiotGames.LegendsOfRuneterra;
 
 using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 {

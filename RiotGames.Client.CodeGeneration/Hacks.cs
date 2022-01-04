@@ -14,7 +14,11 @@ namespace RiotGames.Client.CodeGeneration
     /// </summary>
     internal static class Hacks
     {
-        static Hacks() => Vocabularies.Default.AddUncountable("data");
+        static Hacks()
+        {
+            Vocabularies.Default.AddUncountable("data");
+            Vocabularies.Default.AddUncountable("me");
+        }
 
         public static void Activate() => Debug.WriteLine("Hacks activated!");
 

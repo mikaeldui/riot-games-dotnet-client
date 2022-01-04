@@ -17,7 +17,7 @@ namespace RiotGames
         private ValorantClient? _valorant;
 
         /// <summary>
-        /// If a platform isn't supplied, some endpoints might throw errors.
+        /// Using this constructor is useful for when you only need region-specific API. If you're only using /riot endpoints then use the region closest to you.
         /// </summary>
         public RiotGamesClient(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null) : base(apiKey, region)
         {
@@ -25,18 +25,21 @@ namespace RiotGames
             _valPlatform = valPlatform;
         }
 
+        /// <summary>
+        /// This will set the region to the one for the platform, which might not be closest to you. For the best performance on those endpoints, use the regional constructor.
+        /// </summary>
         public RiotGamesClient(string apiKey, PlatformRoute platform, ValPlatformRoute? valPlatform = null) : base(apiKey, RouteUtils.ToRegional(platform))
         {
             _apiKey = apiKey;
             _valPlatform= valPlatform;
         }
 
-        //[Obsolete("Use the ValorantClient directly instead.", error: true)]
-        //public RiotGamesClient(string apiKey, ValPlatformRoute valPlatform) : base(apiKey, valPlatform)
-        //{
-        //    _apiKey = apiKey;
-        //    _valPlatform = valPlatform;
-        //}
+        [Obsolete("Use the ValorantClient directly instead.", error: true)]
+        public RiotGamesClient(string apiKey, ValPlatformRoute valPlatform) : base(apiKey, valPlatform)
+        {
+            _apiKey = apiKey;
+            _valPlatform = valPlatform;
+        }
 
         public LeagueOfLegendsClient LeagueOfLegends
         {

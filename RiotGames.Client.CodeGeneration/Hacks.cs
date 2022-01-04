@@ -1,7 +1,6 @@
 ﻿using Humanizer.Inflections;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace RiotGames.Client.CodeGeneration
             Vocabularies.Default.AddUncountable("me");
         }
 
-        public static void Activate() => Debug.WriteLine("Hacks activated!");
+        public static void Activate() => Console.WriteLine("Hacks activated!");
 
         public static readonly IReadOnlyDictionary<string, string> EndpointWordCompilations = new Dictionary<string, string>
         {

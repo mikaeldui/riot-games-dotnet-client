@@ -41,7 +41,7 @@ namespace RiotGames.Client.CodeGeneration
     {
         public static MethodDeclarationSyntax? PublicAsyncTask(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
         {
-            var methodDeclaration = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName("Task<" + returnType + ">"), methodName.EndWith("Async"))
+            var methodDeclaration = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName("Task" + StatementHelper.TypeArgument(returnType)), methodName.EndWith("Async"))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
                 .WithBody(SyntaxFactory.Block(bodyStatement));
 
@@ -55,7 +55,7 @@ namespace RiotGames.Client.CodeGeneration
 
     internal static class StatementHelper
     {
-        public static string TypeArgument(string returnType) => $"<{returnType.Remove("[]")}>";
+        public static string TypeArgument(string returnType) => $"<{returnType}>";
         public static string TypeArgument(string valueType, string returnType) => $"<{valueType}, {returnType}>";
         public static StatementSyntax ReturnAwait(string objectName, string methodName, string? typeArgument, params string[] arguments) =>
             SyntaxFactory.ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");

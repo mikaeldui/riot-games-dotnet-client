@@ -43,7 +43,7 @@ namespace RiotGames.Client.CodeGeneration
             StatementSyntax bodyStatement;
             {
                 string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
-                string? typeArgument = httpMethod == HttpMethod.Get ? StatementHelper.TypeArgument(returnType) : StatementHelper.TypeArgument(requestType, returnType);
+                string? typeArgument = httpMethod == HttpMethod.Get ? StatementHelper.TypeArgument(returnType.Remove("[]")) : StatementHelper.TypeArgument(requestType, returnType.Remove("[]"));
                 string? specificMethod = null;
 
                 if (returnType.EndsWith("[]"))

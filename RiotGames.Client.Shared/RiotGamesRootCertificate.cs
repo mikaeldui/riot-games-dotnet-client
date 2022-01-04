@@ -10,12 +10,14 @@ namespace RiotGames
 {
     internal static class RiotGamesRootCertificate
     {
+        private const string RESOURCE_NAME_PARTIAL = "riotgames.pem";
+
         public static X509Certificate2 X509Certificate2 { get; }
 
         static RiotGamesRootCertificate()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "RiotGames.Client.riotgames.pem";
+            var resourceName = assembly.GetManifestResourceNames().First(n => n.EndsWith(RESOURCE_NAME_PARTIAL));
 
             using Stream? stream = assembly.GetManifestResourceStream(resourceName);
 

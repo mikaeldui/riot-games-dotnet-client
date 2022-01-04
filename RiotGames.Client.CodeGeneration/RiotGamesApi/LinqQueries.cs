@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    using Path = KeyValuePair<string, RiotApiOpenApiSchema.PathObject>;
-    using Paths = IEnumerable<KeyValuePair<string, RiotApiOpenApiSchema.PathObject>>;
-    using SchemaObject = RiotApiOpenApiSchema.ComponentsObject.SchemaObject;
-    using Schema = KeyValuePair<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
-    using Schemas = Dictionary<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
+    using Path = KeyValuePair<string, RiotApiPathObject>;
+    using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
+    using Schema = KeyValuePair<string, RiotApiComponentSchemaObject>;
+    using Schemas = Dictionary<string, RiotApiComponentSchemaObject>;
 
     internal static class LinqQueries
     {

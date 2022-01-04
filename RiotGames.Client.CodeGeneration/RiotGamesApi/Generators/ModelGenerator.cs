@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    using Schema = KeyValuePair<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
+    using Schema = KeyValuePair<string, RiotApiComponentSchemaObject>;
 
     internal class ModelGenerator
     {

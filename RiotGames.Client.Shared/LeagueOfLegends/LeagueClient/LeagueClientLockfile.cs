@@ -11,6 +11,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     internal class LeagueClientLockfile
     {
         internal const string LEAGUECLIENT_DEFAULT_LOCKFILE_PATH = @"C:\Riot Games\League of Legends\lockfile";
+        internal const string LEAGUECLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
 
         private LeagueClientLockfile(string processName, ulong processId, ushort port, string password, string protocol)
         {
@@ -29,12 +30,23 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
 
         public static LeagueClientLockfile FromPath(string path = LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
         {
-            var content = File.ReadAllText(path);
+            var content = _fileReadAllText(path);
             var splitContent = content.Split(':');
             return new LeagueClientLockfile(splitContent[0], UInt64.Parse(splitContent[1]), UInt16.Parse(splitContent[2]), splitContent[3], splitContent[4]);
         }
 
-        public static LeagueClientLockfile FromProcess(string processName = LeagueClient.LEAGUECLIENT_DEFAULT_PROCESS_NAME)
+        private static string _fileReadAllText(string path)
+        {
+            string text;
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream))
+            {
+                text = reader.ReadToEnd();
+            }
+            return text;
+        }
+
+        public static LeagueClientLockfile FromProcess(string processName = LEAGUECLIENT_DEFAULT_PROCESS_NAME)
         {
             var process = Process.GetProcessesByName(processName).Single();
 

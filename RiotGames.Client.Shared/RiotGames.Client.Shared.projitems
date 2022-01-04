@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4681c1c4-8fb7-4050-9fac-15b6b0d416e9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>RiotGames.Client.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SystemExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueOfLegends\LeagueClient\LeagueClientHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueOfLegends\LeagueClient\LeagueClientLockfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RiotGamesRootCertificate.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)riotgames.pem" />
+  </ItemGroup>
+</Project>

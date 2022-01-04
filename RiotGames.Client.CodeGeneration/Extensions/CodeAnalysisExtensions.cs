@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RiotGames.Client.CodeGeneration.RiotGamesApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;

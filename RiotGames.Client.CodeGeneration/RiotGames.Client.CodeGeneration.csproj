@@ -13,4 +13,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
   </ItemGroup>
 
+  <Import Project="..\RiotGames.Client.Shared\RiotGames.Client.Shared.projitems" Label="Shared" />
+
 </Project>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     /// <summary>
     /// Contains hacks to make everything work a little better. 

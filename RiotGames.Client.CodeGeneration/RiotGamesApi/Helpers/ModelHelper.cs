@@ -5,9 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MingweiSamuel.RiotApiOpenApiSchema.ComponentsObject;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     internal static class ModelHelper
     {
@@ -21,7 +20,7 @@ namespace RiotGames.Client.CodeGeneration
             return Hacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
         }
 
-        public static string GetTypeName(this RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)
+        public static string GetTypeName(this RiotApiSchemaObject schema)
         {
             if (schema.Ref != null)
                 return GetTypeNameFromRef(schema.Ref);
@@ -43,7 +42,7 @@ namespace RiotGames.Client.CodeGeneration
             throw new Exception("Couldn't figure out the response type.");
         }
 
-        public static string GetTypeName(this SchemaObject.PropertyObject property)
+        public static string GetTypeName(this RiotApiComponentPropertyObject property)
         {
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            
@@ -57,6 +56,22 @@ namespace RiotGames.Client.CodeGeneration
                 "boolean" => "bool",
                 _ => name,
             };
-        }    
+        }
+
+        public static string GetTypeName(this OpenApiComponentPropertyObject property)
+        {
+            if (property.Ref != null)
+                return GetTypeNameFromRef(property.Ref);
+
+            var name = ModelHelper._removeDtoSuffix(property.Format ?? property.Type);
+
+            return name switch
+            {
+                "int32" => "int",
+                "int64" => "long",
+                "boolean" => "bool",
+                _ => name,
+            };
+        }
     }
 }

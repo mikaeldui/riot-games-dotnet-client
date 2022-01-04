@@ -1,36 +1,25 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace RiotGames.Client.CodeGeneration
+
+namespace RiotGames.Client.CodeGeneration.LeagueClient.Generators
 {
-    internal enum Client
-    {
-        RiotGames,
-        LeagueOfLegends,
-        LegendsOfRuneterra,
-        TeamfightTactics,
-        Valorant
-    }
-
-    internal class ClientGenerator
+    internal class LcuClientGenerator
     {
         NamespaceDeclarationSyntax _namespace;
         ClassDeclarationSyntax _classDeclaration;
 
-        public ClientGenerator(Client client)
+        public LcuClientGenerator()
         {
-            // Ensure we don't get RiotGames.RiotGames.
-            var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();
+            _namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
 
-            _namespace = NamespaceHelper.CreateNamespaceDeclaration(@namespace);
-
-            _classDeclaration = ClassHelper.CreatePublicPartialClass($"{client}Client");
+            _classDeclaration = ClassHelper.CreatePublicPartialClass($"LeagueClient");
         }
 
         public void AddEndpoint(string methodIdentifier, bool isPlatform, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)

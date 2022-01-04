@@ -17,14 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="riotgames.pem" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="riotgames.pem" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\README.md">
       <Pack>True</Pack>
@@ -35,5 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-nightly-2021-12-30-6d67c5d9bd" />
   </ItemGroup>
+
+  <Import Project="..\RiotGames.Client.Shared\RiotGames.Client.Shared.projitems" Label="Shared" />
 
 </Project>

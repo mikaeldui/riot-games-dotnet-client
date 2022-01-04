@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Humanizer;
 using MingweiSamuel;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    using Path = KeyValuePair<string, RiotApiOpenApiSchema.PathObject>;
-    using Paths = IEnumerable<KeyValuePair<string, RiotApiOpenApiSchema.PathObject>>;
+    using Path = KeyValuePair<string, RiotApiPathObject>;
+    using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
 
     internal static class ClientHelper
     {

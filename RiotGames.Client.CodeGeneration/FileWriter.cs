@@ -15,11 +15,11 @@ namespace RiotGames.Client.CodeGeneration
 
     internal static class FileWriter
     {
-        public static void WriteFile(Client client, FileType fileType, string contents)
+        public static void WriteFile(RiotGamesApi.Client client, FileType fileType, string contents)
         {
             string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client");
 
-            if (client != Client.RiotGames)
+            if (client != RiotGamesApi.Client.RiotGames)
                 folder = Path.Combine(folder, client.ToString());
 
             File.WriteAllText(Path.Combine(folder, $"{client}{fileType}.g.cs"), contents);

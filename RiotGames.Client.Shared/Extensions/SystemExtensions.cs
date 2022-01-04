@@ -11,9 +11,7 @@ namespace RiotGames
         public static byte[] ToByteArray(this Stream stream)
         {
             if (stream is MemoryStream ms)
-            {
                 return ms.ToArray();
-            }
             else
             {
                 using MemoryStream ms2 = new();

@@ -14,7 +14,7 @@ namespace MingweiSamuel
 
     #region Path
 
-    [DebuggerDisplay("XEndpoint")]
+    [DebuggerDisplay("X-Endpoint = {XEndpoint}")]
     internal class RiotApiPathObject : OpenApiPathObject<RiotApiMethodObject, RiotApiPostMethodObject, RiotApiPutMethodObject, RiotApiParameterObject,
         RiotApiSchemaObject>
     {

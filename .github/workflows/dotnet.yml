@@ -2,13 +2,11 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
     - '.github/workflows/**'
   pull_request:
-    branches: [ main ]
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'

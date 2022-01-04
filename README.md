@@ -11,7 +11,15 @@ It's easily extendible. You can leverage its type safety and inherit the clients
 
 ## Download
 
-You can find the latest alpha releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases). It'll soon be available on NuGet.
+You can find the latest releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet].
+
+To install the package, type the following in the package manager console:
+
+    Install-Package MikaelDui.RiotGames.Client -IncludePrerelease
+    
+Or use the .NET CLI:
+
+    dotnet add package MikaelDui.RiotGames.Client --prerelease
 
 ## Examples
 

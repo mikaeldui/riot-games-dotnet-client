@@ -26,11 +26,13 @@ Or use the .NET CLI:
 ### Getting [League of Legends][lol] [masteries](https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore)
 
 ```C#
+using Camille.Enums;
 using RiotGames.LeagueOfLegends;
 
-using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
+using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
 {
-    var masteries = await client.GetMasteriesAsync("some-summoner-ID");
+    var summoner = await client.GetSummonerByNameAsync("some-summoner-name");
+    var masteries = await client.GetMasteriesAsync(summoner.Id);
     foreach(var mastery in masteries)
         Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
 }
@@ -41,7 +43,7 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD"))
 ```C#
 using RiotGames.LegendsOfRuneterra;
 
-using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
+using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD", RegionRoute.AMERICAS))
 {
     var leaderboards = await client.GetRankedLeaderboardsAsync();
     foreach(var player in leaderboards.Players)
@@ -54,7 +56,7 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD"))
 ```C#
 using RiotGames.TeamfightTactics;
 
-using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
+using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
 {
     var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
     foreach(var entry in leagueEntries)
@@ -67,7 +69,7 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD"))
 ```C#
 using RiotGames.Valorant;
 
-using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD"))
+using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD", ValPlatformRoute.EU))
 {
     var match = await client.GetMatchAsync("some-match-ID");
     foreach(var player in match.Players)
@@ -81,9 +83,10 @@ Using the [`RiotGamesClient`](https://github.com/mikaeldui/riot-games-dotnet-cli
 ```C#
 using RiotGames;
 
-using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD"))
+using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1, ValPlatformRoute.NA))
 {
-    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync("some-summoner-ID");
+    var lolSummoner = await client.LeagueOfLegends.GetSummonerByNameAsync("some-summoner-name");
+    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner.Id);
     foreach(var mastery in lolMasteries)
         Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
 

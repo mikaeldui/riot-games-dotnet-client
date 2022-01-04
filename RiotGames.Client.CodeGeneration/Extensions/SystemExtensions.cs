@@ -52,6 +52,8 @@ namespace RiotGames.Client.CodeGeneration
         public static bool IsLower(this char input) => input.ToString() == input.ToString().ToLower();
 
         public static bool IsScreaming(this string input) => input.All(c => c.ToString() == c.ToString().ToUpper());
+
+        public static string EndWith(this string input, string end) => input.EndsWith(end) ? input : input + end;
     }
 
     public static class ArrayExtensions

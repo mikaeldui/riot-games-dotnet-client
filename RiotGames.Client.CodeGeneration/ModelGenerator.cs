@@ -12,29 +12,23 @@ namespace RiotGames.Client.CodeGeneration
     {
         NamespaceDeclarationSyntax _namespace;
         private Client _client;
+        private bool _usingSystemTextJsonSerialization = false;
 
         public ModelGenerator(Client client)
         {
             _client = client;
 
-            _namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(string.Join('.', new string[] { "RiotGames", client.ToString() }.Distinct()))).NormalizeWhitespace();
+            // Ensure we don't get RiotGames.RiotGames.
+            var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();
 
-            _namespace = _namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Text.Json.Serialization")));
+            _namespace = NamespaceHelper.CreateNamespaceDeclaration(@namespace);
         }
 
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
             var className = ModelHelper.GetTypeNameFromRef(schema.Key);
-            //  Create a class: (class RiotGamesClient)
-            var classDeclaration = SyntaxFactory.ClassDeclaration(className);
-
-            // Add the public modifier: (public partial class RiotGamesClient)
-            classDeclaration = classDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
-
-            //// Inherit BaseEntity<T> and implement IHaveIdentity: (public class Order : BaseEntity<T>, IHaveIdentity)
-            classDeclaration = classDeclaration.AddBaseListTypes(
-                SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName($"{_client}Object")));
+            var classDeclaration = ClassHelper.CreatePublicClassWithBaseType(className, $"{_client}Object");
 
             var properties = schemaObject.Properties.Select(kv =>
             {
@@ -48,17 +42,22 @@ namespace RiotGames.Client.CodeGeneration
                     identifier = "X" + identifier;
                 }
 
-                if (kv.Value.Type == "array" || kv.Value.XType == "array")                
-                    return _simpleProperty(kv.Value.Items.GetTypeName() + "[]?", identifier, jsonProperty);                
+                string typeName;
 
-                return _simpleProperty(kv.Value.GetTypeName() + "?", identifier, jsonProperty);
+                if (kv.Value.Type == "array" || kv.Value.XType == "array")
+                    typeName = kv.Value.Items.GetTypeName() + "[]";
+                else
+                    typeName = kv.Value.GetTypeName();
+
+                typeName += "?"; // Make nullable
+
+                return _simpleProperty(typeName, identifier, jsonProperty);
             }).ToArray();
 
             classDeclaration = classDeclaration.AddMembers(properties);
 
             // Add the class to the namespace.
             _namespace = _namespace.AddMembers(classDeclaration);
-
         }
 
         public void AddDtos(IEnumerable<Schema> schemas)
@@ -75,21 +74,18 @@ namespace RiotGames.Client.CodeGeneration
 
         private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
         {
-            var property = SyntaxFactory.PropertyDeclaration(SyntaxFactory.ParseTypeName(typeName), identifier)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddAccessorListAccessors(
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+            var property = PropertyHelper.CreatePublicProperty(typeName, identifier);
 
-            if (jsonProperty == null)
-                return property;
+            if (jsonProperty != null)
+            {
+                // We need to add this namespace for the attribute.
+                if (!_usingSystemTextJsonSerialization)
+                    _namespace = _namespace.AddSystemTextJsonSerializationUsing();
 
-            else
-                return property.AddAttributeLists(
-                    SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList<AttributeSyntax>(
-                        SyntaxFactory.Attribute(SyntaxFactory.IdentifierName("JsonPropertyName"))
-                        .WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($"(\"{jsonProperty}\")")))));
+                property = property.AddJsonPropertyNameAttribute(jsonProperty);
+            }
 
+            return property;
         }
     }
 }

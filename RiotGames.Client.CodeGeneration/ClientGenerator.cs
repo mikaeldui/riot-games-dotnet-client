@@ -25,27 +25,25 @@ namespace RiotGames.Client.CodeGeneration
 
         public ClientGenerator(Client client)
         {
-            _namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(string.Join('.', new string[] { "RiotGames", client.ToString() }.Distinct()))).NormalizeWhitespace();
+            // Ensure we don't get RiotGames.RiotGames.
+            var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();
 
-            //  Create a class: (class RiotGamesClient)
-            _classDeclaration = SyntaxFactory.ClassDeclaration($"{client}Client");
+            _namespace = NamespaceHelper.CreateNamespaceDeclaration(@namespace);
 
-            // Add the public modifier: (public partial class RiotGamesClient)
-            _classDeclaration = _classDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.PartialKeyword));
+            _classDeclaration = ClassHelper.CreatePublicPartialClass($"{client}Client");
         }
 
-        public void AddEndpoint(string name, bool isPlatform, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
+        public void AddEndpoint(string methodIdentifier, bool isPlatform, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
         {
             // Long time since I did an XOR, this might not work.
             if (httpMethod == HttpMethod.Get ^ requestType == null)
                 throw new ArgumentException("If the httpMetod is get then requestType must be null. If it is post or put then it must be set.");
 
-
             // Create a stament with the body of a method.
-            StatementSyntax syntax;
+            StatementSyntax bodyStatement;
             {
                 string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
-                string? typeArgument = httpMethod == HttpMethod.Get ? $"<{returnType.Remove("[]")}>" : $"<{requestType}, {returnType}>";
+                string? typeArgument = httpMethod == HttpMethod.Get ? StatementHelper.TypeArgument(returnType) : StatementHelper.TypeArgument(requestType, returnType);
                 string? specificMethod = null;
 
                 if (returnType.EndsWith("[]"))
@@ -69,26 +67,16 @@ namespace RiotGames.Client.CodeGeneration
 
                 string baseMethod = httpMethod.ToString().ToPascalCase() + specificMethod + "Async";
 
+                // Add "$" if it's to be interpolated.
                 string requestUriArgument = pathParameters == null ? $"\"{requestUri}\"" : $"$\"{requestUri}\"";
 
                 if (httpMethod == HttpMethod.Get)
-                    syntax = SyntaxFactory.ParseStatement($"return await {clientName}.{baseMethod}{typeArgument}({requestUriArgument});");
+                    bodyStatement = StatementHelper.ReturnAwait(clientName, baseMethod, typeArgument, requestUriArgument);
                 else
-                    syntax = SyntaxFactory.ParseStatement($"return await {clientName}.{baseMethod}{typeArgument}({requestUriArgument}, value);");
+                    bodyStatement = StatementHelper.ReturnAwait(clientName, baseMethod, typeArgument, requestUriArgument, "value");
             }
 
-            // Create a method
-            var methodDeclaration = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName("Task<" + returnType + ">"), name.EndsWith("Async") ? name : name + "Async")
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
-                .WithBody(SyntaxFactory.Block(syntax));
-
-            if (pathParameters != null)
-                foreach (var parameter in pathParameters)
-                {
-                    methodDeclaration = methodDeclaration.AddParameterListParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameter.Key)).WithType(SyntaxFactory.ParseTypeName(parameter.Value)));
-                }
-
-            _classDeclaration = _classDeclaration.AddMembers(methodDeclaration);
+            _classDeclaration = _classDeclaration.AddPublicAsyncTask(returnType, methodIdentifier, bodyStatement, pathParameters);
         }
 
         public string GenerateCode()

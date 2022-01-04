@@ -28,7 +28,7 @@ namespace RiotGames
         /// <summary>
         /// This will set the region to the one for the platform, which might not be closest to you. For the best performance on those endpoints, use the regional constructor.
         /// </summary>
-        public RiotGamesClient(string apiKey, PlatformRoute platform, ValPlatformRoute? valPlatform = null) : base(apiKey, RouteUtils.ToRegional(platform))
+        public RiotGamesClient(string apiKey, PlatformRoute platform, ValPlatformRoute? valPlatform = null) : base(apiKey, platform)
         {
             _apiKey = apiKey;
             _valPlatform= valPlatform;

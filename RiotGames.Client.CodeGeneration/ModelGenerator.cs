@@ -80,7 +80,10 @@ namespace RiotGames.Client.CodeGeneration
             {
                 // We need to add this namespace for the attribute.
                 if (!_usingSystemTextJsonSerialization)
+                {
+                    _usingSystemTextJsonSerialization = true;
                     _namespace = _namespace.AddSystemTextJsonSerializationUsing();
+                }
 
                 property = property.AddJsonPropertyNameAttribute(jsonProperty);
             }

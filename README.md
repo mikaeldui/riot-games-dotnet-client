@@ -11,7 +11,7 @@ It's easily extendible. You can leverage its type safety and inherit the clients
 
 ## Download
 
-You can find the latest releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet].
+You can find the latest releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).
 
 To install the package, type the following in the package manager console:
 

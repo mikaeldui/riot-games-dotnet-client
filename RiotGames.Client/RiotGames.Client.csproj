@@ -17,6 +17,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="riotgames.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="riotgames.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\README.md">
       <Pack>True</Pack>

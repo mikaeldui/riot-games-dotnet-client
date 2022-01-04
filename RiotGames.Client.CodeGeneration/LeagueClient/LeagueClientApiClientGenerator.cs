@@ -13,15 +13,19 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         {
             // TODO: Download certificate.
 
-            Console.WriteLine("Getting API specification from LCU");
+            var schema = await MingweiSamuel.MingweiSamuelSchemasClient.GetLcuOpenApiSchemaAsync();
 
-            var lockfile = LeagueOfLegends.LeagueClient.LeagueClientLockfile.FromProcess();
-            using (var client = new LeagueOfLegends.LeagueClient.LeagueClientHttpClient("riot", lockfile.Password, lockfile.Port))
-            {
-                var openApiSpec = await client.GetStringAsync("/swagger/v1/api-docs");
+            Debugger.Break();
 
-                Debugger.Break();
-            }
+            //Console.WriteLine("Getting API specification from LCU");
+
+            //var lockfile = LeagueOfLegends.LeagueClient.LeagueClientLockfile.FromProcess();
+            //using (var client = new LeagueOfLegends.LeagueClient.LeagueClientHttpClient("riot", lockfile.Password, lockfile.Port))
+            //{
+            //    var openApiSpec = await client.GetStringAsync("/swagger/v1/api-docs");
+
+            //    Debugger.Break();
+            //}
         }
     }
 }

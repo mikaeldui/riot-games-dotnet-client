@@ -21,7 +21,7 @@ namespace MingweiSamuel
 
     internal class LcuSchemaObject : OpenApiSchemaObject
     {
-        public bool? AdditionalProperties { get; set; }
+        public object? AdditionalProperties { get; set; }
     }
 
     internal class LcuParameterObject : OpenApiParameterObject

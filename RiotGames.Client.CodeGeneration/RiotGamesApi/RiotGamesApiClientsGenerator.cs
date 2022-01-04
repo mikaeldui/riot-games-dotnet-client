@@ -16,7 +16,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         {
             Console.WriteLine("Downloading the Open API specification");
 
-            var schema = await RiotApiSchemaClient.GetOpenApiSchemaAsync();
+            var schema = await MingweiSamuelSchemasClient.GetRiotOpenApiSchemaAsync();
 
             Console.WriteLine($"Downloaded spec file containing {schema.Paths?.Count} paths and {schema.Components?.Schemas?.Count} component schemas.");
 

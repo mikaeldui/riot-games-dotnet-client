@@ -46,6 +46,7 @@ namespace RiotGames.Client.CodeGeneration
                 string? typeArgument = httpMethod == HttpMethod.Get ? StatementHelper.TypeArgument(returnType.Remove("[]")) : StatementHelper.TypeArgument(requestType, returnType.Remove("[]"));
                 string? specificMethod = null;
 
+                // Current work-around, added some type specific HTTP methods.
                 if (returnType.EndsWith("[]"))
                     if (returnType.StartsWith("string"))
                     {

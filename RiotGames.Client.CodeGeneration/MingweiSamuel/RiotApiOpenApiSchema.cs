@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
 
-namespace MingweiSamuel
+namespace MingweiSamuel.RiotApi
 {
     [DebuggerDisplay("Paths = {Paths.Count} Components.Schema = {Components.Schemas.Count}")]
     internal class RiotApiOpenApiSchema : 

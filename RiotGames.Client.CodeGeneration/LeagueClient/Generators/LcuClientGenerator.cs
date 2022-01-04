@@ -8,18 +8,22 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 
-namespace RiotGames.Client.CodeGeneration.LeagueClient.Generators
+namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
     internal class LcuClientGenerator
     {
-        NamespaceDeclarationSyntax _namespace;
         ClassDeclarationSyntax _classDeclaration;
+        private bool _needRootClass = false;
 
-        public LcuClientGenerator()
+        public LcuClientGenerator(string? subClass = null)
         {
-            _namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
-
-            _classDeclaration = ClassHelper.CreatePublicPartialClass($"LeagueClient");
+            if (subClass == null)
+                _classDeclaration = _leagueClientClass();
+            else
+            {
+                _needRootClass = true;
+                _classDeclaration = ClassHelper.CreatePublicClass(subClass);
+            }
         }
 
         public void AddEndpoint(string methodIdentifier, bool isPlatform, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
@@ -69,13 +73,34 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient.Generators
             _classDeclaration = _classDeclaration.AddPublicAsyncTask(returnType, methodIdentifier, bodyStatement, pathParameters);
         }
 
+        private ClassDeclarationSyntax _leagueClientClass() => ClassHelper.CreatePublicPartialClass($"LeagueClient");
+
         public string GenerateCode()
         {
-            // Add the class to the namespace.
-            _namespace = _namespace.AddMembers(_classDeclaration);
+            var @namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+
+            if (!_needRootClass)
+                @namespace = @namespace.AddMembers(_classDeclaration);
+            else
+            {
+                var rootClass = _leagueClientClass();
+
+                rootClass.AddMembers(_classDeclaration);
+
+                FieldDeclarationSyntax aField = SyntaxFactory.FieldDeclaration(
+                    SyntaxFactory.VariableDeclaration(
+                        SyntaxFactory.ParseTypeName("String"),
+                        SyntaxFactory.SeparatedList(new[] { SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("_a")) })
+                    ))
+                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+
+                rootClass.AddMembers(SyntaxFactory.FieldDeclaration(SyntaxFactory.parse))
+
+                @namespace.AddMembers(rootClass);
+            }
 
             // Normalize and get code as string.
-            return _namespace
+            return @namespace
                 .NormalizeWhitespace()
                 .ToFullString();
         }

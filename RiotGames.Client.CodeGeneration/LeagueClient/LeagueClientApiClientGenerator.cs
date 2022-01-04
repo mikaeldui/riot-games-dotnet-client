@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RiotGames.Client.CodeGeneration.LeagueClient;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +14,18 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         {
             // TODO: Download certificate.
 
+            _console("League Client: Downloading the Open API specification.");
+
             var schema = await MingweiSamuel.MingweiSamuelSchemasClient.GetLcuOpenApiSchemaAsync();
+
+            _console($"League Client: Downloaded spec file containing {schema.Paths?.Count} paths and {schema.Components?.Schemas?.Count} component schemas.");
+
+            var groupedPaths = schema.Paths.GroupByModule();
+
+            foreach(var group in groupedPaths)
+            {
+                var lcuClientGenerator = new LcuClientGenerator();
+            }
 
             Debugger.Break();
 
@@ -27,5 +39,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             //    Debugger.Break();
             //}
         }
+
+        private static void _console(string message) => Console.WriteLine("League Client: " + message);
     }
 }

@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 namespace MingweiSamuel.Lcu
 {
     using LcuMethod = OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>;
-    using LcuComponentsObject = OpenApiComponentsObject<OpenApiComponentSchemaObject<LcuComponentPropertyObject>, LcuComponentPropertyObject>;
-    using LcuComponentSchema = OpenApiComponentSchemaObject<LcuComponentPropertyObject>;
+    using LcuComponentsObject = OpenApiComponentsObject<LcuComponentSchemaObject, LcuComponentPropertyObject>;
 
     internal class LcuApiOpenApiSchema : OpenApiSchema<
         OpenApiPathObject<LcuMethod, LcuMethod, LcuMethod, LcuParameterObject, LcuSchemaObject>,
         LcuMethod, LcuMethod, LcuMethod, LcuParameterObject, LcuSchemaObject, LcuComponentsObject,
-        LcuComponentSchema, LcuComponentPropertyObject>
+        LcuComponentSchemaObject, LcuComponentPropertyObject>
     {
     }
 
@@ -28,6 +27,11 @@ namespace MingweiSamuel.Lcu
     {
         public string? Type { get; set; }
         public string? Format { get; set; }
+    }
+
+    internal class LcuComponentSchemaObject : OpenApiComponentSchemaObject<LcuComponentPropertyObject>
+    {
+        public string[]? Enum { get; set; }
     }
 
     internal class LcuComponentPropertyObject : OpenApiComponentPropertyObject

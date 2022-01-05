@@ -92,5 +92,11 @@ namespace RiotGames.Client.CodeGeneration
                 source[replacement] = value;
             }
         }
+
+        public static string[] ToPascalCase(this string[] source) =>
+            source.Select(s => s.ToPascalCase()).ToArray();
+
+        public static string[] ToCamelCase(this string[] source) =>
+            source.Select(s => s.ToCamelCase()).ToArray();
     }
 }

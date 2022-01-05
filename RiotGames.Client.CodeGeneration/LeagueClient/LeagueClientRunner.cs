@@ -1,4 +1,5 @@
-﻿using RiotGames.Client.CodeGeneration.LeagueClient;
+﻿using MingweiSamuel.Lcu;
+using RiotGames.Client.CodeGeneration.LeagueClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,13 +21,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             _console($"League Client: Downloaded spec file containing {schema.Paths?.Count} paths and {schema.Components?.Schemas?.Count} component schemas.");
 
-            var groupedPaths = schema.Paths.GroupByModule();
+            _generateEndpoints(schema);
 
-            var generator = new LeagueClientEndpointsGenerator();
-
-            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
-            var code = generator.GenerateCode();
-            FileWriter.WriteLeagueClientFile(code, null);
+            _generateModels(schema);
 
             //Console.WriteLine("Getting API specification from LCU");
 
@@ -37,6 +34,24 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             //    Debugger.Break();
             //}
+        }
+        private static void _generateEndpoints(LcuApiOpenApiSchema schema)
+        {
+            var groupedPaths = schema.Paths.GroupByModule();
+
+            var generator = new LeagueClientEndpointsGenerator();
+            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
+            var code = generator.GenerateCode();
+            FileWriter.WriteLeagueClientFile(code, null);
+        }
+
+        private static void _generateModels(LcuApiOpenApiSchema schema)
+        {
+            // TODO: Maybe group them by module and put them in separate namespaces.
+
+            var generator = new LeagueClientModelsGenerator();
+            generator.AddDtos(schema.Components.Schemas);
+            FileWriter.WriteLeagueClientModelsFile(generator.GenerateCode());
         }
 
         private static void _console(string message) => Console.WriteLine("League Client: " + message);

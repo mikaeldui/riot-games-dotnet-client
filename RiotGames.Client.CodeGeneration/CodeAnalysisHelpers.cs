@@ -35,6 +35,14 @@ namespace RiotGames.Client.CodeGeneration
                 .AddModifiers(SF.Token(SyntaxKind.InternalKeyword));
     }
 
+    internal static class EnumHelper
+    {
+        public static EnumDeclarationSyntax CreatePublicEnum(string identifier, params string[] members) =>
+            SF.EnumDeclaration(SF.Identifier(identifier))
+                .AddModifiers(SF.Token(SyntaxKind.PublicKeyword))
+                .AddMembers(members.Select(m => SF.EnumMemberDeclaration(SF.Identifier(m))).ToArray());
+    }
+
     internal static class FieldHelper
     {
         public static FieldDeclarationSyntax CreatePrivateField(string type, string identifier) =>

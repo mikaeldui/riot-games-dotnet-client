@@ -22,8 +22,8 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string GetTypeName(this OpenApiComponentPropertyObject property)
         {
-            //if (property.Ref != null)
-            //    return GetTypeNameFromRef(property.Ref);
+            if (property.Ref != null)
+                return GetTypeNameFromRef(property.Ref);
 
             return GetTypeNameFromString(property.Format ?? property.Type);
         }
@@ -62,6 +62,7 @@ namespace RiotGames.Client.CodeGeneration
                 "int32" => "int",
                 "int64" => "long",
                 "boolean" => "bool",
+                "integer" => "int",
                 _ => typeName,
             };
         }

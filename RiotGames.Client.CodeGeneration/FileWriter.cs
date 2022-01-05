@@ -36,6 +36,13 @@ namespace RiotGames.Client.CodeGeneration
             File.WriteAllText(Path.Combine(folder, $"LeagueClient{suffix}.g.cs"), contents);
         }
 
+        public static void WriteLeagueClientModelsFile(string contents)
+        {
+            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+
+            File.WriteAllText(Path.Combine(folder, $"LeagueClientModels.g.cs"), contents);
+        }
+
         private static string GetAssemblyDirectory()
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);

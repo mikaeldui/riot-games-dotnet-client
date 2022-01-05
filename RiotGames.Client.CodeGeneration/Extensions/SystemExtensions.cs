@@ -61,6 +61,13 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string Remove(this string input, string toRemove) => input.Replace(toRemove, "");
 
+        public static string RemoveChars(this string input, params char[] toRemove)
+        {
+            foreach (var c in toRemove)
+                input = input.Replace(c.ToString(), "");
+            return input;
+        }
+
         public static bool IsLower(this char input) => input.ToString() == input.ToString().ToLower();
 
         public static bool IsScreaming(this string input) => input.All(c => c.ToString() == c.ToString().ToUpper());
@@ -68,9 +75,22 @@ namespace RiotGames.Client.CodeGeneration
         public static string EndWith(this string input, string end) => input.EndsWith(end) ? input : input + end;
     }
 
-    public static class ArrayExtensions
+    public static class IEnumerableExtensions
     {
         public static T[] Concat<T>(this T[] source, T[] secondArray) =>
             source.Concat(secondArray).ToArray();
+
+        public static void ReplaceKeys<TValue>(this Dictionary<string, TValue> source, IReadOnlyDictionary<string, string> replacements)
+        {
+            var needsReplacement = source.Keys.Where(k => replacements.ContainsKey(k)).ToArray();
+
+            foreach(var key in needsReplacement)
+            {
+                var replacement = replacements[key];
+                TValue value = source[key];
+                source.Remove(key);
+                source[replacement] = value;
+            }
+        }
     }
 }

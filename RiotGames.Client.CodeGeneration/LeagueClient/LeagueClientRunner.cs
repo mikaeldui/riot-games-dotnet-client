@@ -22,15 +22,11 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             var groupedPaths = schema.Paths.GroupByModule();
 
-            foreach(var group in groupedPaths)
-            {
-                var lcuClientGenerator = new LeagueClientGenerator(group.Key?.ToPascalCase());
-                lcuClientGenerator.AddPathsAsEndpoints(group);
-                var code = lcuClientGenerator.GenerateCode();
-                FileWriter.WriteLeagueClientFile(code, lcuClientGenerator.SubClass);
-                _console($"Generated client for {lcuClientGenerator.SubClass}.");
-            }
+            var generator = new LeagueClientGenerator();
 
+            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
+            var code = generator.GenerateCode();
+            FileWriter.WriteLeagueClientFile(code, null);
 
             //Console.WriteLine("Getting API specification from LCU");
 

@@ -14,11 +14,11 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
     internal static class LeagueClientHelper
     {
-        //static LeagueClientHelper() => Hacks.Activate();
+        static LeagueClientHelper() => LeagueClientHacks.Activate();
 
         public static string? GetNameFromPath(string path, bool? isPlural)
         {
-            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
                 //.Skip(1).ToArray(); // Skip "riot" or "lol"
             string firstPart;
             string secondPart;

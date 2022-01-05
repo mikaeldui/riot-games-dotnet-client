@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer.Inflections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
-    internal class LeagueClientHacks
+    internal static class LeagueClientHacks
     {
+        static LeagueClientHacks()
+        {
+            ReservedPathParameters = ReservedIdentifiers.ToDictionary(kvp => "{" + kvp.Key + "}", kvp => "{" + kvp.Value + "}");
+            Vocabularies.Default.AddUncountable("status");
+        }
+
+        public static void Activate() => Console.WriteLine("Hacks activated!");
+
         public static readonly IReadOnlyDictionary<string, string> ReservedIdentifiers = new Dictionary<string, string>
         {
             {"namespace", "@namespace" },
@@ -15,10 +24,5 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         };
 
         public static readonly IReadOnlyDictionary<string, string> ReservedPathParameters;
-
-        static LeagueClientHacks()
-        {
-            ReservedPathParameters = ReservedIdentifiers.ToDictionary(kvp => "{" + kvp.Key + "}", kvp => "{" + kvp.Value + "}");
-        }
     }
 }

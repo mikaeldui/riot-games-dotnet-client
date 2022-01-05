@@ -80,6 +80,16 @@ namespace RiotGames.Client.CodeGeneration
         public static T[] Concat<T>(this T[] source, T[] secondArray) =>
             source.Concat(secondArray).ToArray();
 
+        public static string[] Replace(this string[] source, string oldValue, string newValue)
+        {
+            var index = Array.IndexOf(source, oldValue);
+
+            if (index != -1)
+                source[index] = newValue;
+
+            return source;
+        }
+
         public static void ReplaceKeys<TValue>(this Dictionary<string, TValue> source, IReadOnlyDictionary<string, string> replacements)
         {
             var needsReplacement = source.Keys.Where(k => replacements.ContainsKey(k)).ToArray();

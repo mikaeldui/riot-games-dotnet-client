@@ -107,7 +107,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     return; //TODO: Implement response 204.
                 var responseSchema = response200.Content?.First().Value.Schema;
                 bool isArrayReponse = responseSchema?.Type == "array";
-                var nameFromPath = ClientHelper.GetNameFromPath(path.Key.RemoveChars('{', '}'), isArrayReponse);
+                var nameFromPath = ClientHelper.GetNameFromPath(path.Key, isArrayReponse);
 
                 Dictionary<string, string?>? pathParameters = null;
 

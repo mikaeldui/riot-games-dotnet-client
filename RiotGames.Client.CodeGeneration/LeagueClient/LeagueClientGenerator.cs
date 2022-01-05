@@ -118,7 +118,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                     pathParameters = poGet.Parameters
                         .GroupBy(p => p.Name).Select(g => g.First())
-                        .Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Type);
+                        .Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.GetTypeName());
                 }
 
                 AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);

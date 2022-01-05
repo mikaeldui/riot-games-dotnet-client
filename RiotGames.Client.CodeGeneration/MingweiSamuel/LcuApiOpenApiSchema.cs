@@ -27,6 +27,7 @@ namespace MingweiSamuel.Lcu
     internal class LcuParameterObject : OpenApiParameterObject
     {
         public string? Type { get; set; }
+        public string? Format { get; set; }
     }
 
     internal class LcuComponentPropertyObject : OpenApiComponentPropertyObject

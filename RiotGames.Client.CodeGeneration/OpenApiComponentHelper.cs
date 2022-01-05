@@ -40,9 +40,9 @@ namespace RiotGames.Client.CodeGeneration
                     case "array":
                         return GetTypeName(schema.Items) + "[]";
                     case "integer":
-                        return schema.Format ?? "int";
+                        return GetTypeNameFromString(schema.Format ?? "int");
                     case "number":
-                        return schema.Format ?? "decimal";
+                        return GetTypeNameFromString(schema.Format ?? "decimal");
                     case "string":
                         return schema.Type;
                     case "boolean":
@@ -52,8 +52,6 @@ namespace RiotGames.Client.CodeGeneration
                 }
 
             throw new Exception("Couldn't figure out the response type.");
-
-            return GetTypeNameFromString(schema.Format ?? schema.Type);
         }
 
         public static string GetTypeNameFromString(string typeName)

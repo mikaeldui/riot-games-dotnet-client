@@ -88,6 +88,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return ToName(firstPart) + ToName(secondPart) + ToName(lastPart);
         }
 
+
+        public static string GetTypeName(this LcuParameterObject parameter)
+        {
+            return OpenApiComponentHelper.GetTypeNameFromString(parameter.Format ?? parameter.Type);
+        }
+
         public static string? ToName(string name)
         {
             if (name == null)

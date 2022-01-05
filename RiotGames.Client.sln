@@ -14,18 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiotGames.Client.Tests", "RiotGames.Client.Tests\RiotGames.Client.Tests.csproj", "{E0C11E14-DC43-44AF-B49B-D05538C6B0CD}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RiotGames.Client.Shared", "RiotGames.Client.Shared\RiotGames.Client.Shared.shproj", "{4681C1C4-8FB7-4050-9FAC-15B6B0D416E9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4C24407B-B904-4F96-ACB7-E9B1AE2E461D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2C4DBE40-F7A3-4ACE-B752-841A5AFCD5CA}"
-EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		RiotGames.Client.Shared\RiotGames.Client.Shared.projitems*{4681c1c4-8fb7-4050-9fac-15b6b0d416e9}*SharedItemsImports = 13
-		RiotGames.Client.Shared\RiotGames.Client.Shared.projitems*{54b3aaed-ed09-4093-8287-62a249d9496b}*SharedItemsImports = 5
-		RiotGames.Client.Shared\RiotGames.Client.Shared.projitems*{f6a8c9c8-def9-4b19-90a5-7262f0962882}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -46,10 +35,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E0C11E14-DC43-44AF-B49B-D05538C6B0CD} = {4C24407B-B904-4F96-ACB7-E9B1AE2E461D}
-		{4681C1C4-8FB7-4050-9FAC-15B6B0D416E9} = {2C4DBE40-F7A3-4ACE-B752-841A5AFCD5CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4F8469C-F8B7-4FD3-A97F-A766D9AD9A05}

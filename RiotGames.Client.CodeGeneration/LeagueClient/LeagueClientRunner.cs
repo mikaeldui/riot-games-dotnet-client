@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
-    internal static class LeagueClientApiClientGenerator
+    internal static class LeagueClientRunner
     {
         public static async Task GenerateCodeAsync()
         {
@@ -24,10 +24,13 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             foreach(var group in groupedPaths)
             {
-                var lcuClientGenerator = new LcuClientGenerator();
+                var lcuClientGenerator = new LeagueClientGenerator(group.Key?.ToPascalCase());
+                lcuClientGenerator.AddPathsAsEndpoints(group);
+                var code = lcuClientGenerator.GenerateCode();
+                FileWriter.WriteLeagueClientFile(code, lcuClientGenerator.SubClass);
+                _console($"Generated client for {lcuClientGenerator.SubClass}.");
             }
 
-            Debugger.Break();
 
             //Console.WriteLine("Getting API specification from LCU");
 

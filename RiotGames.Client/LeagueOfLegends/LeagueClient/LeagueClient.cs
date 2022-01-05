@@ -13,7 +13,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     {
         //internal const string LEAGUECLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
         private const string LEAGUECLIENT_USERNAME = "riot";
-        private readonly LeagueClientHttpClient _client;
+        internal readonly LeagueClientHttpClient HttpClient;
 
         public LeagueClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
         {
@@ -21,9 +21,9 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
                 ? LeagueClientLockfile.FromProcess(processName)
                 : LeagueClientLockfile.FromPath(lockfilePath);
 
-            _client = new LeagueClientHttpClient(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+            HttpClient = new LeagueClientHttpClient(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
         }
 
-        public void Dispose() => _client.Dispose();
+        public void Dispose() => HttpClient.Dispose();
     }
 }

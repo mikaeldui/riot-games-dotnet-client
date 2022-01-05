@@ -1,4 +1,5 @@
 ﻿using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,16 +9,14 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    internal static class ModelHelper
+    internal static class RiotApiComponentHelper
     {
-        private static string _removeDtoSuffix(string dtoName) =>
-            dtoName.Remove("Dto").Remove("DTO");
-
         // RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject
 
         public static string GetTypeNameFromRef(string @ref)
         {
-            return Hacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
+            var riotApiRef = RiotApiHacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + (@ref?.Split('.')?.Last());
+            return OpenApiComponentHelper.GetTypeNameFromRef(riotApiRef);
         }
 
         public static string GetTypeName(this RiotApiSchemaObject schema)
@@ -30,7 +29,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 switch (schema.Type)
                 {
                     case "array":
-                        return _removeDtoSuffix(schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')) + "[]";
+                        return (schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')).RemoveDtoSuffix() + "[]";
                     case "integer":
                         if (schema.XType == null)
                             throw new Exception("Schema.XType is null for some reason.");
@@ -47,23 +46,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            
 
-            var name = ModelHelper._removeDtoSuffix(property.XType ?? property.Format ?? property.Type);
-
-            return name switch
-            {
-                "int32" => "int",
-                "int64" => "long",
-                "boolean" => "bool",
-                _ => name,
-            };
-        }
-
-        public static string GetTypeName(this OpenApiComponentPropertyObject property)
-        {
-            if (property.Ref != null)
-                return GetTypeNameFromRef(property.Ref);
-
-            var name = ModelHelper._removeDtoSuffix(property.Format ?? property.Type);
+            var name = (property.XType ?? property.Format ?? property.Type).RemoveDtoSuffix();
 
             return name switch
             {

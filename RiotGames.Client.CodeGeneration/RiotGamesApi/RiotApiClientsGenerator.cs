@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MingweiSamuel.RiotApi;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
+    using Path = KeyValuePair<string, RiotApiPathObject>;
+    using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
+    using ClientHelper = RiotApiClientsHelper;
+
     internal enum Client
     {
         RiotGames,
@@ -18,12 +24,12 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         Valorant
     }
 
-    internal class ClientGenerator
+    internal class RiotApiClientsGenerator
     {
         NamespaceDeclarationSyntax _namespace;
         ClassDeclarationSyntax _classDeclaration;
 
-        public ClientGenerator(Client client)
+        public RiotApiClientsGenerator(Client client)
         {
             // Ensure we don't get RiotGames.RiotGames.
             var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();
@@ -79,6 +85,40 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
             _classDeclaration = _classDeclaration.AddPublicAsyncTask(returnType, methodIdentifier, bodyStatement, pathParameters);
         }
+
+        public void AddPathAsEndpoints(Path path)
+        {
+            //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
+
+            var po = path.Value;
+            var poGet = po.Get;
+            if (poGet != null)
+            {
+                var responseSchema = poGet?.Responses?["200"]?.Content?.First().Value.Schema;
+                bool isArrayReponse = responseSchema?.Type == "array";
+                var nameFromPath = ClientHelper.GetNameFromPath(path.Key, isArrayReponse);
+                bool isPlatform = path.Value.XRouteEnum != "regional";
+
+                Dictionary<string, string?>? pathParameters = null;
+
+                if (poGet is { Parameters: not null, Parameters: { Length: > 0 } })
+                {
+                    if (!poGet.Parameters.All(p => p.In is "path" or "header" or "query"))
+                        Debugger.Break();
+
+                    pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema?.XType ?? p.Schema?.Type);
+                }
+
+                AddEndpoint("Get" + nameFromPath, isPlatform, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
+            }
+        }
+
+        public void AddPathsAsEndpoints(Paths paths)
+        {
+            foreach (var path in paths)
+                AddPathAsEndpoints(path);
+        }
+
 
         public string GenerateCode()
         {

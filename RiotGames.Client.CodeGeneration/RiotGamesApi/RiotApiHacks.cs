@@ -11,9 +11,9 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
     /// Contains hacks to make everything work a little better. 
     /// These probably needs to be updated regularly.
     /// </summary>
-    internal static class Hacks
+    internal static class RiotApiHacks
     {
-        static Hacks()
+        static RiotApiHacks()
         {
             Vocabularies.Default.AddUncountable("data");
             Vocabularies.Default.AddUncountable("me");

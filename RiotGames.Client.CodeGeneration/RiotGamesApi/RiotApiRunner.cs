@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using MingweiSamuel;
 using RiotGames.Client.CodeGeneration;
-using Schema = System.Collections.Generic.KeyValuePair<string, MingweiSamuel.RiotApiComponentSchemaObject>;
+using Schema = System.Collections.Generic.KeyValuePair<string, MingweiSamuel.RiotApi.RiotApiComponentSchemaObject>;
 
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    internal static class RiotGamesApiClientsGenerator
+    internal static class RiotApiRunner
     {
         public static async Task GenerateCodeAsync()
         {
@@ -28,31 +28,31 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 foreach (var group in pathsGrouping)
                 {
-                    ClientGenerator cg;
+                    RiotApiClientsGenerator cg;
                     switch (group.Key)
                     {
                         case "riot":
-                            cg = new ClientGenerator(Client.RiotGames);
+                            cg = new RiotApiClientsGenerator(Client.RiotGames);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.RiotGames, FileType.Client, cg.GenerateCode());
                             break;
                         case "lol":
-                            cg = new ClientGenerator(Client.LeagueOfLegends);
+                            cg = new RiotApiClientsGenerator(Client.LeagueOfLegends);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.LeagueOfLegends, FileType.Client, cg.GenerateCode());
                             break;
                         case "lor":
-                            cg = new ClientGenerator(Client.LegendsOfRuneterra);
+                            cg = new RiotApiClientsGenerator(Client.LegendsOfRuneterra);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.LegendsOfRuneterra, FileType.Client, cg.GenerateCode());
                             break;
                         case "tft":
-                            cg = new ClientGenerator(Client.TeamfightTactics);
+                            cg = new RiotApiClientsGenerator(Client.TeamfightTactics);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.TeamfightTactics, FileType.Client, cg.GenerateCode());
                             break;
                         case "val":
-                            cg = new ClientGenerator(Client.Valorant);
+                            cg = new RiotApiClientsGenerator(Client.Valorant);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.Valorant, FileType.Client, cg.GenerateCode());
                             break;
@@ -91,31 +91,31 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 foreach (var group in groupedSchemas)
                 {
-                    ModelGenerator dg;
+                    RiotApiModelGenerator dg;
                     switch (group.Key)
                     {
                         case "riot":
-                            dg = new ModelGenerator(Client.RiotGames);
+                            dg = new RiotApiModelGenerator(Client.RiotGames);
                             dg.AddDtos(group);
                             FileWriter.WriteFile(Client.RiotGames, FileType.Models, dg.GenerateCode());
                             break;
                         case "lol":
-                            dg = new ModelGenerator(Client.LeagueOfLegends);
+                            dg = new RiotApiModelGenerator(Client.LeagueOfLegends);
                             dg.AddDtos(group);
                             FileWriter.WriteFile(Client.LeagueOfLegends, FileType.Models, dg.GenerateCode());
                             break;
                         case "lor":
-                            dg = new ModelGenerator(Client.LegendsOfRuneterra);
+                            dg = new RiotApiModelGenerator(Client.LegendsOfRuneterra);
                             dg.AddDtos(group);
                             FileWriter.WriteFile(Client.LegendsOfRuneterra, FileType.Models, dg.GenerateCode());
                             break;
                         case "tft":
-                            dg = new ModelGenerator(Client.TeamfightTactics);
+                            dg = new RiotApiModelGenerator(Client.TeamfightTactics);
                             dg.AddDtos(group);
                             FileWriter.WriteFile(Client.TeamfightTactics, FileType.Models, dg.GenerateCode());
                             break;
                         case "val":
-                            dg = new ModelGenerator(Client.Valorant);
+                            dg = new RiotApiModelGenerator(Client.Valorant);
                             dg.AddDtos(group);
                             FileWriter.WriteFile(Client.Valorant, FileType.Models, dg.GenerateCode());
                             break;

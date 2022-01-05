@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Camille.Enums" Version="3.0.0-nightly-2021-12-30-6d67c5d9bd" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using MingweiSamuel.RiotApi;
+using MingweiSamuel.Lcu;
 
 namespace MingweiSamuel
 {

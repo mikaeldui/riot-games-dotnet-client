@@ -1,4 +1,5 @@
 ﻿using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
     using Schema = KeyValuePair<string, RiotApiComponentSchemaObject>;
     using Schemas = Dictionary<string, RiotApiComponentSchemaObject>;
 
-    internal static class LinqQueries
+    internal static class RiotApiLinqQueries
     {
         public static Paths WhereReferencesSchema(this Paths paths, Schema schema) =>
             paths.Where(p =>

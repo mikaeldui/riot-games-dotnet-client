@@ -6,18 +6,16 @@ using System.Text;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
-    public class LeagueClientHttpClient : HttpClient
+    internal class LeagueClientHttpClient : RiotGamesHttpClient<LeagueClientObject>
     {
-        public LeagueClientHttpClient(string username, string password, ushort port) : base(new LeagueClientHttpClientHandler())
+        internal LeagueClientHttpClient(string username, string password, ushort port) : base(new LeagueClientHttpClientHandler())
         {
-            DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Basic", 
-                    Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}")));
-            BaseAddress = new UriBuilder("https", "127.0.0.1", port).Uri;
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}")));
+            HttpClient.BaseAddress = new UriBuilder("https", "127.0.0.1", port).Uri;
         }
     }
 
-    public class LeagueClientHttpClientHandler : HttpClientHandler
+    internal class LeagueClientHttpClientHandler : HttpClientHandler
     {
         public LeagueClientHttpClientHandler()
         {

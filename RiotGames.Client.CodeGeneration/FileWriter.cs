@@ -25,6 +25,17 @@ namespace RiotGames.Client.CodeGeneration
             File.WriteAllText(Path.Combine(folder, $"{client}{fileType}.g.cs"), contents);
         }
 
+        public static void WriteLeagueClientFile(string contents, string? subClass = null)
+        {
+            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            
+            string? suffix = null;
+            if (subClass != null)
+                suffix = "." + subClass;
+
+            File.WriteAllText(Path.Combine(folder, $"LeagueClient{suffix}.g.cs"), contents);
+        }
+
         private static string GetAssemblyDirectory()
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);

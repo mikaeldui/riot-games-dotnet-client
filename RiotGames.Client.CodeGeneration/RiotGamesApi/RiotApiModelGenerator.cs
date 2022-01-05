@@ -3,18 +3,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     using Schema = KeyValuePair<string, RiotApiComponentSchemaObject>;
 
-    internal class ModelGenerator
+    internal class RiotApiModelGenerator
     {
         NamespaceDeclarationSyntax _namespace;
         private Client _client;
         private bool _usingSystemTextJsonSerialization = false;
 
-        public ModelGenerator(Client client)
+        public RiotApiModelGenerator(Client client)
         {
             _client = client;
 
@@ -27,7 +28,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
-            var className = ModelHelper.GetTypeNameFromRef(schema.Key);
+            var className = RiotApiComponentHelper.GetTypeNameFromRef(schema.Key);
             var classDeclaration = ClassHelper.CreatePublicClassWithBaseType(className, $"{_client}Object");
 
             var properties = schemaObject.Properties.Select(kv =>

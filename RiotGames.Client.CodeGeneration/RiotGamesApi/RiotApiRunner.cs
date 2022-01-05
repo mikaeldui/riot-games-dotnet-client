@@ -28,31 +28,31 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 foreach (var group in pathsGrouping)
                 {
-                    RiotApiPathsGenerator cg;
+                    RiotApiEndpointsGenerator cg;
                     switch (group.Key)
                     {
                         case "riot":
-                            cg = new RiotApiPathsGenerator(Client.RiotGames);
+                            cg = new RiotApiEndpointsGenerator(Client.RiotGames);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.RiotGames, FileType.Client, cg.GenerateCode());
                             break;
                         case "lol":
-                            cg = new RiotApiPathsGenerator(Client.LeagueOfLegends);
+                            cg = new RiotApiEndpointsGenerator(Client.LeagueOfLegends);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.LeagueOfLegends, FileType.Client, cg.GenerateCode());
                             break;
                         case "lor":
-                            cg = new RiotApiPathsGenerator(Client.LegendsOfRuneterra);
+                            cg = new RiotApiEndpointsGenerator(Client.LegendsOfRuneterra);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.LegendsOfRuneterra, FileType.Client, cg.GenerateCode());
                             break;
                         case "tft":
-                            cg = new RiotApiPathsGenerator(Client.TeamfightTactics);
+                            cg = new RiotApiEndpointsGenerator(Client.TeamfightTactics);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.TeamfightTactics, FileType.Client, cg.GenerateCode());
                             break;
                         case "val":
-                            cg = new RiotApiPathsGenerator(Client.Valorant);
+                            cg = new RiotApiEndpointsGenerator(Client.Valorant);
                             cg.AddPathsAsEndpoints(group);
                             FileWriter.WriteFile(Client.Valorant, FileType.Client, cg.GenerateCode());
                             break;

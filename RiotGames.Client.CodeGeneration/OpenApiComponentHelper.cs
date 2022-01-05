@@ -13,11 +13,11 @@ namespace RiotGames.Client.CodeGeneration
         public static string RemoveDtoSuffix(this string dtoName) =>
             dtoName.Remove("Dto").Remove("DTO");
 
-        public static string GetTypeNameFromRef(string @ref)
+        public static string GetTypeNameFromRef(string @ref, bool removeDtoSuffix = true)
         {
             //return RiotApiHacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + (@ref?.Split('.')?.Last()).RemoveDtoSuffix();
             @ref = @ref.SplitAndRemoveEmptyEntries('/').Last();
-            return @ref.RemoveDtoSuffix();
+            return removeDtoSuffix ? @ref.RemoveDtoSuffix() : @ref;
         }
 
         public static string GetTypeName(this OpenApiComponentPropertyObject property)

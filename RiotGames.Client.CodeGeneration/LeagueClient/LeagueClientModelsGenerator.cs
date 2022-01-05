@@ -25,22 +25,19 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             _namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
         }
 
-        public void AddDto(Schema schema)
+        private void _addDto(string identifier, LcuComponentSchemaObject schema)
         {
-            var schemaObject = schema.Value;
-            var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key).ToPascalCase();
-
             MemberDeclarationSyntax member;
 
-            if (schemaObject.Enum != null)
+            if (schema.Enum != null)
             {
-                member = EnumHelper.CreatePublicEnum(identifier, schemaObject.Enum.ToPascalCase());
+                member = EnumHelper.CreatePublicEnum(identifier, schema.Enum.ToPascalCase());
             }
             else
             {
                 var @class = ClassHelper.CreatePublicClassWithBaseType(identifier, $"LeagueClientObject");
 
-                var properties = schemaObject.Properties.Select(kv =>
+                var properties = schema.Properties.Select(kv =>
                 {
                     string propertyIdentifier = kv.Key.ToPascalCase();
                     if (propertyIdentifier == identifier)
@@ -75,8 +72,17 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public void AddDtos(IEnumerable<Schema> schemas)
         {
+            string[] neededDtoSuffixes = schemas.Select(s => OpenApiComponentHelper.GetTypeNameFromRef(s.Key).ToPascalCase())
+                .GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToArray();
+
             foreach (var schema in schemas)
-                AddDto(schema);
+            {
+                var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key).ToPascalCase();
+                if (neededDtoSuffixes.Contains(identifier))
+                    identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false).ToPascalCase();
+
+                _addDto(identifier, schema.Value);
+            }
         }
 
         public string GenerateCode()

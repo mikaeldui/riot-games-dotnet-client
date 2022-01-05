@@ -16,7 +16,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     using Paths = IEnumerable<KeyValuePair<string, OpenApiPathObject<OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, LcuParameterObject, LcuSchemaObject>>>;
     using ClientHelper = LeagueClientHelper;
 
-    internal class LeagueClientGenerator
+    internal class LeagueClientPathsGenerator
     {
         protected const string LEAGUECLIENT_CLASS_IDENTIFIER = "LeagueClient";
         protected string HttpClientIdentifier = "HttpClient";
@@ -27,9 +27,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         private List<MemberDeclarationSyntax[]> _moduleProperties = new List<MemberDeclarationSyntax[]>();
         private List<ClassDeclarationSyntax> _moduleClasses = new List<ClassDeclarationSyntax>();
 
-        public LeagueClientGenerator() : this(LEAGUECLIENT_CLASS_IDENTIFIER) { }
+        public LeagueClientPathsGenerator() : this(LEAGUECLIENT_CLASS_IDENTIFIER) { }
 
-        private LeagueClientGenerator(string className, bool partialClass = true)
+        private LeagueClientPathsGenerator(string className, bool partialClass = true)
         {
             ClassName = className;
             if (partialClass)
@@ -163,7 +163,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 .ToFullString();
         }
 
-        internal class LeagueClientModuleGenerator : LeagueClientGenerator
+        internal class LeagueClientModuleGenerator : LeagueClientPathsGenerator
         {
             public readonly string ModuleName;
 

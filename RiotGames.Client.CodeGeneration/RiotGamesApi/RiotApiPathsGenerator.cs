@@ -24,12 +24,12 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         Valorant
     }
 
-    internal class RiotApiClientsGenerator
+    internal class RiotApiPathsGenerator
     {
         NamespaceDeclarationSyntax _namespace;
         ClassDeclarationSyntax _classDeclaration;
 
-        public RiotApiClientsGenerator(Client client)
+        public RiotApiPathsGenerator(Client client)
         {
             // Ensure we don't get RiotGames.RiotGames.
             var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();

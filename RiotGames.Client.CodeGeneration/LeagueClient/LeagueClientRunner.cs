@@ -22,7 +22,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             var groupedPaths = schema.Paths.GroupByModule();
 
-            var generator = new LeagueClientGenerator();
+            var generator = new LeagueClientPathsGenerator();
 
             generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
             var code = generator.GenerateCode();

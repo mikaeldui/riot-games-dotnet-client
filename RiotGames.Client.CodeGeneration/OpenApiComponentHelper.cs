@@ -17,7 +17,7 @@ namespace RiotGames.Client.CodeGeneration
         {
             //return RiotApiHacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + (@ref?.Split('.')?.Last()).RemoveDtoSuffix();
             @ref = @ref.SplitAndRemoveEmptyEntries('/').Last();
-            return removeDtoSuffix ? @ref.RemoveDtoSuffix() : @ref;
+            return (removeDtoSuffix ? @ref.RemoveDtoSuffix() : @ref).ToPascalCase();
         }
 
         public static string GetTypeName(this OpenApiComponentPropertyObject property)

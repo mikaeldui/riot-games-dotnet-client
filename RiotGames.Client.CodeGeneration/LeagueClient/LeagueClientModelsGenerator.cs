@@ -72,14 +72,14 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public void AddDtos(IEnumerable<Schema> schemas)
         {
-            string[] neededDtoSuffixes = schemas.Select(s => OpenApiComponentHelper.GetTypeNameFromRef(s.Key).ToPascalCase())
+            string[] neededDtoSuffixes = schemas.Select(s => OpenApiComponentHelper.GetTypeNameFromRef(s.Key))
                 .GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToArray();
 
             foreach (var schema in schemas)
             {
-                var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key).ToPascalCase();
+                var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key);
                 if (neededDtoSuffixes.Contains(identifier))
-                    identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false).ToPascalCase();
+                    identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false);
 
                 _addDto(identifier, schema.Value);
             }

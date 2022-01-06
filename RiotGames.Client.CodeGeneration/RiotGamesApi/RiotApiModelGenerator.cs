@@ -3,18 +3,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    using Schema = KeyValuePair<string, RiotApiOpenApiSchema.ComponentsObject.SchemaObject>;
+    using Schema = KeyValuePair<string, RiotApiComponentSchemaObject>;
 
-    internal class ModelGenerator
+    internal class RiotApiModelGenerator
     {
         NamespaceDeclarationSyntax _namespace;
         private Client _client;
         private bool _usingSystemTextJsonSerialization = false;
 
-        public ModelGenerator(Client client)
+        public RiotApiModelGenerator(Client client)
         {
             _client = client;
 
@@ -27,7 +28,7 @@ namespace RiotGames.Client.CodeGeneration
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
-            var className = ModelHelper.GetTypeNameFromRef(schema.Key);
+            var className = RiotApiModelsHelper.GetTypeNameFromRef(schema.Key);
             var classDeclaration = ClassHelper.CreatePublicClassWithBaseType(className, $"{_client}Object");
 
             var properties = schemaObject.Properties.Select(kv =>
@@ -42,12 +43,7 @@ namespace RiotGames.Client.CodeGeneration
                     identifier = "X" + identifier;
                 }
 
-                string typeName;
-
-                if (kv.Value.Type == "array" || kv.Value.XType == "array")
-                    typeName = kv.Value.Items.GetTypeName() + "[]";
-                else
-                    typeName = kv.Value.GetTypeName();
+                string typeName = kv.Value.GetTypeName();
 
                 typeName += "?"; // Make nullable
 

@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     /// <summary>
     /// Contains hacks to make everything work a little better. 
     /// These probably needs to be updated regularly.
     /// </summary>
-    internal static class Hacks
+    internal static class RiotApiHacks
     {
-        static Hacks()
+        static RiotApiHacks()
         {
             Vocabularies.Default.AddUncountable("data");
             Vocabularies.Default.AddUncountable("me");

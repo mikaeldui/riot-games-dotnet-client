@@ -1,27 +1,27 @@
 ﻿using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MingweiSamuel.RiotApiOpenApiSchema.ComponentsObject;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    internal static class ModelHelper
+    internal static class RiotApiModelsHelper
     {
-        private static string _removeDtoSuffix(string dtoName) =>
-            dtoName.Remove("Dto").Remove("DTO");
-
         // RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject
 
         public static string GetTypeNameFromRef(string @ref)
         {
-            return Hacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + _removeDtoSuffix(@ref?.Split('.')?.Last());
+            @ref = RiotApiHacks.EndpointsWithDuplicateSchemas
+                .FirstOrDefault(kvp => @ref.Contains(kvp.Key))
+                .Value + @ref?.Split('.')?.Last();
+            return OpenApiComponentHelper.GetTypeNameFromRef(@ref);
         }
 
-        public static string GetTypeName(this RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject schema)
+        public static string GetTypeName(this RiotApiSchemaObject schema)
         {
             if (schema.Ref != null)
                 return GetTypeNameFromRef(schema.Ref);
@@ -31,7 +31,7 @@ namespace RiotGames.Client.CodeGeneration
                 switch (schema.Type)
                 {
                     case "array":
-                        return _removeDtoSuffix(schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')) + "[]";
+                        return (schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')).RemoveDtoSuffix() + "[]";
                     case "integer":
                         if (schema.XType == null)
                             throw new Exception("Schema.XType is null for some reason.");
@@ -43,12 +43,15 @@ namespace RiotGames.Client.CodeGeneration
             throw new Exception("Couldn't figure out the response type.");
         }
 
-        public static string GetTypeName(this SchemaObject.PropertyObject property)
+        public static string GetTypeName(this OpenApiComponentPropertyObject property)
         {
+            if (property.Type == "array" || (property as RiotApiComponentPropertyObject)?.XType == "array")
+                return GetTypeName(property.Items) + "[]";
+
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            
 
-            var name = ModelHelper._removeDtoSuffix(property.XType ?? property.Format ?? property.Type);
+            var name = ((property as RiotApiComponentPropertyObject)?.XType ?? property.Format ?? property.Type).RemoveDtoSuffix();
 
             return name switch
             {
@@ -57,6 +60,6 @@ namespace RiotGames.Client.CodeGeneration
                 "boolean" => "bool",
                 _ => name,
             };
-        }    
+        }
     }
 }

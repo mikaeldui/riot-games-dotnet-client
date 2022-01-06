@@ -6,50 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Humanizer;
 using MingweiSamuel;
+using MingweiSamuel.RiotApi;
 
-namespace RiotGames.Client.CodeGeneration
+namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    using Path = KeyValuePair<string, RiotApiOpenApiSchema.PathObject>;
-    using Paths = IEnumerable<KeyValuePair<string, RiotApiOpenApiSchema.PathObject>>;
+    using Path = KeyValuePair<string, RiotApiPathObject>;
+    using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
 
-    internal static class ClientHelper
+    internal static class RiotApiEndpointsHelper
     {
-        static ClientHelper() => Hacks.Activate();
+        static RiotApiEndpointsHelper() => RiotApiHacks.Activate();
 
-        public static void AddPathAsEndpoints(this ClientGenerator cg, Path path)
-        {
-            //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
-
-            var po = path.Value;
-            var poGet = po.Get;
-            if (poGet != null)
-            {
-                var responseSchema = poGet?.Responses?["200"]?.Content?.First().Value.Schema;
-                bool isArrayReponse = responseSchema?.Type == "array";
-                var nameFromPath = _getNameFromPath(path.Key, isArrayReponse);
-                bool isPlatform = path.Value.XRouteEnum != "regional";
-
-                Dictionary<string, string?>? pathParameters = null;
-
-                if (poGet is { Parameters: not null, Parameters: { Length: > 0 } })
-                {
-                    if (!poGet.Parameters.All(p => p.In is "path" or "header" or "query"))
-                        Debugger.Break();
-
-                    pathParameters = poGet.Parameters.Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.Schema?.XType ?? p.Schema?.Type);
-                }
-
-                cg.AddEndpoint("Get" + nameFromPath, isPlatform, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
-            }
-        }
-
-        public static void AddPathsAsEndpoints(this ClientGenerator cg, Paths paths)
-        {
-            foreach (var path in paths)
-                cg.AddPathAsEndpoints(path);
-        }
-
-        private static string? _getNameFromPath(string path, bool? isPlural)
+        public static string? GetNameFromPath(string path, bool? isPlural)
         {
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries)
                 .Skip(1).ToArray(); // Skip "riot" or "lol"
@@ -67,7 +35,7 @@ namespace RiotGames.Client.CodeGeneration
             }
 
             // Make sure the secondPart is kebabed.
-            secondPart = secondPart.Replace(Hacks.EndpointWordCompilations);
+            secondPart = secondPart.Replace(RiotApiHacks.EndpointWordCompilations);
 
             // Check if we just need the first part
             if (lastPart == null)
@@ -84,9 +52,9 @@ namespace RiotGames.Client.CodeGeneration
                     }
 
                     if (firstPart == "summoner" && parts.Length > 3 && parts[3].StartsWith("by-"))
-                        return _toName(firstPart) + _toName(parts[3]);
+                        return ToName(firstPart) + ToName(parts[3]);
 
-                    return _toName(String.Join('-', secondParts));
+                    return ToName(String.Join('-', secondParts));
                 }
             }
 
@@ -115,17 +83,17 @@ namespace RiotGames.Client.CodeGeneration
             if (firstPart == secondPart || firstPart == secondPart.Singularize())
             {
                 if (lastPart != null)
-                    return _toName(firstPart) + _toName(lastPart);
+                    return ToName(firstPart) + ToName(lastPart);
             }
 
-            return _toName(firstPart) + _toName(secondPart) + _toName(lastPart);                
+            return ToName(firstPart) + ToName(secondPart) + ToName(lastPart);                
         }
 
-        private static string? _toName(string name)
+        public static string? ToName(string name)
         {
             if (name == null)
                 return null;
-            return name.Replace(Hacks.EndpointWordCompilations).ToPascalCase();
+            return name.Replace(RiotApiHacks.EndpointWordCompilations).ToPascalCase();
         }
 
         public static string? GetGame(this Path path) =>

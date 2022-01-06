@@ -43,6 +43,15 @@ namespace RiotGames.Client.CodeGeneration
                 .AddMembers(members.Select(m => SF.EnumMemberDeclaration(SF.Identifier(m))).ToArray());
     }
 
+    internal static class AttributeHelper
+    {
+        public static AttributeSyntax CreateAttribute(string identifier) =>
+            SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(identifier));
+
+        public static AttributeSyntax CreateAttribute(string identifier, string stringArgument) =>
+            CreateAttribute(identifier).WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($"(\"{stringArgument}\")"));
+    }
+
     internal static class FieldHelper
     {
         public static FieldDeclarationSyntax CreatePrivateField(string type, string identifier) =>

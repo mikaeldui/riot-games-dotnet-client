@@ -9,7 +9,7 @@ namespace RiotGames
     {
         private static readonly string? VERSION = typeof(RiotGamesHttpClient<>).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 
-        protected HttpClient HttpClient;
+        internal HttpClient HttpClient;
 
         internal protected RiotGamesHttpClient()
         {

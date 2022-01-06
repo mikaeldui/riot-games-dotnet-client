@@ -31,7 +31,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             if (schema.Enum != null)
             {
-                member = EnumHelper.CreatePublicEnum(identifier, schema.Enum.ToPascalCase());
+                member = EnumHelper.CreatePublicEnum(identifier, schema.Enum.ToPascalCase())
+                    .AddJsonStringEnumAttribute();
             }
             else
             {

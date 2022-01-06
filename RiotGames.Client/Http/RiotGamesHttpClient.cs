@@ -51,8 +51,11 @@ namespace RiotGames
             if (typeof(T) == typeof(int[]))
                 return (T)(object)await HttpClient.GetFromJsonAsync<int[]>(requestUri);
 
-            if (typeof(T) == typeof(dynamic))
+            if (typeof(T) == typeof(ExpandoObject))
                 return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri);
+
+            if (typeof(T) == typeof(ExpandoObject[]))
+                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject[]>(requestUri);
 
             throw new NotImplementedException("This system type hasn't been implemented in GetSystemTypeAsync<T>.");
         }

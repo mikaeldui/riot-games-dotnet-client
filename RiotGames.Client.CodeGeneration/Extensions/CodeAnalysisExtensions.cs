@@ -23,7 +23,13 @@ namespace RiotGames.Client.CodeGeneration
                         SyntaxFactory.Attribute(SyntaxFactory.IdentifierName("JsonPropertyName"))
                         .WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($"(\"{name}\")")))));
 
+        public static NamespaceDeclarationSyntax AddUsing(this NamespaceDeclarationSyntax @namespace, string usingNamespace) =>
+            @namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(usingNamespace)));
+
         public static NamespaceDeclarationSyntax AddSystemTextJsonSerializationUsing(this NamespaceDeclarationSyntax @namespace) =>
-            @namespace.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Text.Json.Serialization")));
+            @namespace.AddUsing("System.Text.Json.Serialization");
+
+        public static NamespaceDeclarationSyntax AddSystemDynamicUsing(this NamespaceDeclarationSyntax @namespace) =>
+            @namespace.AddUsing("System.Dynamic");
     }
 }

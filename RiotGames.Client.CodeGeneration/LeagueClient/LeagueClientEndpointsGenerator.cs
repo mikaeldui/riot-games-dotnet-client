@@ -24,8 +24,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         public readonly string ClassName;
         protected ClassDeclarationSyntax ClassDeclaration;
 
-        private List<MemberDeclarationSyntax[]> _moduleProperties = new List<MemberDeclarationSyntax[]>();
-        private List<ClassDeclarationSyntax> _moduleClasses = new List<ClassDeclarationSyntax>();
+        private List<MemberDeclarationSyntax[]> _moduleProperties = new();
+        private List<ClassDeclarationSyntax> _moduleClasses = new();
 
         public LeagueClientEndpointsGenerator() : this(LEAGUECLIENT_CLASS_IDENTIFIER) { }
 
@@ -55,16 +55,22 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                 // Current work-around, added some type specific HTTP methods.
                 if (returnType.EndsWith("[]"))
-                    if (returnType.StartsWith("string") || returnType.StartsWith("dynamic") || returnType.StartsWith("int"))
+                    if (returnType.StartsWith("string") || returnType.StartsWith("dynamic") || returnType.StartsWith("int") || returnType.StartsWith("long"))
                     {
                         specificMethod = "SystemType";
-                        typeArgument = StatementHelper.TypeArgument(returnType);
+                        if (returnType.StartsWith("dynamic"))
+                            typeArgument = StatementHelper.TypeArgument("ExpandoObject[]");
+                        else
+                            typeArgument = StatementHelper.TypeArgument(returnType);
                     }
                     else
                         specificMethod = "Array";
                 else if (returnType is "int" or "string" or "bool" or "dynamic" or "long" or "double")
                 {
                     specificMethod = "SystemType";
+
+                    if (returnType == "dynamic")
+                        typeArgument = StatementHelper.TypeArgument("ExpandoObject");
                 }
 
                 string baseMethod = httpMethod.ToString().ToPascalCase() + specificMethod + "Async";
@@ -150,6 +156,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             ClassDeclaration = ClassDeclaration.AddMembers(nestedMembers);
 
             var @namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+            @namespace = @namespace.AddSystemDynamicUsing();
 
             @namespace = @namespace.AddMembers(ClassDeclaration);
 

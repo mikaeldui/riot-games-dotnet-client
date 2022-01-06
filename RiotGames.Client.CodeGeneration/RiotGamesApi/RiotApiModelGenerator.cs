@@ -43,12 +43,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     identifier = "X" + identifier;
                 }
 
-                string typeName;
-
-                if (kv.Value.Type == "array" || kv.Value.XType == "array")
-                    typeName = kv.Value.Items.GetTypeName() + "[]";
-                else
-                    typeName = kv.Value.GetTypeName();
+                string typeName = kv.Value.GetTypeName();
 
                 typeName += "?"; // Make nullable
 

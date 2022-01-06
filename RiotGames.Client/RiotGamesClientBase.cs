@@ -21,18 +21,18 @@ namespace RiotGames
         internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
             _region = region;
-            _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, region);
+            _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
         }
 
         internal RiotGamesClientBase(string apiKey, PlatformRoute platform, bool createRegionalClient = true)
         {
             _platform = platform;
-            _platformClient = new RiotGamesHttpClient<TObjectBase>(apiKey, platform);
+            _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
 
             if (createRegionalClient)
             {
                 _region = RouteUtils.ToRegional(platform);
-                _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
+                _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
             }
         }
 

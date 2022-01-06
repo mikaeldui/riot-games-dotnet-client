@@ -15,8 +15,10 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
         public static string GetTypeNameFromRef(string @ref)
         {
-            var riotApiRef = RiotApiHacks.EndpointsWithDuplicateSchemas.FirstOrDefault(kvp => @ref.Contains(kvp.Key)).Value + (@ref?.Split('.')?.Last());
-            return OpenApiComponentHelper.GetTypeNameFromRef(riotApiRef);
+            @ref = RiotApiHacks.EndpointsWithDuplicateSchemas
+                .FirstOrDefault(kvp => @ref.Contains(kvp.Key))
+                .Value + @ref?.Split('.')?.Last();
+            return OpenApiComponentHelper.GetTypeNameFromRef(@ref);
         }
 
         public static string GetTypeName(this RiotApiSchemaObject schema)
@@ -41,12 +43,15 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             throw new Exception("Couldn't figure out the response type.");
         }
 
-        public static string GetTypeName(this RiotApiComponentPropertyObject property)
+        public static string GetTypeName(this OpenApiComponentPropertyObject property)
         {
+            if (property.Type == "array" || (property as RiotApiComponentPropertyObject)?.XType == "array")
+                return GetTypeName(property.Items) + "[]";
+
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            
 
-            var name = (property.XType ?? property.Format ?? property.Type).RemoveDtoSuffix();
+            var name = ((property as RiotApiComponentPropertyObject)?.XType ?? property.Format ?? property.Type).RemoveDtoSuffix();
 
             return name switch
             {

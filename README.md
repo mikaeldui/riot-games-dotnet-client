@@ -97,7 +97,7 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1
 ```
 
 ### Getting the current League of Legends champ select
-You can use the `LeagueClient` to communicate directly with the League Client (aka LCU).
+You can use the [`LeagueClient`](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/RiotGames.Client/LeagueOfLegends/LeagueClient/LeagueClient.cs) to communicate directly with the League Client (aka LCU).
 
 ```C#
 using RiotGames.LeagueOfLegends.LeagueClient;

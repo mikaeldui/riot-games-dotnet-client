@@ -61,7 +61,11 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (parts.Length <= 2)
                     isPlural = null;
                 else if (!parts.Last().StartsWith('{'))
+                {
                     lastPart = parts.Last();
+                    if (LeagueClientHacks.EndpointTypeSuffixes.Contains(lastPart))
+                        lastPart = parts.SkipLast(1).Last() + "-" + lastPart;
+                }
             }
 
             // Make sure the secondPart is kebabed.

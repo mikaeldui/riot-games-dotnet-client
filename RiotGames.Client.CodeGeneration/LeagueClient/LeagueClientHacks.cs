@@ -62,5 +62,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             {"openapi.json", "openapi-json" },
             {"riotclient", "riot-client" }
         };
+
+        public static readonly string[] EndpointTypeSuffixes = new string[]
+        {
+            "as-string"
+        };
     }
 }

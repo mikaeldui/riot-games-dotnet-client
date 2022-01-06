@@ -33,10 +33,16 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             if (parts.Length == 1)
             {
-                return ToName(parts[0]);
-                //if (isPlural != null && isPlural == true)
-                //else
-                //    return ToName(parts[0].Singularize());
+                var name = ToName(parts[0]);
+                if (isPlural != null)
+                {
+                    if (isPlural == true)
+                        return name.Pluralize();
+                    else
+                        return name.Singularize();
+                }
+
+                return name;
             }
 
 

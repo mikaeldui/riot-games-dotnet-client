@@ -13,7 +13,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     using Path = KeyValuePair<string, RiotApiPathObject>;
     using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
-    using ClientHelper = RiotApiClientsHelper;
+    using ClientHelper = RiotApiEndpointsHelper;
 
     internal enum Client
     {

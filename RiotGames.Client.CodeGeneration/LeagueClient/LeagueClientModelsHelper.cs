@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
-    internal static class LeagueClientComponentHelper
+    internal static class LeagueClientModelsHelper
     {
         //public static string GetTypeName(this LcuSchemaObject schema) =>
         //    OpenApiComponentHelper.GetTypeNameFromString(schema.Format ?? schema.Type);

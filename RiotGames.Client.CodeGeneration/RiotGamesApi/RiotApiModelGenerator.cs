@@ -28,7 +28,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
-            var className = RiotApiComponentHelper.GetTypeNameFromRef(schema.Key);
+            var className = RiotApiModelsHelper.GetTypeNameFromRef(schema.Key);
             var classDeclaration = ClassHelper.CreatePublicClassWithBaseType(className, $"{_client}Object");
 
             var properties = schemaObject.Properties.Select(kv =>

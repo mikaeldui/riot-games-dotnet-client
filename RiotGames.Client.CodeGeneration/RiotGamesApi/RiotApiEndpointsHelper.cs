@@ -13,9 +13,9 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
     using Path = KeyValuePair<string, RiotApiPathObject>;
     using Paths = IEnumerable<KeyValuePair<string, RiotApiPathObject>>;
 
-    internal static class RiotApiClientsHelper
+    internal static class RiotApiEndpointsHelper
     {
-        static RiotApiClientsHelper() => RiotApiHacks.Activate();
+        static RiotApiEndpointsHelper() => RiotApiHacks.Activate();
 
         public static string? GetNameFromPath(string path, bool? isPlural)
         {

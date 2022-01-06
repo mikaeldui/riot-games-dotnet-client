@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
-    internal static class RiotApiComponentHelper
+    internal static class RiotApiModelsHelper
     {
         // RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject
 

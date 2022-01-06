@@ -11,7 +11,7 @@ namespace RiotGames.Client.Tests.LeagueOfLegendsTests.LeagueClientTests
     [TestClass]
     public class LeagueClientTests
     {
-#if DEBUG
+#if false
         [TestMethod]
         public async Task GetChampSelectSummoner()
         {

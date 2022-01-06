@@ -104,10 +104,10 @@ using RiotGames.LeagueOfLegends.LeagueClient;
 
 using (var client = new LeagueClient())
 {
-    var session = await client.ChampSelect.GetSessionAsync();
+    var session = await client.LolChampSelect.GetSessionAsync();
     foreach(var teamMember in session.MyTeam)
     {
-        var summoner = await client.Summoners.GetSummonerAsync(teamMember.SummonerId);
+        var summoner = await client.LolSummoners.GetSummonerAsync(teamMember.SummonerId);
         Console.PrintLine($"Team member: {summoner.DisplayName}");
     }
 }

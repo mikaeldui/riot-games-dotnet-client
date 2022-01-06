@@ -96,6 +96,23 @@ using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1
 }
 ```
 
+### Getting the current League of Legends champ select
+You can use the `LeagueClient` to communicate directly with the League Client (aka LCU).
+
+```C#
+using RiotGames.LeagueOfLegends.LeagueClient;
+
+using (var client = new LeagueClient())
+{
+    var session = await client.ChampSelect.GetSessionAsync();
+    foreach(var teamMember in session.MyTeam)
+    {
+        var summoner = await client.Summoners.GetSummonerAsync(teamMember.SummonerId);
+        Console.PrintLine($"Team member: {summoner.DisplayName}");
+    }
+}
+```
+
 ## Notice from [Riot Games][riot]
 
 [Riot Games .NET Client (unofficial)][rgdc] isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing [Riot Games][riot] properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].

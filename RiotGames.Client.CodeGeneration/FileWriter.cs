@@ -15,14 +15,32 @@ namespace RiotGames.Client.CodeGeneration
 
     internal static class FileWriter
     {
-        public static void WriteFile(Client client, FileType fileType, string contents)
+        public static void WriteFile(RiotGamesApi.Client client, FileType fileType, string contents)
         {
             string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client");
 
-            if (client != Client.RiotGames)
+            if (client != RiotGamesApi.Client.RiotGames)
                 folder = Path.Combine(folder, client.ToString());
 
             File.WriteAllText(Path.Combine(folder, $"{client}{fileType}.g.cs"), contents);
+        }
+
+        public static void WriteLeagueClientFile(string contents, string? subClass = null)
+        {
+            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            
+            string? suffix = null;
+            if (subClass != null)
+                suffix = "." + subClass;
+
+            File.WriteAllText(Path.Combine(folder, $"LeagueClient{suffix}.g.cs"), contents);
+        }
+
+        public static void WriteLeagueClientModelsFile(string contents)
+        {
+            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+
+            File.WriteAllText(Path.Combine(folder, $"LeagueClientModels.g.cs"), contents);
         }
 
         private static string GetAssemblyDirectory()

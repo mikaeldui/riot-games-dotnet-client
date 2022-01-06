@@ -8,8 +8,8 @@ namespace RiotGames
         private RegionalRoute? _region;
         private PlatformRoute? _platform;
         private ValPlatformRoute? _valPlatform;
-        private RiotGamesHttpClient<TObjectBase>? _regionalClient;
-        private RiotGamesHttpClient<TObjectBase>? _platformClient;
+        private RiotGamesApiHttpClient<TObjectBase>? _regionalClient;
+        private RiotGamesApiHttpClient<TObjectBase>? _platformClient;
 
         //// Will have to investigate if the RiotGamesClient can give its HttpClient to its children.
         //internal RiotGamesClientBase(RiotHttpClient<TObjectBase>? regionalClient, RiotHttpClient<TObjectBase>? platformClient)
@@ -21,18 +21,18 @@ namespace RiotGames
         internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
             _region = region;
-            _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, region);
+            _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
         }
 
         internal RiotGamesClientBase(string apiKey, PlatformRoute platform, bool createRegionalClient = true)
         {
             _platform = platform;
-            _platformClient = new RiotGamesHttpClient<TObjectBase>(apiKey, platform);
+            _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
 
             if (createRegionalClient)
             {
                 _region = RouteUtils.ToRegional(platform);
-                _regionalClient = new RiotGamesHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
+                _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
             }
         }
 
@@ -42,14 +42,14 @@ namespace RiotGames
         internal RiotGamesClientBase(string apiKey, ValPlatformRoute platform)
         {
             _valPlatform = platform;
-            _platformClient = new RiotGamesHttpClient<TObjectBase>(apiKey, platform);
+            _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
         }
 
         public RegionalRoute? Region => _region;
         public PlatformRoute? Platform => _platform;
         public ValPlatformRoute? ValPlatform => _valPlatform;
 
-        internal RiotGamesHttpClient<TObjectBase> RegionalClient            
+        internal RiotGamesApiHttpClient<TObjectBase> RegionalClient            
         {
             get
             {
@@ -60,7 +60,7 @@ namespace RiotGames
             }        
         }
 
-        internal RiotGamesHttpClient<TObjectBase> PlatformClient
+        internal RiotGamesApiHttpClient<TObjectBase> PlatformClient
         {
             get
             {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration
 {
+    [DebuggerStepThrough]
     internal static class StringExtensions
     {
         public static string FirstCharToUpper(this string input) =>
@@ -14,6 +16,14 @@ namespace RiotGames.Client.CodeGeneration
                 null => throw new ArgumentNullException(nameof(input)),
                 "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
                 _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+            };
+
+        public static string FirstCharToLower(this string input) =>
+            input switch
+            {
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+                _ => string.Concat(input[0].ToString().ToLower(), input.AsSpan(1))
             };
 
         public static string[] SplitAndRemoveEmptyEntries(this string input, char separator) =>
@@ -26,6 +36,7 @@ namespace RiotGames.Client.CodeGeneration
             return input;
         }
 
+        /// <summary> Makes the string look like "ThisIsAString".</summary>
         public static string ToPascalCase(this string input)
         {
             if (input.Contains('-')) // kebab
@@ -47,7 +58,17 @@ namespace RiotGames.Client.CodeGeneration
             else return input; // No idea, just return it.
         }
 
+        /// <summary> Makes the string look like "thisIsAString".</summary>
+        public static string ToCamelCase(this string input) => input.ToPascalCase().FirstCharToLower();
+
         public static string Remove(this string input, string toRemove) => input.Replace(toRemove, "");
+
+        public static string RemoveChars(this string input, params char[] toRemove)
+        {
+            foreach (var c in toRemove)
+                input = input.Replace(c.ToString(), "");
+            return input;
+        }
 
         public static bool IsLower(this char input) => input.ToString() == input.ToString().ToLower();
 
@@ -56,9 +77,39 @@ namespace RiotGames.Client.CodeGeneration
         public static string EndWith(this string input, string end) => input.EndsWith(end) ? input : input + end;
     }
 
-    public static class ArrayExtensions
+    [DebuggerStepThrough]
+    public static class IEnumerableExtensions
     {
         public static T[] Concat<T>(this T[] source, T[] secondArray) =>
             source.Concat(secondArray).ToArray();
+
+        public static string[] Replace(this string[] source, string oldValue, string newValue)
+        {
+            var index = Array.IndexOf(source, oldValue);
+
+            if (index != -1)
+                source[index] = newValue;
+
+            return source;
+        }
+
+        public static void ReplaceKeys<TValue>(this Dictionary<string, TValue> source, IReadOnlyDictionary<string, string> replacements)
+        {
+            var needsReplacement = source.Keys.Where(k => replacements.ContainsKey(k)).ToArray();
+
+            foreach(var key in needsReplacement)
+            {
+                var replacement = replacements[key];
+                TValue value = source[key];
+                source.Remove(key);
+                source[replacement] = value;
+            }
+        }
+
+        public static string[] ToPascalCase(this string[] source) =>
+            source.Select(s => s.ToPascalCase()).ToArray();
+
+        public static string[] ToCamelCase(this string[] source) =>
+            source.Select(s => s.ToCamelCase()).ToArray();
     }
 }

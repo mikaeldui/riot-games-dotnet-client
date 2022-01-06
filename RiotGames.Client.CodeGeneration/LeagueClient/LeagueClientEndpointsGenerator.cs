@@ -25,16 +25,18 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         protected ClassDeclarationSyntax ClassDeclaration;
 
         protected string[] Enums;
+        protected bool VersionSuffix;
 
         private List<MemberDeclarationSyntax[]> _moduleProperties = new();
         private List<ClassDeclarationSyntax> _moduleClasses = new();
 
         public LeagueClientEndpointsGenerator(string[] enums) : this(LEAGUECLIENT_CLASS_IDENTIFIER, enums) { }
 
-        private LeagueClientEndpointsGenerator(string className, string[] enums, bool partialClass = true)
+        private LeagueClientEndpointsGenerator(string className, string[] enums, bool partialClass = true, bool versionSuffix = false)
         {
             ClassName = className;
             Enums = enums;
+            VersionSuffix = versionSuffix;
             if (partialClass)
                 ClassDeclaration = ClassHelper.CreatePublicPartialClass(className);
             else
@@ -42,7 +44,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 ClassDeclaration = ClassHelper.CreatePublicClass(className);
         }
 
-        private void _addEndpoint(string methodIdentifier, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
+        protected virtual void AddEndpoint(string methodIdentifier, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
         {
             // Long time since I did an XOR, this might not work.
             if (httpMethod == HttpMethod.Get ^ requestType == null)
@@ -101,7 +103,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             ClassDeclaration = ClassDeclaration.AddPublicAsyncTask(returnType, methodIdentifier, bodyStatement, pathParameters);
         }
 
-        private void _addPathAsEndpoints(Path path)
+        protected virtual void AddPathAsEndpoints(Path path, string? methodNameSuffix = null)
         {
             //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
 
@@ -115,7 +117,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     return; //TODO: Implement response 204.
                 var responseSchema = response200.Content?.First().Value.Schema;
                 bool isArrayReponse = responseSchema?.Type == "array";
-                var nameFromPath = ClientHelper.GetNameFromPath(path.Key, isArrayReponse);
+                var nameFromPath = ClientHelper.GetNameFromPath(path.Key, isArrayReponse) + methodNameSuffix;
 
                 Dictionary<string, string?>? pathParameters = null;
 
@@ -129,26 +131,89 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                         .Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.GetTypeName());
                 }
 
-                _addEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
+                AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
             }
         }
 
-        protected void AddPathsAsEndpoints(Paths paths)
+        protected void AddPathsAsEndpoints(Paths paths, bool methodVersionSuffix)
         {
+            paths = paths.ToArray();
+
+            Dictionary<string, string?[]>? versionsByPaths = null;
+            if (methodVersionSuffix)
+                versionsByPaths = paths
+                    .Select(p =>
+                    {
+                        var version = p.Key.SplitAndRemoveEmptyEntries('/')[1];
+                        if (version[0] != 'v' || !char.IsDigit(version[1]))
+                            version = null;
+
+                        return (version, string.Join('/', p.Key.SplitAndRemoveEmptyEntries('/').Skip(2)));
+                    })
+                    .GroupBy(t => t.Item2)
+                    .ToDictionary(g => g.Key, g => g.Select(t => t.Item1).OrderBy(s => s)
+                    .ToArray());
+
             foreach (var path in paths)
-                _addPathAsEndpoints(path);
+            {
+                // Detect duplicated methods
+                if (methodVersionSuffix)
+                {
+                    var pathVersions = versionsByPaths[string.Join('/', path.Key.SplitAndRemoveEmptyEntries('/').Skip(2))];
+                    if (pathVersions.Length != 1)
+                    {
+                        var thisPathVersion = pathVersions.Where(pv => pv != null).SingleOrDefault(pv => path.Key.Contains(pv));
+                        AddPathAsEndpoints(path, thisPathVersion);
+                        continue;
+                    }
+                }
+
+                AddPathAsEndpoints(path);
+            }
         }
 
-        public void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths)
+        public void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
         {
-            var nullGroup = groupedPaths.First(g => g.Key == null);
+            var nullGroup = groupedPaths.FirstOrDefault(g => g.Key == null);
 
-            AddPathsAsEndpoints(nullGroup);
+            if (nullGroup != null)
+                AddPathsAsEndpoints(nullGroup, false);
 
             foreach (var group in groupedPaths.Where(g => g.Key != null))
             {
-                var moduleGenerator = new LeagueClientModuleGenerator(group.Key.RemoveChars('{', '}').ToPascalCase(), Enums);
-                moduleGenerator.AddPathsAsEndpoints(group);
+                bool versionSuffix = false;
+                var versioned = group.GroupBy(P =>
+                {
+                    var secondPart = P.Key.SplitAndRemoveEmptyEntries('/')[1];
+                    if (secondPart[0] == 'v' && char.IsDigit(secondPart[1]))
+                        return secondPart;
+                    else return null;
+                });
+
+                if (versioned.Count() > 1)
+                {
+                    var firstVersionCount = versioned.First().Count();
+                    var secondVersionCount = versioned.ElementAt(1).Count();
+                    if (Math.Abs(firstVersionCount - secondVersionCount) > (((float)Math.Max(firstVersionCount, secondVersionCount)) / 5) * 2)
+                    {
+                        // Just use a suffix for there methods
+                        versionSuffix = true;
+                    }
+                    else
+                    {
+                        // Separate modules
+                        foreach(var versionedModule in versioned)
+                        {
+                            AddGroupsAsNestedClassesWithEndpoints(versionedModule.GroupByModule(), 
+                                group.Key.RemoveChars('{', '}').ToPascalCase() + versionedModule.Key?.ToUpper());
+                        }
+
+                        continue;
+                    }
+                }
+
+                var moduleGenerator = new LeagueClientModuleGenerator(className ?? group.Key.RemoveChars('{', '}').ToPascalCase(), Enums, versionSuffix: versionSuffix);
+                moduleGenerator.AddPathsAsEndpoints(group, versionSuffix);
                 _moduleProperties.Add(moduleGenerator.FieldAndProperty);
                 _moduleClasses.Add(moduleGenerator.ClassDeclaration);
                 Console.WriteLine($"League Client: Generated client module for module {moduleGenerator.ModuleName}.");
@@ -180,7 +245,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             private readonly PropertyDeclarationSyntax _propertyDeclaration;
 
-            public LeagueClientModuleGenerator(string moduleName, string[] enums) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
+            public LeagueClientModuleGenerator(string moduleName, string[] enums, bool versionSuffix) : base(moduleName + "Client", enums, partialClass: false, versionSuffix: versionSuffix) // For now, adding Client suffix.
             {
                 ModuleName = moduleName.ToPascalCase();
 

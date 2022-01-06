@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RiotGames.Client.CodeGeneration
 {
+    [DebuggerStepThrough]
     internal static class StringExtensions
     {
         public static string FirstCharToUpper(this string input) =>
@@ -75,6 +77,7 @@ namespace RiotGames.Client.CodeGeneration
         public static string EndWith(this string input, string end) => input.EndsWith(end) ? input : input + end;
     }
 
+    [DebuggerStepThrough]
     public static class IEnumerableExtensions
     {
         public static T[] Concat<T>(this T[] source, T[] secondArray) =>

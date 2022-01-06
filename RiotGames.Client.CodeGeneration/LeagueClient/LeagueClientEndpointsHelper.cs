@@ -3,6 +3,7 @@ using MingweiSamuel;
 using MingweiSamuel.Lcu;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public static string? GetNameFromPath(string path, bool? isPlural)
         {
+#if DEBUG
+            // if (path == "/lol-summoner/v1/current-summoner/summoner-profile") Debugger.Break();
+#endif
+
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
             //.Skip(1).ToArray(); // Skip "riot" or "lol"
 
@@ -63,7 +68,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             //secondPart = secondPart.Replace(Hacks.EndpointWordCompilations);
 
             // Check if we just need the first part
-            if (lastPart == null)
+            if (lastPart == null && firstPart != "current-summoner")
             {
                 var firstParts = firstPart.SplitAndRemoveEmptyEntries('-');
                 var secondParts = secondPart.SplitAndRemoveEmptyEntries('-');

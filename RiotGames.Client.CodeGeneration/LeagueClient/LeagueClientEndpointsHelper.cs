@@ -12,9 +12,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     using Path = KeyValuePair<string, OpenApiPathObject<OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, LcuParameterObject, LcuSchemaObject>>;
     using Paths = IEnumerable<KeyValuePair<string, OpenApiPathObject<OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, OpenApiMethodObject<LcuParameterObject, LcuSchemaObject>, LcuParameterObject, LcuSchemaObject>>>;
 
-    internal static class LeagueClientHelper
+    internal static class LeagueClientEndpointsHelper
     {
-        static LeagueClientHelper() => LeagueClientHacks.Activate();
+        static LeagueClientEndpointsHelper() => LeagueClientHacks.Activate();
 
         public static string? GetNameFromPath(string path, bool? isPlural)
         {

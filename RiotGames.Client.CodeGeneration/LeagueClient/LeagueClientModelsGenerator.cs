@@ -91,6 +91,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return _namespace.NormalizeWhitespace().ToFullString();
         }
 
+        public string[] GetEnums() =>
+            _namespace.Members
+            .Where(m => m.GetType() == typeof(EnumDeclarationSyntax))
+            .Select(m => (EnumDeclarationSyntax)m)
+            .Select(e => e.Identifier.ToString()).ToArray();
+
         private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
         {
             var property = PropertyHelper.CreatePublicProperty(typeName, identifier);

@@ -21,9 +21,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             _console($"League Client: Downloaded spec file containing {schema.Paths?.Count} paths and {schema.Components?.Schemas?.Count} component schemas.");
 
-            _generateEndpoints(schema);
+            _generateModels(schema, out string[] enums);
 
-            _generateModels(schema);
+            _generateEndpoints(schema, enums);
 
             //Console.WriteLine("Getting API specification from LCU");
 
@@ -35,23 +35,25 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             //    Debugger.Break();
             //}
         }
-        private static void _generateEndpoints(LcuApiOpenApiSchema schema)
-        {
-            var groupedPaths = schema.Paths.GroupByModule();
 
-            var generator = new LeagueClientEndpointsGenerator();
-            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
-            var code = generator.GenerateCode();
-            FileWriter.WriteLeagueClientFile(code, null);
-        }
-
-        private static void _generateModels(LcuApiOpenApiSchema schema)
+        private static void _generateModels(LcuApiOpenApiSchema schema, out string[] enums)
         {
             // TODO: Maybe group them by module and put them in separate namespaces.
 
             var generator = new LeagueClientModelsGenerator();
             generator.AddDtos(schema.Components.Schemas);
+            enums = generator.GetEnums();
             FileWriter.WriteLeagueClientModelsFile(generator.GenerateCode());
+        }
+
+        private static void _generateEndpoints(LcuApiOpenApiSchema schema, string[] enums)
+        {
+            var groupedPaths = schema.Paths.GroupByModule();
+
+            var generator = new LeagueClientEndpointsGenerator(enums);
+            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
+            var code = generator.GenerateCode();
+            FileWriter.WriteLeagueClientFile(code, null);
         }
 
         private static void _console(string message) => Console.WriteLine("League Client: " + message);

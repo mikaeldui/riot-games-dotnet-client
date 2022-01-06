@@ -24,14 +24,17 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         public readonly string ClassName;
         protected ClassDeclarationSyntax ClassDeclaration;
 
+        protected string[] Enums;
+
         private List<MemberDeclarationSyntax[]> _moduleProperties = new();
         private List<ClassDeclarationSyntax> _moduleClasses = new();
 
-        public LeagueClientEndpointsGenerator() : this(LEAGUECLIENT_CLASS_IDENTIFIER) { }
+        public LeagueClientEndpointsGenerator(string[] enums) : this(LEAGUECLIENT_CLASS_IDENTIFIER, enums) { }
 
-        private LeagueClientEndpointsGenerator(string className, bool partialClass = true)
+        private LeagueClientEndpointsGenerator(string className, string[] enums, bool partialClass = true)
         {
             ClassName = className;
+            Enums = enums;
             if (partialClass)
                 ClassDeclaration = ClassHelper.CreatePublicPartialClass(className);
             else
@@ -72,6 +75,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     if (returnType == "dynamic")
                         typeArgument = StatementHelper.TypeArgument("ExpandoObject");
                 }
+
+                if (Enums.Contains(returnType))
+                    specificMethod = "Enum";
 
                 string baseMethod = httpMethod.ToString().ToPascalCase() + specificMethod + "Async";
 
@@ -141,7 +147,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             foreach (var group in groupedPaths.Where(g => g.Key != null))
             {
-                var moduleGenerator = new LeagueClientModuleGenerator(group.Key.RemoveChars('{', '}').ToPascalCase());
+                var moduleGenerator = new LeagueClientModuleGenerator(group.Key.RemoveChars('{', '}').ToPascalCase(), Enums);
                 moduleGenerator.AddPathsAsEndpoints(group);
                 _moduleProperties.Add(moduleGenerator.FieldAndProperty);
                 _moduleClasses.Add(moduleGenerator.ClassDeclaration);
@@ -174,7 +180,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             private readonly PropertyDeclarationSyntax _propertyDeclaration;
 
-            public LeagueClientModuleGenerator(string moduleName) : base(moduleName + "Client", partialClass: false) // For now, adding Client suffix.
+            public LeagueClientModuleGenerator(string moduleName, string[] enums) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
             {
                 ModuleName = moduleName.ToPascalCase();
 

@@ -39,7 +39,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 ClassDeclaration = ClassHelper.CreatePublicClass(className);
         }
 
-        protected void AddEndpoint(string methodIdentifier, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
+        private void _addEndpoint(string methodIdentifier, HttpMethod httpMethod, string requestUri, string returnType, string? requestType = null, Dictionary<string, string>? pathParameters = null)
         {
             // Long time since I did an XOR, this might not work.
             if (httpMethod == HttpMethod.Get ^ requestType == null)
@@ -48,27 +48,23 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             // Create a stament with the body of a method.
             StatementSyntax bodyStatement;
             {
+                returnType = returnType.Replace("object", "dynamic");
+
                 string? typeArgument = httpMethod == HttpMethod.Get ? StatementHelper.TypeArgument(returnType.Remove("[]")) : StatementHelper.TypeArgument(requestType, returnType.Remove("[]"));
                 string? specificMethod = null;
 
                 // Current work-around, added some type specific HTTP methods.
                 if (returnType.EndsWith("[]"))
-                    if (returnType.StartsWith("string"))
+                    if (returnType.StartsWith("string") || returnType.StartsWith("dynamic") || returnType.StartsWith("int"))
                     {
-                        specificMethod = "StringArray";
-                        typeArgument = null;
+                        specificMethod = "SystemType";
+                        typeArgument = StatementHelper.TypeArgument(returnType);
                     }
                     else
                         specificMethod = "Array";
-                else if (returnType == "int")
+                else if (returnType is "int" or "string" or "bool" or "dynamic" or "long" or "double")
                 {
-                    specificMethod = "Int";
-                    typeArgument = null;
-                }
-                else if (returnType == "string")
-                {
-                    specificMethod = "String";
-                    typeArgument = null;
+                    specificMethod = "SystemType";
                 }
 
                 string baseMethod = httpMethod.ToString().ToPascalCase() + specificMethod + "Async";
@@ -93,7 +89,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             ClassDeclaration = ClassDeclaration.AddPublicAsyncTask(returnType, methodIdentifier, bodyStatement, pathParameters);
         }
 
-        protected void AddPathAsEndpoints(Path path)
+        private void _addPathAsEndpoints(Path path)
         {
             //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
 
@@ -121,14 +117,14 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                         .Where(p => p.In is not "header" and not "query").ToDictionary(p => p.Name, p => p.GetTypeName());
                 }
 
-                AddEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
+                _addEndpoint("Get" + nameFromPath, HttpMethod.Get, path.Key, responseSchema.GetTypeName(), pathParameters: pathParameters);
             }
         }
 
         protected void AddPathsAsEndpoints(Paths paths)
         {
             foreach (var path in paths)
-                AddPathAsEndpoints(path);
+                _addPathAsEndpoints(path);
         }
 
         public void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths)

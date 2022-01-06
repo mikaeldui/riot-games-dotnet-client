@@ -1,4 +1,5 @@
 ﻿using RiotGames.LeagueOfLegends.LeagueClient;
+using System.Dynamic;
 using System.Net.Http.Json;
 using System.Reflection;
 
@@ -30,14 +31,34 @@ namespace RiotGames
             where TResult : TObjectBase =>
             await HttpClient.GetFromJsonAsync<TResult[]>(requestUri);
 
-        internal async Task<string> GetStringAsync(string? requestUri) =>
-            await HttpClient.GetStringAsync(requestUri);
+        internal async Task<T> GetSystemTypeAsync<T>(string? requestUri)
+        {
+            switch (Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.String:
+                    return (T)(object)await HttpClient.GetStringAsync(requestUri);                    
+                case TypeCode.Int32:
+                    return (T)(object)int.Parse(await HttpClient.GetStringAsync(requestUri));
+                case TypeCode.Int64:
+                    return (T)(object)long.Parse(await HttpClient.GetStringAsync(requestUri));
+                case TypeCode.Double:
+                    return (T)(object)double.Parse(await HttpClient.GetStringAsync(requestUri));
+            }
 
-        internal async Task<int> GetIntAsync(string? requestUri) =>
-            int.Parse(await GetStringAsync(requestUri));
+            if (typeof(T) == typeof(string[]))
+                return (T)(object)await HttpClient.GetFromJsonAsync<string[]>(requestUri);
 
-        internal async Task<string[]?> GetStringArrayAsync(string? requestUri) =>
-            await HttpClient.GetFromJsonAsync<string[]>(requestUri);
+            if (typeof(T) == typeof(int[]))
+                return (T)(object)await HttpClient.GetFromJsonAsync<int[]>(requestUri);
+
+            if (typeof(T) == typeof(dynamic))
+                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri);
+
+            throw new NotImplementedException("This system type hasn't been implemented in GetSystemTypeAsync<T>.");
+        }
+
+        internal async Task<T> GetEnumAsync<T>(string? requestUri) where T : Enum => 
+            (T)Enum.Parse(typeof(T), await HttpClient.GetStringAsync(requestUri));
 
         internal async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
             where TValue : TObjectBase

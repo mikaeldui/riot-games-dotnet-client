@@ -19,9 +19,29 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         public static string? GetNameFromPath(string path, bool? isPlural)
         {
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
-                //.Skip(1).ToArray(); // Skip "riot" or "lol"
+            //.Skip(1).ToArray(); // Skip "riot" or "lol"
+
+
+            if (parts[1].StartsWith('v') && char.IsDigit(parts[1][1]))
+            {
+                if (parts.Length > 2)
+                    parts = parts.Skip(2).ToArray();
+                else
+                    parts = parts.SkipLast(1).ToArray();
+
+            }
+
+            if (parts.Length == 1)
+            {
+                return ToName(parts[0]);
+                //if (isPlural != null && isPlural == true)
+                //else
+                //    return ToName(parts[0].Singularize());
+            }
+
+
             string firstPart;
-            string secondPart;
+            string? secondPart;
             string? lastPart = null;
             {
                 firstPart = parts[0];
@@ -98,8 +118,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         {
             if (name == null)
                 return null;
-            return name.ToPascalCase();
-            //return name.Replace(RiotApiHacks.EndpointWordCompilations).ToPascalCase();
+            return name.Replace(LeagueClientHacks.EndpointWordCompilations).ToPascalCase();
         }
 
         public static string? GetGame(this Path path) =>

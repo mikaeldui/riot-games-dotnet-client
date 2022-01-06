@@ -3,6 +3,9 @@ using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
+using System.Net.Http.Json;
+using System.Dynamic;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
@@ -12,6 +15,16 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         {
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}")));
             HttpClient.BaseAddress = new UriBuilder("https", "127.0.0.1", port).Uri;
+        }
+
+        public async Task<dynamic> GetDynamicAsync(string requestUri)
+        {
+            var result = await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri);
+
+            if (result == null)
+                throw new Exception("The HttpClient result was null!");
+
+            return result;
         }
     }
 

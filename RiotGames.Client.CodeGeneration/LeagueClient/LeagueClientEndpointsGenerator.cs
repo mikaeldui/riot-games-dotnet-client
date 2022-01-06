@@ -105,8 +105,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         protected virtual void AddPathAsEndpoints(Path path, string? methodNameSuffix = null)
         {
-            //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
-
             var po = path.Value;
             var poGet = po.Get;
             if (poGet != null)

@@ -19,13 +19,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public static string? GetNameFromPath(string path, bool? isPlural)
         {
-#if DEBUG
-            // if (path == "/lol-summoner/v1/current-summoner/summoner-profile") Debugger.Break();
-#endif
-
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
-            //.Skip(1).ToArray(); // Skip "riot" or "lol"
-
 
             if (parts[1].StartsWith('v') && char.IsDigit(parts[1][1]))
             {

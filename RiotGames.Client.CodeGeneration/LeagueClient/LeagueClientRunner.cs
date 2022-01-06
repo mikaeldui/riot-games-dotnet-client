@@ -25,15 +25,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             _generateEndpoints(schema, enums);
 
-            //Console.WriteLine("Getting API specification from LCU");
-
-            //var lockfile = LeagueOfLegends.LeagueClient.LeagueClientLockfile.FromProcess();
-            //using (var client = new LeagueOfLegends.LeagueClient.LeagueClientHttpClient("riot", lockfile.Password, lockfile.Port))
-            //{
-            //    var openApiSpec = await client.GetStringAsync("/swagger/v1/api-docs");
-
-            //    Debugger.Break();
-            //}
+            // TODO: WebSockets
         }
 
         private static void _generateModels(LcuApiOpenApiSchema schema, out string[] enums)

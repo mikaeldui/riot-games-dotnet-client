@@ -14,9 +14,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -65,9 +63,7 @@ jobs:
       with:
         version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
         
-    - name: Push
-      uses: ./.github/actions/dotnet-push
-      with:
-        path: ./RiotGames.Client/bin/Release/*.nupkg
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+  release:
+    uses: ./.github/workflows/dotnet-release.yml
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: build

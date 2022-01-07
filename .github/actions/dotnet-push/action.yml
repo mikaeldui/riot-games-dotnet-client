@@ -1,0 +1,21 @@
+name: .NET Push 
+description: Pushed the package to NuGet.org and GitHub.com
+inputs:
+  path: 
+    description: 'The path to the package'
+    required: true
+    default: '*.nupkg'
+  GITHUB_TOKEN:
+    required: true
+  NUGET_ORG_API_KEY:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Push Package to NuGet.org
+      run: dotnet nuget push ${{ inputs.path }} -k ${{ inputs.NUGET_ORG_API_KEY }} -s https://api.nuget.org/v3/index.json
+      shell: bash
+    - name: Push Package to GitHub.com
+      run: dotnet nuget push ${{ inputs.path }} -k ${{ inputs.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/mikaeldui/index.json
+      shell: bash

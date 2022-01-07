@@ -1,0 +1,16 @@
+name: .NET Release
+on: [workflow_call]
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download NuGet Package
+        uses: actions/download-artifact@v2
+        with:
+          name: nupkg
+      - name: Push
+        uses: ./.github/actions/dotnet-push
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}

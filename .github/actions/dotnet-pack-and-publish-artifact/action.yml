@@ -1,0 +1,23 @@
+name: '.NET Pack & Publish as Artifact'
+description: Packs NuGet and publishes as artifacts
+inputs:
+  version: 
+    description: 'The version of the package'
+    required: true
+
+#outputs:
+#  random-number:
+#    description: "Random number"
+#    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - name: Pack
+      working-directory: ./RiotGames.Client
+      run: dotnet pack --configuration Release --no-build /p:Version=${{ inputs.version }}
+      shell: bash
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ./RiotGames.Client/bin/Release/*.nupkg

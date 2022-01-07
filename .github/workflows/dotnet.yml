@@ -5,18 +5,16 @@ on:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/**'
+    - '.github/**'
   pull_request:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/**'
+    - '.github/**'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -44,23 +42,38 @@ jobs:
     - name: 'Tests: Run Tests'   
       working-directory: ./RiotGames.Client.Tests
       run: dotnet test --configuration Release --no-build --verbosity normal
+      
     - name: Prepare packaging
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"      
+      
     - name: Pack Release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
+      with:
+        version: 12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}        
     - name: Pack Feature
       if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
+      with:
+        version: 12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
     - name: Pack Pull Request
       if: ${{ github.event_name == 'pull_request' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
-    - name: Push Package
-      working-directory: ./RiotGames.Client/bin/Release
-      run: dotnet nuget push *.nupkg -k $NUGET_ORG_API_KEY -s https://api.nuget.org/v3/index.json
-      env:
-        NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
+      with:
+        version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
+        
+  release:
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-release.yml@main
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: build
+    
+  feature-branch:
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-feature-branch.yml@main
+    if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
+    needs: build
+    
+  pull-request:
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-pull-request.yml@main
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: build

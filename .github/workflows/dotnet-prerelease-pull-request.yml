@@ -33,13 +33,17 @@ jobs:
         uses: thollander/actions-comment-pull-request@v1        
         with:
           message: |
-            You can install the NuGet Package for this pull request [NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}) using either of these commands:
+            You can install the NuGet Package for this pull request from [NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}) using either of these commands:
 
-            Using **Package Manager Console**:
+            Using **Package Manager Console** (non-floating version):
 
                 PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}
 
-            Using the **.NET CLI**:
+            Using the **.NET CLI** (floating version):
 
-                dotnet add package MikaelDui.RiotGames.Client --version ${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}
+                dotnet add package MikaelDui.RiotGames.Client --version *-pull-request.${{ github.event.pull_request.number }}
+
+            Using a PackageReference (floating version):
+
+                <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-pull-request.${{ github.event.pull_request.number }}" />
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

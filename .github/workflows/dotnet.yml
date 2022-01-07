@@ -5,12 +5,12 @@ on:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/**'
+    - '.github/**'
   pull_request:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/**'
+    - '.github/**'
 
 jobs:
   build:

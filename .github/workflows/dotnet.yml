@@ -59,11 +59,18 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       working-directory: ./RiotGames.Client
       run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
+    - name: Check file existence
+      id: check_files
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "./RiotGames.Client/bin/Release/*.nupkg"
     - name: Push Package to NuGet.org
+      if: steps.check_files.outputs.files_exists == 'true'
       working-directory: ./RiotGames.Client/bin/Release
       run: dotnet nuget push *.nupkg -k $NUGET_ORG_API_KEY -s https://api.nuget.org/v3/index.json
       env:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
     - name: Push Package to GitHub.com
+      if: steps.check_files.outputs.files_exists == 'true'
       working-directory: ./RiotGames.Client/bin/Release
       run: dotnet nuget push *.nupkg  -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/mikaeldui/index.json

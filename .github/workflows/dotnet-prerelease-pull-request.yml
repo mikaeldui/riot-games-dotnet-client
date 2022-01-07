@@ -1,4 +1,4 @@
-name: .NET Pre-release: Feature Branch
+name: '.NET Pre-release: Feature Branch'
 on: [workflow_call]
   
 jobs:

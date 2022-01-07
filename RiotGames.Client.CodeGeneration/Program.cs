@@ -11,5 +11,4 @@ await RiotGames.Client.CodeGeneration.RiotGamesApi.RiotApiRunner.GenerateCodeAsy
 
 await RiotGames.Client.CodeGeneration.LeagueClient.LeagueClientRunner.GenerateCodeAsync();
 
-
 Console.WriteLine("Program done!");

@@ -54,7 +54,7 @@ jobs:
     - name: Pack Feature
       if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
       working-directory: ./RiotGames.Client
-      run: dotnet pack --no-build /p:Version=12.1.1-feature.${{ GITHUB_REF##*/ }}+${{ github.run_id }}.${{ steps.vars.outputs.sha_short }}
+      run: dotnet pack --no-build /p:Version=12.1.1-feature.${GITHUB_REF##*/}+${{ github.run_id }}.${{ steps.vars.outputs.sha_short }}
     - name: Pack Pull Request
       if: ${{ github.event_name == 'pull_request' }}
       working-directory: ./RiotGames.Client

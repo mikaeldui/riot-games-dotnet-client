@@ -45,7 +45,7 @@ jobs:
           name: ${{ inputs.version }}
           tag: ${{ steps.tag_version.outputs.new_tag }}
           body: |
-            You can install this specific version using either of these commands:
+            You can install [this specific version from NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}) using either of these commands:
 
             Using Package Manager Console:
 

@@ -23,7 +23,7 @@ Or use the .NET CLI:
     
 To stay up-to-date with the latest build, use this PackageReference:
 
-    <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-*" />
+    <PackageReference Include="MikaelDui.RiotGames.Client" Version="*" />
 
 ## Examples
 

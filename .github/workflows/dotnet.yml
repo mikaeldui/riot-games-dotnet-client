@@ -67,13 +67,22 @@ jobs:
     uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-release.yml@main
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: build
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      nuget_org_api_key: ${{ secrets.NUGET_ORG_API_KEY }}
     
   feature-branch:
     uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-feature-branch.yml@main
     if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
     needs: build
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      nuget_org_api_key: ${{ secrets.NUGET_ORG_API_KEY }}
     
   pull-request:
     uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-pull-request.yml@main
     if: ${{ github.event_name == 'pull_request' }}
     needs: build
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      nuget_org_api_key: ${{ secrets.NUGET_ORG_API_KEY }}

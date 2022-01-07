@@ -40,10 +40,10 @@ jobs:
       run: dotnet restore
     - name: 'Tests: Build' 
       working-directory: ./RiotGames.Client.Tests
-      run: dotnet build --no-restore
+      run: dotnet build --configuration Release --no-restore
     - name: 'Tests: Run Tests'   
       working-directory: ./RiotGames.Client.Tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --configuration Release --no-build --verbosity normal
     - name: Set outputs
       id: vars
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"

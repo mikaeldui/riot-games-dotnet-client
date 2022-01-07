@@ -7,15 +7,6 @@ on:
         default: 'john-doe'
         required: false
         type: string
-    secrets:
-      GITHUB_TOKEN:
-        description: 'GitHub Token used to push the package to GitHub'
-        required: true
-        type: string
-      NUGET_ORG_API_KEY:
-        description: 'NuGet.org token used to push the package to NuGet.org'
-        required: true
-        type: string
   
 jobs:
   release:

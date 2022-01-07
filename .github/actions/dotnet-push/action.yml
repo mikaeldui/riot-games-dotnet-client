@@ -5,6 +5,11 @@ inputs:
     description: 'The path to the package'
     required: true
     default: '*.nupkg'
+secrets:
+  GITHUB_TOKEN:
+    required: true
+  NUGET_ORG_API_KEY:
+    required: true
 
 runs:
   using: "composite"

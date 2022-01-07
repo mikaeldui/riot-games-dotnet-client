@@ -47,14 +47,14 @@ jobs:
           body: |
             You can install [this specific version from NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}) using either of these commands:
 
-            Using Package Manager Console:
+            Using **Package Manager Console**:
 
                 PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ inputs.version }}
 
-            Using the .NET CLI:
+            Using the **.NET CLI**:
 
                 dotnet add package MikaelDui.RiotGames.Client --version ${{ inputs.version }}
 
-            But it's preferable to use **floating versions**, see [README.md](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/README.md).
+            But it's preferable to use **floating versions**, see [README.md](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/README.md#download).
 
             ${{ steps.tag_version.outputs.changelog }}

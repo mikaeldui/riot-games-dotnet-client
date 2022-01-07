@@ -44,8 +44,10 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
       
     - name: Prepare packaging
-      id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"      
+      id: package_vars
+      run: |
+        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"      
+        echo "::set-output name=release_version::12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}"
       
     - name: Pack Release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}

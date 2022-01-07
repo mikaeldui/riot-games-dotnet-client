@@ -1,9 +1,15 @@
 name: .NET Release
 on: 
   workflow_call:
+    inputs:
+      version:
+        description: 'The version being released'
+        required: true
+        type: string
     secrets:
-        NUGET_ORG_API_KEY:
-          required: true
+      NUGET_ORG_API_KEY:
+        required: true
+        type: string
   
 jobs:
   release:
@@ -14,12 +20,29 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+
       - name: Download NuGet Package
         uses: actions/download-artifact@v2
         with:
           name: nupkg
+
       - name: Push
         uses: ./.github/actions/dotnet-push
         with:
           GITHUB_TOKEN: ${{ github.token }}
           NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+
+      - name: Create tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ inputs.version }}
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.nupkg"
+          token: ${{ github.token }}
+          name: ${{ inputs.version }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}

@@ -1,7 +1,7 @@
 name: '.NET Pack'
 description: Packs NuGet and publishes as artifacts
 inputs:
-  packageVersion: 
+  version: 
     description: 'The version of the package'
     required: true
 

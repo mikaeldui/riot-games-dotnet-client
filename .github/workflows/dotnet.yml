@@ -51,17 +51,17 @@ jobs:
       
     - name: Pack Release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-      uses: ./.github/actions/dotnet-pack-and-publish-as-artifact
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
       with:
         version: 12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}        
     - name: Pack Feature
       if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
-      uses: ./.github/actions/dotnet-pack-and-publish-as-artifact
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
       with:
         version: 12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
     - name: Pack Pull Request
       if: ${{ github.event_name == 'pull_request' }}
-      uses: ./.github/actions/dotnet-pack-and-publish-as-artifact
+      uses: ./.github/actions/dotnet-pack-and-publish-artifact
       with:
         version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
 

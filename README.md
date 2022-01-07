@@ -15,15 +15,15 @@ You can find the latest releases [here on GitHub](https://github.com/mikaeldui/r
 
 To install the package, type the following in the package manager console:
 
-    Install-Package MikaelDui.RiotGames.Client -IncludePrerelease
-    
-Or use the .NET CLI:
-
-    dotnet add package MikaelDui.RiotGames.Client --prerelease
+    Install-Package MikaelDui.RiotGames.Client
     
 To stay up-to-date with the latest stable build, use this PackageReference:
 
     <PackageReference Include="MikaelDui.RiotGames.Client" Version="*" />
+    
+Or use the .NET CLI reference the latest stable:
+
+    dotnet add package MikaelDui.RiotGames.Client --version *
     
 If you want to try out a new feature being developed, use a PackageReference like this:
 

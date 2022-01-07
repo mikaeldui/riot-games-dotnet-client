@@ -64,10 +64,6 @@ jobs:
       uses: ./.github/actions/dotnet-pack-and-publish-artifact
       with:
         version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
-
-    - name: Push Package to NuGet.org
-      working-directory: ./RiotGames.Client/bin/Release
-      run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_ORG_API_KEY }} -s https://api.nuget.org/v3/index.json
-    - name: Push Package to GitHub.com
-      working-directory: ./RiotGames.Client/bin/Release
-      run: dotnet nuget push *.nupkg  -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/mikaeldui/index.json
+        
+    - name: Push
+      uses: ./.github/actions/dotnet-push

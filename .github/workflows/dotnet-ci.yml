@@ -34,7 +34,7 @@ jobs:
       run: dotnet restore
     - name: Build    
       working-directory: ./RiotGames.Client
-      run: dotnet build --no-restore      
+      run: dotnet build --no-restore /nowarn:CS8669    
     - name: Restore dependencies
       working-directory: ./RiotGames.Client.Tests
       run: dotnet restore

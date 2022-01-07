@@ -1,12 +1,5 @@
 name: .NET Release
-on:
-  workflow_call:
-    inputs:
-      username:
-        description: 'A username passed from the caller workflow'
-        default: 'john-doe'
-        required: false
-        type: string
+on: [workflow_call]
   
 jobs:
   release:

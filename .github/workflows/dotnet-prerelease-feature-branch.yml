@@ -1,5 +1,11 @@
 name: '.NET Pre-release: Feature Branch'
-on: [workflow_call]
+on: 
+  workflow_call:
+    secrets:
+        github_token:
+          required: true
+        nuget_org_api_key:
+          required: true
   
 jobs:
   feature-branch:
@@ -17,5 +23,5 @@ jobs:
       - name: Push
         uses: ./.github/actions/dotnet-push
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          NUGET_ORG_API_KEY: ${{ secrets.nuget_org_api_key }}

@@ -9,7 +9,6 @@ on:
     secrets:
       NUGET_ORG_API_KEY:
         required: true
-        type: string
   
 jobs:
   release:

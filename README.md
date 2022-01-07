@@ -13,19 +13,19 @@ It's easily extendible. You can leverage its type safety and inherit the clients
 
 You can find the latest releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).
 
-To install the package, type the following in the package manager console:
+To install the latest version of the package, type the following in the **package manager** console:
 
-    Install-Package MikaelDui.RiotGames.Client -IncludePrerelease
+    Install-Package MikaelDui.RiotGames.Client
     
-Or use the .NET CLI:
-
-    dotnet add package MikaelDui.RiotGames.Client --prerelease
-    
-To stay up-to-date with the latest stable build, use this PackageReference:
+To stay **up-to-date** with the **latest stable** build, use this **PackageReference**:
 
     <PackageReference Include="MikaelDui.RiotGames.Client" Version="*" />
     
-If you want to try out a new feature being developed, use a PackageReference like this:
+Or use the **.NET CLI** reference the **latest stable** and stay **up-to-date**:
+
+    dotnet add package MikaelDui.RiotGames.Client --version *
+    
+If you want to try out a new **feature being developed**, use a **PackageReference** like this:
 
     <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-feature.awesome-feature" />
 

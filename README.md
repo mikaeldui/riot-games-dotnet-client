@@ -24,10 +24,6 @@ Or use the **.NET CLI** reference the **latest stable** and stay **up-to-date**:
 You can also use a **PackageReference** to stay **up-to-date** with the **latest stable** build:
 
     <PackageReference Include="MikaelDui.RiotGames.Client" Version="*" />
-    
-If you want to try out a new **feature being developed**, use a **PackageReference** like this:
-
-    <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-feature.awesome-feature" />
 
 ## Examples
 

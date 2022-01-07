@@ -44,33 +44,30 @@ jobs:
     - name: 'Tests: Run Tests'   
       working-directory: ./RiotGames.Client.Tests
       run: dotnet test --configuration Release --no-build --verbosity normal
+      
     - name: Prepare packaging
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"      
+      
     - name: Pack Release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}
+      uses: ./.github/actions/dotnet-pack
+      with:
+        version: 12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}        
     - name: Pack Feature
       if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
+      uses: ./.github/actions/dotnet-pack
+      with:
+        version: 12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
     - name: Pack Pull Request
       if: ${{ github.event_name == 'pull_request' }}
-      working-directory: ./RiotGames.Client
-      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
-    - name: Check file existence
-      id: check_files
-      uses: andstor/file-existence-action@v1
+      uses: ./.github/actions/dotnet-pack
       with:
-        files: "./RiotGames.Client/bin/Release/*.nupkg"
+        version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
+
     - name: Push Package to NuGet.org
-      if: steps.check_files.outputs.files_exists == 'true'
       working-directory: ./RiotGames.Client/bin/Release
-      run: dotnet nuget push *.nupkg -k $NUGET_ORG_API_KEY -s https://api.nuget.org/v3/index.json
-      env:
-        NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+      run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_ORG_API_KEY }} -s https://api.nuget.org/v3/index.json
     - name: Push Package to GitHub.com
-      if: steps.check_files.outputs.files_exists == 'true'
       working-directory: ./RiotGames.Client/bin/Release
       run: dotnet nuget push *.nupkg  -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/mikaeldui/index.json

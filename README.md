@@ -20,6 +20,10 @@ To install the package, type the following in the package manager console:
 Or use the .NET CLI:
 
     dotnet add package MikaelDui.RiotGames.Client --prerelease
+    
+To stay up-to-date with the latest build, use this PackageReference:
+
+    <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-*" />
 
 ## Examples
 

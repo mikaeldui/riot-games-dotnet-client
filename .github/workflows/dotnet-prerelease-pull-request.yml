@@ -2,9 +2,7 @@ name: '.NET Pre-release: Pull Request'
 on: 
   workflow_call:
     secrets:
-        github_token:
-          required: true
-        nuget_org_api_key:
+        NUGET_ORG_API_KEY:
           required: true
   
 jobs:
@@ -23,5 +21,5 @@ jobs:
       - name: Push
         uses: ./.github/actions/dotnet-push
         with:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-          NUGET_ORG_API_KEY: ${{ secrets.nuget_org_api_key }}
+          GITHUB_TOKEN: ${{ github.token }}
+          NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}

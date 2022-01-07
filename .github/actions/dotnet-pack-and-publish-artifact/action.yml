@@ -15,6 +15,7 @@ runs:
     - name: Pack
       working-directory: ./RiotGames.Client
       run: dotnet pack --configuration Release --no-build /p:Version=${{ inputs.version }}
+      shell: bash
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:

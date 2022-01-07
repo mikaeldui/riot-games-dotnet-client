@@ -1,4 +1,4 @@
-name: '.NET Pack'
+name: '.NET Pack & Publish as Artifact'
 description: Packs NuGet and publishes as artifacts
 inputs:
   version: 

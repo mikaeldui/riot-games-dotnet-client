@@ -5,7 +5,7 @@ on:
       version:
         description: 'The version being released'
         required: true
-        type: string
+        type: string        
     secrets:
       NUGET_ORG_API_KEY:
         required: true
@@ -44,4 +44,17 @@ jobs:
           token: ${{ github.token }}
           name: ${{ inputs.version }}
           tag: ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          body: |
+            You can install this specific version using either of these commands:
+
+            Using Package Manager Console:
+
+                PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ inputs.version }}
+
+            Using the .NET CLI:
+
+                dotnet add package MikaelDui.RiotGames.Client --version ${{ inputs.version }}
+
+            But it's preferable to use **floating versions**, see [README.md](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/README.md).
+
+            ${{ steps.tag_version.outputs.changelog }}

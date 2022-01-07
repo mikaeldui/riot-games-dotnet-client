@@ -64,6 +64,6 @@ jobs:
         version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
         
   release:
-    uses: ./.github/workflows/dotnet-release.yml
+    uses: ./.github/workflows/dotnet-release.yml@features/riot-games-dotnet-client
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: build

@@ -68,5 +68,6 @@ jobs:
     - name: Push
       uses: ./.github/actions/dotnet-push
       with:
+        path: ./RiotGames.Client/bin/Release/*.nupkg
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}

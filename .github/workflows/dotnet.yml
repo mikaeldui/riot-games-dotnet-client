@@ -64,6 +64,16 @@ jobs:
         version: 12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
         
   release:
-    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-release.yml@features/riot-games-dotnet-client
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-release.yml@main
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: build
+    
+  feature-branch:
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-feature-branch.yml@main
+    if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
+    needs: build
+    
+  pull-request:
+    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/dotnet-prerelease-pull-request.yml@main
+    if: ${{ github.event_name == 'pull_request' }}
     needs: build

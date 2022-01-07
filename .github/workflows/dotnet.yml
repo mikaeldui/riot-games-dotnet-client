@@ -23,39 +23,44 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
+    - name: 'Code Generation: Restore dependencies'
       working-directory: ./RiotGames.Client.CodeGeneration
       run: dotnet restore
-    - name: Run CodeGen    
+    - name: 'Code Generation: Run'    
       working-directory: ./RiotGames.Client.CodeGeneration
-      run: dotnet run --no-restore
-    - name: Restore dependencies
+      run: dotnet run --configuration Release --no-restore
+    - name: 'Riot Games Client: Restore dependencies'
       working-directory: ./RiotGames.Client
       run: dotnet restore
-    - name: Build    
+    - name: 'Riot Games Client: Build'  
       working-directory: ./RiotGames.Client
-      run: dotnet build --no-restore /nowarn:CS8669    
-    - name: Restore dependencies
+      run: dotnet build --configuration Release --no-restore /nowarn:CS8669    
+    - name: 'Tests: Restore dependencies'
       working-directory: ./RiotGames.Client.Tests
       run: dotnet restore
-    - name: Build    
+    - name: 'Tests: Build' 
       working-directory: ./RiotGames.Client.Tests
-      run: dotnet build --no-restore
-    - name: Test    
+      run: dotnet build --configuration Release --no-restore
+    - name: 'Tests: Run Tests'   
       working-directory: ./RiotGames.Client.Tests
-      run: dotnet test --no-build --verbosity normal
-    - name: Set outputs
+      run: dotnet test --configuration Release --no-build --verbosity normal
+    - name: Prepare packaging
       id: vars
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Pack Release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
       working-directory: ./RiotGames.Client
-      run: dotnet pack --no-build /p:Version=12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}
+      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}+${{ steps.vars.outputs.sha_short }}
     - name: Pack Feature
       if: ${{ startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push' }}
       working-directory: ./RiotGames.Client
-      run: dotnet pack --no-build /p:Version=12.1.1-feature.${GITHUB_REF##*/}+${{ github.run_number }}.${{ steps.vars.outputs.sha_short }}
+      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-feature.${GITHUB_REF##*/}+${{ steps.vars.outputs.sha_short }}
     - name: Pack Pull Request
       if: ${{ github.event_name == 'pull_request' }}
       working-directory: ./RiotGames.Client
-      run: dotnet pack --no-build /p:Version=12.1.1-pull-request.${{ github.event.pull_request.number }}+${{ github.run_number }}.${{ steps.vars.outputs.sha_short }}
+      run: dotnet pack --configuration Release --no-build /p:Version=12.1.1.${{ github.run_number }}-pull-request.${{ github.event.pull_request.number }}+${{ steps.vars.outputs.sha_short }}
+    - name: Push Package
+      working-directory: ./RiotGames.Client/bin/Release
+      run: dotnet nuget push *.nupkg -k $NUGET_ORG_API_KEY -s https://api.nuget.org/v3/index.json
+      env:
+        NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}

@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 Console.WriteLine("Welcome to the RiotGames.Client.CodeGeneration program!");
 
+// TODO: Get latest version from https://ddragon.leagueoflegends.com/api/versions.json
 
 // Let this still run on CI..
 await RiotGames.Client.CodeGeneration.RiotGamesApi.RiotApiRunner.GenerateCodeAsync();

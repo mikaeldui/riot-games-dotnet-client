@@ -11,8 +11,9 @@
     <PackageProjectUrl>https://github.com/mikaeldui/riot-games-dotnet-client</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
-    <PackageTags>riot games; league of legends; legends of runeterra; teamfight tactics; valorant</PackageTags>
+    <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; Teamfight Tactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient;</PackageTags>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageIcon>RiotGames-270x270.png</PackageIcon>
   </PropertyGroup>
 
     <ItemGroup>
@@ -40,6 +41,13 @@
 
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="RiotGames-270x270.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

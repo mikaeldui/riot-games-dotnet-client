@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5E05C473-40A1-4AFE-9FFC-D1575FD6CDF6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiotGames.Client.Tests", "RiotGames.Client.Tests\RiotGames.Client.Tests.csproj", "{E0C11E14-DC43-44AF-B49B-D05538C6B0CD}"

@@ -7,6 +7,8 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 It features a purpose-built Open API client generator and is written with Vanilla C#.
 
+There are auto-generated overloads so that you can pass a CLR object as parameter to the clients.
+
 It's easily extendible. You can leverage its type safety and inherit the clients or just use its GetAsync/PostAsync/PutAsync methods if you need to do something that's not supported.
 
 ## Download
@@ -36,7 +38,7 @@ using RiotGames.LeagueOfLegends;
 using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
 {
     var summoner = await client.GetSummonerByNameAsync("some-summoner-name");
-    var masteries = await client.GetMasteriesAsync(summoner.Id);
+    var masteries = await client.GetMasteriesAsync(summoner);
     foreach(var mastery in masteries)
         Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
 }
@@ -90,7 +92,7 @@ using RiotGames;
 using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1, ValPlatformRoute.NA))
 {
     var lolSummoner = await client.LeagueOfLegends.GetSummonerByNameAsync("some-summoner-name");
-    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner.Id);
+    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner);
     foreach(var mastery in lolMasteries)
         Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
 

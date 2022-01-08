@@ -110,10 +110,15 @@ namespace RiotGames.Client.CodeGeneration
     internal static class StatementHelper
     {
         public static string TypeArgument(string returnType) => $"<{returnType}>";
+
         public static string TypeArgument(string valueType, string returnType) => $"<{valueType}, {returnType}>";
-        public static StatementSyntax ReturnAwait(string objectName, string methodName, string? typeArgument, params string[] arguments) =>
-            SF.ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");
-        public static StatementSyntax SameClassReturnAwait(string methodName, string? typeArgument, params string[] arguments) =>
-            SF.ParseStatement($"return await {methodName}{typeArgument}({string.Join(", ", arguments)});");
+
+        public static StatementSyntax ReturnAwait(string? objectName, string methodName, string? typeArgument, params string[] arguments)
+        {
+            if (objectName == null)
+                return SF.ParseStatement($"return await {methodName}{typeArgument}({string.Join(", ", arguments)});");
+
+            return SF.ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");
+        }
     }
 }

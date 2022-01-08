@@ -41,6 +41,83 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             { "val-status-v1.Content", "Status" }
         };
 
+        public static readonly IReadOnlyDictionary<string, string> ParameterIdentifierTypos = new Dictionary<string, string>
+        {
+            { "encryptedPUUID", "encryptedPuuid" }
+        };
 
+        public static readonly IReadOnlyDictionary<string, string> PathParameterIdentifierTypos = 
+            ParameterIdentifierTypos.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
+
+        public static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> BasicInterfaces =
+            new Dictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>>
+            {
+                { 
+                    "RiotGames", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string", "EncryptedPuuid"), "IEncryptedPuuid" },
+                        { ("string", "EncryptedAccountId"), "IEncryptedAccountId" },
+                        { ("string", "EncryptedSummonerId"), "IEncryptedSummonerId" }
+                    } 
+                },
+                {
+                    "LeagueOfLegends", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string", "LeagueId"), "ILeagueOfLegendsLeagueId" },
+                        { ("string", "MatchId"), "ILeagueOfLegendsMatchId" },
+                        { ("int", "TournamentId"), "ILeagueOfLegendsTournamentId" }
+                    }
+                },
+                {
+                    "LegendsOfRuneterra", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string", "MatchId"), "ILegendsOfRuneterraMatchId" }
+                    }
+                },
+                {
+                    "TeamfightTactics", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string", "LeagueId"), "ITeamfightTacticsLeagueId" },
+                        { ("string", "MatchId"), "ITeamfightTacticsMatchId" }
+                    }
+                },
+                {
+                    "Valorant", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string", "MatchId"), "IValorantMatchId" }
+                    }
+                }
+            };
+
+        public static bool TryGetBasicInterfaceIdentifier(
+            this IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> basicInterfaces, 
+            Client client, string propertyTypeName, string propertyIdentifier, out string interfaceIdentifier)
+        {
+#pragma warning disable CS8601 // Possible null reference assignment.
+            // Start with game-specific interface
+            if (basicInterfaces.TryGetValue(client.ToString(), out var clientBasicInterfaces)
+                && clientBasicInterfaces.TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
+                return true;
+            // If not found, then maybe there's a Riot interface that could be used
+            else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
+                return true;
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+            return false;
+        }
+
+        // Because Riot has yet to update their specs.
+        public static readonly IReadOnlyDictionary<string, string> OldPropertyIdentifiers = new Dictionary<string, string>
+        {
+            { "Puuid", "EncryptedPuuid" },
+            { "AccountId", "EncryptedAccountId" },
+            { "SummonerId", "EncryptedSummonerId" }
+        };
+
+        public static readonly IReadOnlyDictionary<string, string> OldParameterIdentifiers = 
+            OldPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
+        
+        public static readonly IReadOnlyDictionary<string, string> OldPathParameterIdentifiers = 
+            OldParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
     }
 }

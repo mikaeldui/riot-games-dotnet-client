@@ -6,13 +6,21 @@ using System.Threading.Tasks;
 
 namespace RiotGames
 {
-    public interface ISummonerId
+    // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
+    public interface IEncryptedPuuid
     {
-        public string? SummonerId { get; set; }
+        public string EncryptedPuuid { get; set; }
     }
 
-    public interface IPuuid
+    // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
+    public interface IEncryptedAccountId
     {
-        public string? Puuid { get; set; }
+        public string EncryptedAccountId { get; set; }
+    }
+
+    // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
+    public interface IEncryptedSummonerId
+    {
+        public string EncryptedSummonerId { get; set; }
     }
 }

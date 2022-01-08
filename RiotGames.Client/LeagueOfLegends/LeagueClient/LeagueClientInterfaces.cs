@@ -11,6 +11,11 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         public long? SummonerId { get; set; }
     }
 
+    public interface IPuuid
+    {
+        public string? Puuid { get; set; }
+    }
+
     public interface IAccountId
     {
         public long? AccountId { get; set; }

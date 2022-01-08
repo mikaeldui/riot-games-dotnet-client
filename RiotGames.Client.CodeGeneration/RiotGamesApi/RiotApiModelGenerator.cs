@@ -45,10 +45,16 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 string typeName = kv.Value.GetTypeName();
 
-                typeName += "?"; // Make nullable
+                //typeName += "?"; // Make nullable
 
-                if(RiotApiModelsHelper.BasicInterfaces.TryGetValue((typeName, identifier), out string? @interface))
-                    classDeclaration = classDeclaration.AddBaseType(@interface);
+                if (RiotApiHacks.OldPropertyIdentifiers.TryGetValue(identifier, out string? newIdentifier))
+                {
+                    jsonProperty = identifier;
+                    identifier = newIdentifier;
+                }
+
+                if (RiotApiHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier(_client, typeName, identifier, out string? interfaceIdentifier))
+                    classDeclaration = classDeclaration.AddBaseType(interfaceIdentifier);
 
                 return _simpleProperty(typeName, identifier, jsonProperty);
             }).ToArray();

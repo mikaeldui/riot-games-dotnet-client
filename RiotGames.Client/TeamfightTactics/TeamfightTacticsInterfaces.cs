@@ -4,20 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.LeagueOfLegends
+namespace RiotGames.TeamfightTactics
 {
-    public interface ILeagueOfLegendsLeagueId
+    public interface ITeamfightTacticsLeagueId
     {
         public string LeagueId { get; set; }
     }
 
-    public interface ILeagueOfLegendsMatchId
+    public interface ITeamfightTacticsMatchId
     {
         public string MatchId { get; set; }
-    }
-
-    public interface ILeagueOfLegendsTournamentId
-    {
-        public int TournamentId { get; set; }
     }
 }

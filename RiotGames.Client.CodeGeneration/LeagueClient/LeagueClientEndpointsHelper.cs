@@ -17,7 +17,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     {
         static LeagueClientEndpointsHelper() => LeagueClientHacks.Activate();
 
-        public static string? GetNameFromPath(string path, bool? isPlural)
+        public static string GetNameFromPath(string path, bool? isPlural)
         {
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
 
@@ -32,7 +32,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             if (parts.Length == 1)
             {
-                var name = ToName(parts[0]);
+                var name = _toName(parts[0]);
                 if (isPlural != null)
                 {
                     if (isPlural == true)
@@ -80,9 +80,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     }
 
                     if (firstPart == "summoner" && parts.Length > 2 && parts[2].StartsWith("by-"))
-                        return ToName(firstPart) + ToName(parts[2]);
+                        return _toName(firstPart) + _toName(parts[2]);
 
-                    return ToName(String.Join('-', secondParts));
+                    return _toName(String.Join('-', secondParts));
                 }
             }
 
@@ -111,10 +111,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             if (firstPart == secondPart || firstPart == secondPart.Singularize())
             {
                 if (lastPart != null)
-                    return ToName(firstPart) + ToName(lastPart);
+                    return firstPart._toName() + lastPart._toName();
             }
 
-            return ToName(firstPart) + ToName(secondPart) + ToName(lastPart);
+            return firstPart._toName() + secondPart._toName() + lastPart?._toName();
         }
 
 
@@ -123,10 +123,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return OpenApiComponentHelper.GetTypeNameFromString(parameter.Format ?? parameter.Type);
         }
 
-        public static string? ToName(string name)
+        private static string _toName(this string name)
         {
-            if (name == null)
-                return null;
             return name.Replace(LeagueClientHacks.EndpointWordCompilations).ToPascalCase();
         }
 

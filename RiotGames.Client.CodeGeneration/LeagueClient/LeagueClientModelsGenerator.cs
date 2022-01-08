@@ -58,7 +58,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     else
                         typeName = kv.Value.GetTypeName();
 
-                    typeName += "?"; // Make nullable
+                    //typeName += "?"; // Make nullable
 
                     if (LeagueClientModelsHelper.BasicInterfaces.TryGetValue((typeName, propertyIdentifier), out string? @interface))
                         @class = @class.AddBaseType(@interface);

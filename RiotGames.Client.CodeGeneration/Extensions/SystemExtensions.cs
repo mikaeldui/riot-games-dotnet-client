@@ -63,6 +63,10 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string Remove(this string input, string toRemove) => input.Replace(toRemove, "");
 
+        public static string RemoveStart(this string input, string toRemove) => input.StartsWith(toRemove) ? input[toRemove.Length..] : input;
+
+        public static string RemoveEnd(this string input, string toRemove) => input.EndsWith(toRemove) ? input[..^toRemove.Length] : input;
+
         public static string RemoveChars(this string input, params char[] toRemove)
         {
             foreach (var c in toRemove)

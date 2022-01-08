@@ -60,12 +60,5 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             };
         }
 
-        public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
-            new Dictionary<(string typeName, string identifier), string>()
-            {
-                { ("string?", "Puuid"), "IPuuid" },
-                { ("string?", "SummonerId"), "ISummonerId" },
-                { ("int?", "TournamentId"), "ITournamentId" }
-            };
     }
 }

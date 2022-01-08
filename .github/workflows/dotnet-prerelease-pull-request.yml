@@ -9,10 +9,13 @@ on:
     secrets:
         NUGET_ORG_API_KEY:
           required: true
+          
+concurrency: pull-request
   
 jobs:
   pull-request:
     runs-on: ubuntu-latest
+    environment: pull-request
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET

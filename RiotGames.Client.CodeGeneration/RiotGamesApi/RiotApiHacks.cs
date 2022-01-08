@@ -41,6 +41,21 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             { "val-status-v1.Content", "Status" }
         };
 
+        public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
+            new Dictionary<(string typeName, string identifier), string>()
+            {
+                { ("string?", "EncryptedPuuid"), "IEncryptedPuuid" },
+                { ("string?", "EncryptedAccountId"), "IEncryptedAccountId" },
+                { ("string?", "EncryptedSummonerId"), "IEncryptedSummonerId" },
+                { ("int?", "TournamentId"), "ITournamentId" }
+            };
 
+        // Because Riot has yet to update their specs.
+        public static readonly IReadOnlyDictionary<string, string> OldPropertyNames = new Dictionary<string, string>
+        {
+            { "Puuid", "EncryptedPuuid" },
+            { "AccountId", "EncryptedAccountId" },
+            { "SummonerId", "EncryptedSummonerId" }
+        };
     }
 }

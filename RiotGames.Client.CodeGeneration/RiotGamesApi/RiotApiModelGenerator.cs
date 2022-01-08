@@ -47,7 +47,13 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 typeName += "?"; // Make nullable
 
-                if(RiotApiModelsHelper.BasicInterfaces.TryGetValue((typeName, identifier), out string? @interface))
+                if (RiotApiHacks.OldPropertyNames.TryGetValue(identifier, out string? newIdentifier))
+                {
+                    jsonProperty = identifier;
+                    identifier = newIdentifier;
+                }
+
+                if(RiotApiHacks.BasicInterfaces.TryGetValue((typeName, identifier), out string? @interface))
                     classDeclaration = classDeclaration.AddBaseType(@interface);
 
                 return _simpleProperty(typeName, identifier, jsonProperty);

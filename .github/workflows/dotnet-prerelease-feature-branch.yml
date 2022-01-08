@@ -4,7 +4,6 @@ on:
     secrets:
         NUGET_ORG_API_KEY:
           required: true
-concurrency: feature-branch
 jobs:
   feature-branch:
     runs-on: ubuntu-latest

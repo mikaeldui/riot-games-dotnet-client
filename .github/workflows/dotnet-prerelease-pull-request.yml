@@ -10,9 +10,11 @@ on:
         NUGET_ORG_API_KEY:
           required: true  
 jobs:
-  pull-request:
+  release:
     runs-on: ubuntu-latest
-    environment: pull-request
+    environment: 
+      name: pull-request
+      url: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET

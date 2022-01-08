@@ -1,13 +1,20 @@
 name: '.NET Pre-release: Feature Branch'
 on: 
   workflow_call:
+    inputs:
+      version:
+        description: 'The version being released'
+        required: true
+        type: string 
     secrets:
         NUGET_ORG_API_KEY:
           required: true
 jobs:
-  feature-branch:
+  release:
     runs-on: ubuntu-latest
-    environment: feature-branch
+    environment: 
+      name: feature-branch
+      url: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}-feature.${GITHUB_REF##*/}
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET

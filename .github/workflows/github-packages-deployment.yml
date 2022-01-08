@@ -1,4 +1,4 @@
-name: GitHub Packages Push
+name: GitHub Packages Deployment
 on: [ workflow_call ]
 jobs:
   push:
@@ -13,14 +13,14 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Download NuGet Package
+      - name: Download NuGet Package Artifact
         uses: actions/download-artifact@v2
         with:
           name: nupkg
+      - name: Get Package Version
+        id: version
+        uses: ./.github/actions/nuget-package-version
       - name: Push
         uses: ./.github/actions/dotnet-push
         with:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: Package Version
-        id: version
-        uses: ./.github/actions/nuget-package-version

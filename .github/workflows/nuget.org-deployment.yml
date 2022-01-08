@@ -1,4 +1,4 @@
-name: NuGet.org Push
+name: NuGet.org Deployment
 on: 
   workflow_call:      
     secrets:
@@ -17,14 +17,14 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Download NuGet Package
+      - name: Download NuGet Package Artifact
         uses: actions/download-artifact@v2
         with:
           name: nupkg
-      - name: Push
+      - name: Get Package Version
+        id: version
+        uses: ./.github/actions/nuget-package-version
+      - name: Push to NuGet.org
         uses: ./.github/actions/dotnet-push
         with:
           NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
-      - name: Package Version
-        id: version
-        uses: ./.github/actions/nuget-package-version

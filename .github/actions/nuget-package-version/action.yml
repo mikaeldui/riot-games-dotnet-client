@@ -6,7 +6,9 @@ inputs:
     required: true
     default: '*.nupkg'
 outputs:
-  version: ${{ steps.version.outputs.version }}
+  version: 
+    description: 'The version of the package, without build metadata.'
+    value: ${{ steps.version.outputs.version }}
 
 runs:
   using: "composite"

@@ -89,6 +89,21 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 }
             };
 
+        public static bool TryGetBasicInterfaceIdentifier(
+            this IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> basicInterfaces, 
+            Client client, string propertyTypeName, string propertyIdentifier, out string? interfaceIdentifier)
+        {
+            // Start with game-specific interface
+            if (basicInterfaces.TryGetValue(client.ToString(), out var clientBasicInterfaces)
+                && clientBasicInterfaces.TryGetValue((propertyTypeName, propertyIdentifier), out interfaceIdentifier))
+                return true;
+            // If not found, then maybe there's a Riot interface that could be used
+            else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName, propertyIdentifier), out interfaceIdentifier))
+                return true;
+
+            return false;
+        }
+
         // Because Riot has yet to update their specs.
         public static readonly IReadOnlyDictionary<string, string> OldPropertyIdentifiers = new Dictionary<string, string>
         {

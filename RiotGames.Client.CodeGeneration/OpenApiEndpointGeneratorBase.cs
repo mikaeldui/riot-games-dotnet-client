@@ -27,7 +27,7 @@ namespace RiotGames.Client.CodeGeneration
                 ClassDeclaration = ClassHelper.CreatePublicClass(className);
         }
 
-        protected void AddEndpoint(EndpointDefinition? endpoint)
+        protected virtual void AddEndpoint(EndpointDefinition? endpoint)
         {
             if (endpoint == null)
                 return;

@@ -33,13 +33,44 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             _client = client;
         }
 
+        protected override void AddEndpoint(EndpointDefinition? endpoint)
+        {
+            base.AddEndpoint(endpoint);
+
+            if (endpoint == null)
+                return;
+
+            // Maybe we have a basic interface and can add an overlaod.
+            if (endpoint.Identifier.StartsWith("Get") && endpoint.RequestPathParameters != null && endpoint.RequestPathParameters.Count == 1)
+            {
+                var parameter = endpoint.RequestPathParameters.Single();
+
+                if (RiotApiHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier(_client, parameter.Value + "?", parameter.Key.ToPascalCase(), out string? interfaceIdentifier))
+                {
+                    if (endpoint.Identifier.Contains("By"))
+                    {
+                        var methodIdentifierParts = endpoint.Identifier.Split("By");
+                        var interfaceMethodIdentifier = methodIdentifierParts[0];
+                        var parameterIdentifier = methodIdentifierParts[1];
+                        string? interfaceMethodTypeArgument = null;
+
+                        var method = MethodHelper.PublicAsyncTask(endpoint.ReturnTypeName, interfaceMethodIdentifier,
+                            StatementHelper.ReturnAwait(null, endpoint.Identifier.EndWith("Async"), interfaceMethodTypeArgument, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                            new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
+
+                        ClassDeclaration = ClassDeclaration.AddMembers(method);
+                    }
+                }
+            }
+        }
+
         protected override EndpointDefinition? GetMethodObjectToEndpointDefinition(RiotApiMethodObject getMethodObject, string path, RiotApiPathObject pathObject)
         {
             //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
 
             var responseSchema = getMethodObject?.Responses?["200"]?.Content?.First().Value.Schema;
             bool isArrayReponse = responseSchema?.Type == "array";
-            var nameFromPath = ClientHelper.GetNameFromPath(path, isArrayReponse);
+            var methodIdentifier = "Get" + ClientHelper.GetNameFromPath(path, isArrayReponse);
             bool isPlatform = pathObject.XRouteEnum != "regional";
 
             string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
@@ -67,7 +98,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 path = path.Replace(RiotApiHacks.OldPathParameterIdentifiers);
             }
 
-            return new EndpointDefinition("Get" + nameFromPath, responseSchema.GetTypeName(), 
+            return new EndpointDefinition(methodIdentifier, returnType, 
                 clientName, httpClientMethod,typeArgument, path, null, pathParameters);            
         }
 

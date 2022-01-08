@@ -2,6 +2,7 @@ name: GitHub Packages Push
 on: [ workflow_call ]
 jobs:
   push:
+    name: 'Push to GitHub Packages'
     runs-on: ubuntu-latest
     environment: 
       name: github-packages

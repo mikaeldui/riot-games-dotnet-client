@@ -6,6 +6,7 @@ on:
         required: true
 jobs:
   push:
+    name: 'Push to NuGet.org'
     runs-on: ubuntu-latest
     environment: 
       name: nuget.org

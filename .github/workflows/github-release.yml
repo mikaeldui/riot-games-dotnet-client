@@ -2,6 +2,7 @@ name: Create GitHub Release
 on: [ workflow_call ]
 jobs:
   create-release:
+    name: 'Create GitHub Release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

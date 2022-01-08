@@ -8,6 +8,6 @@ namespace RiotGames.Valorant
 {
     public interface IValorantMatchId
     {
-        public string? MatchId { get; set; }
+        public string MatchId { get; set; }
     }
 }

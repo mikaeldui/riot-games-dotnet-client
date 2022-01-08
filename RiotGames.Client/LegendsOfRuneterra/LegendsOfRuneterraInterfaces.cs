@@ -8,6 +8,6 @@ namespace RiotGames.LegendsOfRuneterra
 {
     public interface ILegendsOfRuneterraMatchId
     {
-        public string? MatchId { get; set; }
+        public string MatchId { get; set; }
     }
 }

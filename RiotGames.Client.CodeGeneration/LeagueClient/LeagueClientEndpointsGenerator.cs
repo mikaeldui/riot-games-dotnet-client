@@ -157,10 +157,17 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             if (!parameters.All(p => p.In is "path" or "header" or "query"))
                 Debugger.Break();
 
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return parameters
                 .GroupBy(p => p.Name).Select(g => g.First())
                 .Where(p => p.In is not "header" and not "query")
                 .ToDictionary(p => p.Name, p => p.GetTypeName());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+
         }
 
 
@@ -218,6 +225,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                 if (MethodVersionSuffix)
                 {
+                    if (VersionsByPaths == null)
+                        throw new Exception("VersionsByPaths isn't set!");
+
                     var pathVersions = VersionsByPaths[string.Join('/', path.SplitAndRemoveEmptyEntries('/').Skip(2))];
                     if (pathVersions.Length != 1)
                     {

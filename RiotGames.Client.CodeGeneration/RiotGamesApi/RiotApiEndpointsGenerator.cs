@@ -45,21 +45,23 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             {
                 var parameter = endpoint.RequestPathParameters.Single();
 
-                if (RiotApiHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier(_client, parameter.Value + "?", parameter.Key.ToPascalCase(), out string? interfaceIdentifier))
+                if (RiotApiHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier(_client, parameter.Value + "?", parameter.Key.ToPascalCase(), out string interfaceIdentifier))
                 {
+                    string methodIdentifier = endpoint.Identifier;
+                    string parameterIdentifier = interfaceIdentifier[1..].RemoveStart(_client.ToString()).RemoveStart("Encrypted").RemoveEnd("Id");
+
                     if (endpoint.Identifier.Contains("By"))
                     {
-                        var methodIdentifierParts = endpoint.Identifier.Split("By");
-                        var interfaceMethodIdentifier = methodIdentifierParts[0];
-                        var parameterIdentifier = methodIdentifierParts[1];
-                        string? interfaceMethodTypeArgument = null;
-
-                        var method = MethodHelper.PublicAsyncTask(endpoint.ReturnTypeName, interfaceMethodIdentifier,
-                            StatementHelper.ReturnAwait(null, endpoint.Identifier.EndWith("Async"), interfaceMethodTypeArgument, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
-                            new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
-
-                        ClassDeclaration = ClassDeclaration.AddMembers(method);
+                        var methodIdentifierParts = methodIdentifier.Split("By");
+                        methodIdentifier = methodIdentifierParts[0];
+                        parameterIdentifier = methodIdentifierParts[1];
                     }
+
+                    var method = MethodHelper.PublicAsyncTask(endpoint.ReturnTypeName, methodIdentifier,
+                        StatementHelper.ReturnAwait(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                        new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
+
+                    ClassDeclaration = ClassDeclaration.AddMembers(method);
                 }
             }
         }
@@ -126,9 +128,15 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             if (!parameters.All(p => p.In is "path" or "header" or "query"))
                 Debugger.Break();
 
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return parameters
                 .Where(p => p.In is not "header" and not "query")
-                .ToDictionary(p => p.Name, p => p.Schema.XType ?? p.Schema.Type);
+                .ToDictionary(p => p.Name, p => (p.Schema.XType ?? p.Schema.Type).ToLower());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
         }
 
         protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(RiotApiPostMethodObject postMethodObject, string path, RiotApiPathObject pathObject)

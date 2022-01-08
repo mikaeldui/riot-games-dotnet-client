@@ -8,16 +8,16 @@ namespace RiotGames.LeagueOfLegends
 {
     public interface ILeagueOfLegendsLeagueId
     {
-        public string? LeagueId { get; set; }
+        public string LeagueId { get; set; }
     }
 
     public interface ILeagueOfLegendsMatchId
     {
-        public string? MatchId { get; set; }
+        public string MatchId { get; set; }
     }
 
     public interface ILeagueOfLegendsTournamentId
     {
-        public int? TournamentId { get; set; }
+        public int TournamentId { get; set; }
     }
 }

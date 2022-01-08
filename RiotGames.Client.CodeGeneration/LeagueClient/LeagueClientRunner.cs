@@ -33,7 +33,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             // TODO: Maybe group them by module and put them in separate namespaces.
 
             var generator = new LeagueClientModelsGenerator();
-            generator.AddDtos(schema.Components.Schemas);
+            generator.AddDtos(schema?.Components?.Schemas);
             enums = generator.GetEnums();
             FileWriter.WriteLeagueClientModelsFile(generator.GenerateCode());
         }

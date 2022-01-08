@@ -55,51 +55,53 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 { 
                     "RiotGames", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string?", "EncryptedPuuid"), "IEncryptedPuuid" },
-                        { ("string?", "EncryptedAccountId"), "IEncryptedAccountId" },
-                        { ("string?", "EncryptedSummonerId"), "IEncryptedSummonerId" }
+                        { ("string", "EncryptedPuuid"), "IEncryptedPuuid" },
+                        { ("string", "EncryptedAccountId"), "IEncryptedAccountId" },
+                        { ("string", "EncryptedSummonerId"), "IEncryptedSummonerId" }
                     } 
                 },
                 {
                     "LeagueOfLegends", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string?", "LeagueId"), "ILeagueOfLegendsLeagueId" },
-                        { ("string?", "MatchId"), "ILeagueOfLegendsMatchId" },
-                        { ("int?", "TournamentId"), "ILeagueOfLegendsTournamentId" }
+                        { ("string", "LeagueId"), "ILeagueOfLegendsLeagueId" },
+                        { ("string", "MatchId"), "ILeagueOfLegendsMatchId" },
+                        { ("int", "TournamentId"), "ILeagueOfLegendsTournamentId" }
                     }
                 },
                 {
                     "LegendsOfRuneterra", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string?", "MatchId"), "ILegendsOfRuneterraMatchId" }
+                        { ("string", "MatchId"), "ILegendsOfRuneterraMatchId" }
                     }
                 },
                 {
                     "TeamfightTactics", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string?", "LeagueId"), "ITeamfightTacticsLeagueId" },
-                        { ("string?", "MatchId"), "ITeamfightTacticsMatchId" }
+                        { ("string", "LeagueId"), "ITeamfightTacticsLeagueId" },
+                        { ("string", "MatchId"), "ITeamfightTacticsMatchId" }
                     }
                 },
                 {
                     "Valorant", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string?", "MatchId"), "IValorantMatchId" }
+                        { ("string", "MatchId"), "IValorantMatchId" }
                     }
                 }
             };
 
         public static bool TryGetBasicInterfaceIdentifier(
             this IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> basicInterfaces, 
-            Client client, string propertyTypeName, string propertyIdentifier, out string? interfaceIdentifier)
+            Client client, string propertyTypeName, string propertyIdentifier, out string interfaceIdentifier)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             // Start with game-specific interface
             if (basicInterfaces.TryGetValue(client.ToString(), out var clientBasicInterfaces)
-                && clientBasicInterfaces.TryGetValue((propertyTypeName, propertyIdentifier), out interfaceIdentifier))
+                && clientBasicInterfaces.TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
                 return true;
             // If not found, then maybe there's a Riot interface that could be used
-            else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName, propertyIdentifier), out interfaceIdentifier))
+            else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
                 return true;
+#pragma warning restore CS8601 // Possible null reference assignment.
 
             return false;
         }

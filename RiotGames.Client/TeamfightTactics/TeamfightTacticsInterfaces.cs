@@ -8,11 +8,11 @@ namespace RiotGames.TeamfightTactics
 {
     public interface ITeamfightTacticsLeagueId
     {
-        public string? LeagueId { get; set; }
+        public string LeagueId { get; set; }
     }
 
     public interface ITeamfightTacticsMatchId
     {
-        public string? MatchId { get; set; }
+        public string MatchId { get; set; }
     }
 }

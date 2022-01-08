@@ -45,7 +45,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 string typeName = kv.Value.GetTypeName();
 
-                typeName += "?"; // Make nullable
+                //typeName += "?"; // Make nullable
 
                 if (RiotApiHacks.OldPropertyIdentifiers.TryGetValue(identifier, out string? newIdentifier))
                 {

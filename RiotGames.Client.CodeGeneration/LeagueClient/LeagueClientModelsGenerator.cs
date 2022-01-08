@@ -60,7 +60,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                     typeName += "?"; // Make nullable
 
-                return _simpleProperty(typeName, propertyIdentifier, jsonProperty);
+                    if (LeagueClientModelsHelper.BasicInterfaces.TryGetValue((typeName, propertyIdentifier), out string? @interface))
+                        @class = @class.AddBaseType(@interface);
+
+                    return _simpleProperty(typeName, propertyIdentifier, jsonProperty);
                 }).ToArray();
 
                 member = @class.AddMembers(properties);

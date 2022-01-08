@@ -26,7 +26,7 @@ namespace RiotGames.Client.CodeGeneration
             SF.ClassDeclaration(@class).AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.PartialKeyword));
 
         public static ClassDeclarationSyntax CreatePublicClassWithBaseType(string @class, string baseType) =>
-            CreatePublicClass(@class).AddBaseListTypes(SF.SimpleBaseType(SF.ParseTypeName(baseType)));
+            CreatePublicClass(@class).AddBaseType(baseType);
 
         public static ConstructorDeclarationSyntax CreateInternalConstructor(string className, string parameterType, string parameterIdentifier, string fieldIdentifier) =>
             SF.ConstructorDeclaration(className)
@@ -83,7 +83,7 @@ namespace RiotGames.Client.CodeGeneration
 
     internal static class MethodHelper
     {
-        public static MethodDeclarationSyntax? PublicAsyncTask(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
+        public static MethodDeclarationSyntax PublicAsyncTask(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
         {
             var methodDeclaration = SF.MethodDeclaration(
                 SF.ParseTypeName("Task" + StatementHelper.TypeArgument(returnType)), 

@@ -11,8 +11,6 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
     internal static class RiotApiModelsHelper
     {
-        // RiotApiOpenApiSchema.PathObject.MethodObject.ResponseObject.ContentObject.SchemaObject
-
         public static string GetTypeNameFromRef(string @ref)
         {
             @ref = RiotApiHacks.EndpointsWithDuplicateSchemas
@@ -61,5 +59,13 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 _ => name,
             };
         }
+
+        public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
+            new Dictionary<(string typeName, string identifier), string>()
+            {
+                { ("string?", "Puuid"), "IPuuid" },
+                { ("string?", "SummonerId"), "ISummonerId" },
+                { ("int?", "TournamentId"), "ITournamentId" }
+            };
     }
 }

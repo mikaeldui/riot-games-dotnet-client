@@ -50,19 +50,25 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             string httpClientMethod = GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 
             var pathParameters = ToPathParameters(getMethodObject?.Parameters);
-            // Add "$" if it's to be interpolated.
 
-            string requestUriArgument = pathParameters == null ? $"\"{path}\"" : $"$\"{path}\"";
+            // Addd quotes for C# string
+            path = $"\"{path}\"";
 
-            return new EndpointDefinition(
-                "Get" + nameFromPath, 
-                responseSchema.GetTypeName(), 
-                clientName, 
-                httpClientMethod,
-                typeArgument, 
-                requestUriArgument, 
-                null, 
-                pathParameters);            
+            if (pathParameters != null)
+            {
+                // Add "$" for string interpolation.
+                path = $"${path}";
+
+                // Start with typos
+                pathParameters.ReplaceKeys(RiotApiHacks.ParameterIdentifierTypos);
+                path = path.Replace(RiotApiHacks.PathParameterIdentifierTypos);
+
+                pathParameters.ReplaceKeys(RiotApiHacks.OldParameterIdentifiers);
+                path = path.Replace(RiotApiHacks.OldPathParameterIdentifiers);
+            }
+
+            return new EndpointDefinition("Get" + nameFromPath, responseSchema.GetTypeName(), 
+                clientName, httpClientMethod,typeArgument, path, null, pathParameters);            
         }
 
         public override string GenerateCode()

@@ -41,6 +41,14 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             { "val-status-v1.Content", "Status" }
         };
 
+        public static readonly IReadOnlyDictionary<string, string> ParameterIdentifierTypos = new Dictionary<string, string>
+        {
+            { "encryptedPUUID", "encryptedPuuid" }
+        };
+
+        public static readonly IReadOnlyDictionary<string, string> PathParameterIdentifierTypos = 
+            ParameterIdentifierTypos.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
+
         public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
             new Dictionary<(string typeName, string identifier), string>()
             {
@@ -51,11 +59,17 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             };
 
         // Because Riot has yet to update their specs.
-        public static readonly IReadOnlyDictionary<string, string> OldPropertyNames = new Dictionary<string, string>
+        public static readonly IReadOnlyDictionary<string, string> OldPropertyIdentifiers = new Dictionary<string, string>
         {
             { "Puuid", "EncryptedPuuid" },
             { "AccountId", "EncryptedAccountId" },
             { "SummonerId", "EncryptedSummonerId" }
         };
+
+        public static readonly IReadOnlyDictionary<string, string> OldParameterIdentifiers = 
+            OldPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
+        
+        public static readonly IReadOnlyDictionary<string, string> OldPathParameterIdentifiers = 
+            OldParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
     }
 }

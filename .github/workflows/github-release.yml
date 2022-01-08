@@ -1,0 +1,45 @@
+name: Create GitHub Release
+on: [ workflow_call ]
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Download NuGet Package
+        uses: actions/download-artifact@v2
+        with:
+          name: nupkg
+      - name: Package Version
+        id: version
+        uses: ./.github/actions/nuget-package-version
+      - name: Create tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.version.outputs.version }}
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.nupkg"
+          token: ${{ github.token }}
+          name: ${{ inputs.version }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          body: |
+            You can install [this specific version from NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ steps.version.outputs.version }}) 
+            or [GitHub Packages](https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018?version=${{ steps.version.outputs.version }}) using either of these commands:
+
+            Using **Package Manager Console**:
+
+                PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ steps.version.outputs.version }}
+
+            Using the **.NET CLI**:
+
+                dotnet add package MikaelDui.RiotGames.Client --version ${{ steps.version.outputs.version }}
+
+            But it's preferable to use **floating versions**, see [README.md](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/README.md#download).
+
+          #  ${{ steps.tag_version.outputs.changelog }}

@@ -7,8 +7,8 @@ on:
         required: true
         type: string 
     secrets:
-        NUGET_ORG_API_KEY:
-          required: true  
+      NUGET_ORG_API_KEY:
+        required: true  
 jobs:
   release:
     runs-on: ubuntu-latest

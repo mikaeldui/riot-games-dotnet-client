@@ -1,0 +1,20 @@
+name: 'NuGet: Get version from file name' 
+description: Parses the file name
+inputs:
+  path: 
+    description: 'The path to the package'
+    required: true
+    default: '*.nupkg'
+outputs:
+  version: ${{ steps.version.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Parse version
+      id: version
+      run: |
+        filename=$(basename ${{ inputs.path }})
+        version=$(echo $filename | sed -e 's/.*Client.\(.*\).nupkg.*/\1/')
+        echo "::set-output name=version::$(echo $version)"
+      shell: bash

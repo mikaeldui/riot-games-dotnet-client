@@ -1,0 +1,25 @@
+name: GitHub Packages Push
+on: [ workflow_call ]
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    environment: 
+      name: github-packages
+      url: https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018?version=${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Download NuGet Package
+        uses: actions/download-artifact@v2
+        with:
+          name: nupkg
+      - name: Push
+        uses: ./.github/actions/dotnet-push
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Package Version
+        id: version
+        uses: ./.github/actions/nuget-package-version

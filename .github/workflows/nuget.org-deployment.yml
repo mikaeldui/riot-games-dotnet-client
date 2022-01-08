@@ -1,20 +1,15 @@
-name: '.NET Pre-release: Feature Branch'
+name: NuGet.org Push
 on: 
-  workflow_call:
-    inputs:
-      version:
-        description: 'The version being released'
-        required: true
-        type: string 
+  workflow_call:      
     secrets:
       NUGET_ORG_API_KEY:
         required: true
 jobs:
-  release:
+  push:
     runs-on: ubuntu-latest
     environment: 
-      name: feature-branch
-      url: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ inputs.version }}-feature.${GITHUB_REF##*/}
+      name: nuget.org
+      url: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
@@ -28,5 +23,7 @@ jobs:
       - name: Push
         uses: ./.github/actions/dotnet-push
         with:
-          GITHUB_TOKEN: ${{ github.token }}
           NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
+      - name: Package Version
+        id: version
+        uses: ./.github/actions/nuget-package-version

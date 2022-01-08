@@ -53,7 +53,11 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     identifier = newIdentifier;
                 }
 
-                if(RiotApiHacks.BasicInterfaces.TryGetValue((typeName, identifier), out string? @interface))
+                // Start with game-specific interface
+                if (RiotApiHacks.BasicInterfaces.TryGetValue(_client.ToString(), out var basicInterfaces) && basicInterfaces.TryGetValue((typeName, identifier), out string? @interface))
+                    classDeclaration = classDeclaration.AddBaseType(@interface);
+                // If not found, then maybe there's a Riot interface that could be used
+                else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((typeName, identifier), out @interface))
                     classDeclaration = classDeclaration.AddBaseType(@interface);
 
                 return _simpleProperty(typeName, identifier, jsonProperty);

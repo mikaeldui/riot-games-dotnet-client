@@ -49,13 +49,44 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         public static readonly IReadOnlyDictionary<string, string> PathParameterIdentifierTypos = 
             ParameterIdentifierTypos.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
 
-        public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
-            new Dictionary<(string typeName, string identifier), string>()
+        public static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> BasicInterfaces =
+            new Dictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>>
             {
-                { ("string?", "EncryptedPuuid"), "IEncryptedPuuid" },
-                { ("string?", "EncryptedAccountId"), "IEncryptedAccountId" },
-                { ("string?", "EncryptedSummonerId"), "IEncryptedSummonerId" },
-                { ("int?", "TournamentId"), "ITournamentId" }
+                { 
+                    "RiotGames", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string?", "EncryptedPuuid"), "IEncryptedPuuid" },
+                        { ("string?", "EncryptedAccountId"), "IEncryptedAccountId" },
+                        { ("string?", "EncryptedSummonerId"), "IEncryptedSummonerId" }
+                    } 
+                },
+                {
+                    "LeagueOfLegends", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string?", "LeagueId"), "ILeagueOfLegendsLeagueId" },
+                        { ("string?", "MatchId"), "ILeagueOfLegendsMatchId" },
+                        { ("int?", "TournamentId"), "ILeagueOfLegendsTournamentId" }
+                    }
+                },
+                {
+                    "LegendsOfRuneterra", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string?", "MatchId"), "ILegendsOfRuneterraMatchId" }
+                    }
+                },
+                {
+                    "TeamfightTactics", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string?", "LeagueId"), "ITeamfightTacticsLeagueId" },
+                        { ("string?", "MatchId"), "ITeamfightTacticsMatchId" }
+                    }
+                },
+                {
+                    "Valorant", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("string?", "MatchId"), "IValorantMatchId" }
+                    }
+                }
             };
 
         // Because Riot has yet to update their specs.

@@ -17,15 +17,15 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      
-      - name: Get Package Version
-        uses: mikaeldui/actions/nuget-package-version@main
-        id: version
 
       - name: Download NuGet Package Artifact
         uses: actions/download-artifact@v2
         with:
           name: nupkg
+
+      - name: Get Package Version
+        uses: mikaeldui/actions/nuget-package-version@main
+        id: version
         
       - name: Push to NuGet.org
         uses: mikaeldui/actions/dotnet-push@main

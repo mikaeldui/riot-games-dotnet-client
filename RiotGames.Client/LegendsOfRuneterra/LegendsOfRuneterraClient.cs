@@ -6,7 +6,6 @@ namespace RiotGames.LegendsOfRuneterra
     {
         public LegendsOfRuneterraClient(string apiKey, RegionalRoute region) : base(apiKey, region)
         {
-
         }
     }
 }

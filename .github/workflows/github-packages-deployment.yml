@@ -21,5 +21,5 @@ jobs:
         
       - name: Push
         uses: mikaeldui/actions/dotnet-push@main
-s        with:
+        with:
           GITHUB_TOKEN: ${{ github.token }}

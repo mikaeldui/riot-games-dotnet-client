@@ -80,6 +80,7 @@ jobs:
       uses: mikaeldui/actions/dotnet-pack-and-publish-artifact@main
       with:
         version: ${{ steps.version.outputs.version }}
+        project_directory: ./RiotGames.Client
 
   nuget-org:
     name: 'NuGet.org'

@@ -101,7 +101,7 @@ You can use the [`LeagueClient`](https://github.com/mikaeldui/riot-games-dotnet-
 using RiotGames.LeagueOfLegends.LeagueClient;
 using LeagueClient.LeagueOfLegendsClient client = new();
 
-var session = await client.LChampSelect.GetSessionAsync();
+var session = await client.ChampSelect.GetSessionAsync();
 foreach(var teamMember in session.MyTeam)
 {
     var summoner = await client.Summoners.GetSummonerAsync(teamMember);

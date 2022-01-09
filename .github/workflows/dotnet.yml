@@ -85,7 +85,7 @@ jobs:
   nuget-org:
     name: 'NuGet.org'
     if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-    uses: mikaeldui/workflows/nupkg/nuget.org-deploy.yml@main
+    uses: mikaeldui/actions/.github/workflows/nupkg/nuget.org-deploy.yml@main
     needs: build
     secrets:
       NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
@@ -93,13 +93,13 @@ jobs:
   github-packages:
     name: 'GitHub Packages'
     if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-    uses: mikaeldui/workflows/nupkg/github-packages-deploy.yml@main
+    uses: mikaeldui/actions/.github/workflows/nupkg/github-packages-deploy.yml@main
     needs: build
 
   github-release:
     name: 'GitHub Release'
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    uses: mikaeldui/workflows/nupkg/github-release.yml@main
+    uses: mikaeldui/actions/.github/workflows/nupkg/github-release.yml@main
     needs: [nuget-org, github-packages]
 
   github-pull-request-comment:

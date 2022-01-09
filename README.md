@@ -35,13 +35,13 @@ You can also use a **PackageReference** to stay **up-to-date** with the **latest
 using Camille.Enums;
 using RiotGames.LeagueOfLegends;
 
-using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
-{
-    var summoner = await client.GetSummonerByNameAsync("some-summoner-name");
-    var masteries = await client.GetMasteriesAsync(summoner);
-    foreach(var mastery in masteries)
-        Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
-}
+using LeagueOfLegends client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
+
+var summoner = await client.GetSummonerByNameAsync("Some summoner name");
+var masteries = await client.GetMasteriesAsync(summoner);
+foreach(var mastery in masteries)
+    Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
+
 ```
 
 ### Getting [Legends of Runeterra][lor] [leadersboard](https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards)
@@ -49,12 +49,12 @@ using (var client = new LeagueOfLegendsClient("ABCD-ABCD-ABCD-ABCD", PlatformRou
 ```C#
 using RiotGames.LegendsOfRuneterra;
 
-using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD", RegionRoute.AMERICAS))
-{
-    var leaderboards = await client.GetRankedLeaderboardsAsync();
-    foreach(var player in leaderboards.Players)
-        Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
-}
+using LegendsOfRuneterraClient client = new("ABCD-ABCD-ABCD-ABCD", RegionRoute.AMERICAS))
+
+var leaderboards = await client.GetRankedLeaderboardsAsync();
+foreach(var player in leaderboards.Players)
+    Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
+
 ```
 
 ### Getting [Teamfight Tactics][tft] [league entires](https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner)
@@ -62,12 +62,12 @@ using (var client = new LegendsOfRuneterraClient("ABCD-ABCD-ABCD-ABCD", RegionRo
 ```C#
 using RiotGames.TeamfightTactics;
 
-using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
-{
-    var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
-    foreach(var entry in leagueEntries)
-        Console.PrintLine($"Player #{entry.SummonerName}: {player.LeaguePoints} LP");
-}
+using TeamfightTacticsClient client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1))
+
+var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
+foreach(var entry in leagueEntries)
+    Console.PrintLine($"Player #{entry.SummonerName}: {player.LeaguePoints} LP");
+
 ```
 
 ### Getting a [Valorant][val] [match](https://developer.riotgames.com/apis#val-match-v1/GET_getMatch)
@@ -75,12 +75,12 @@ using (var client = new TeamfightTacticsClient("ABCD-ABCD-ABCD-ABCD", PlatformRo
 ```C#
 using RiotGames.Valorant;
 
-using (var client = new ValorantClient("ABCD-ABCD-ABCD-ABCD", ValPlatformRoute.EU))
-{
-    var match = await client.GetMatchAsync("some-match-ID");
-    foreach(var player in match.Players)
-        Console.PrintLine($"Player #{player.Title} played champion #{player.ChampionId}");
-}
+using ValorantClient client = new("ABCD-ABCD-ABCD-ABCD", ValPlatformRoute.EU))
+
+var match = await client.GetMatchAsync("some-match-ID");
+foreach(var player in match.Players)
+    Console.PrintLine($"Player #{player.Title} played champion #{player.ChampionId}");
+
 ```
 
 ### Doing multi-game stuff
@@ -89,17 +89,17 @@ Using the [`RiotGamesClient`](https://github.com/mikaeldui/riot-games-dotnet-cli
 ```C#
 using RiotGames;
 
-using (var client = new RiotGamesClient("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1, ValPlatformRoute.NA))
-{
-    var lolSummoner = await client.LeagueOfLegends.GetSummonerByNameAsync("some-summoner-name");
-    var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner);
-    foreach(var mastery in lolMasteries)
-        Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
+using RiotGamesClient client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1, ValPlatformRoute.NA))
 
-    var lorLeaderboards = await client.LegendsOfRuneterra.GetRankedLeaderboardsAsync();
-    foreach(var player in lorLeaderboards.Players)
-        Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
-}
+var lolSummoner = await client.LeagueOfLegends.GetSummonerByNameAsync("some-summoner-name");
+var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner);
+foreach(var mastery in lolMasteries)
+    Console.PrintLine($"Champion #{mastery.ChampionId}: {mastery.championPoints} points");
+
+var lorLeaderboards = await client.LegendsOfRuneterra.GetRankedLeaderboardsAsync();
+foreach(var player in lorLeaderboards.Players)
+    Console.PrintLine($"Player #{player.Name}: {player.Lp} LP");
+
 ```
 
 ### Getting the current League of Legends champ select
@@ -108,15 +108,15 @@ You can use the [`LeagueClient`](https://github.com/mikaeldui/riot-games-dotnet-
 ```C#
 using RiotGames.LeagueOfLegends.LeagueClient;
 
-using (var client = new LeagueClient())
+using LeagueClient.LeagueOfLegendsClient client = new()
+
+var session = await client.LChampSelect.GetSessionAsync();
+foreach(var teamMember in session.MyTeam)
 {
-    var session = await client.LolChampSelect.GetSessionAsync();
-    foreach(var teamMember in session.MyTeam)
-    {
-        var summoner = await client.LolSummoners.GetSummonerAsync(teamMember.SummonerId);
-        Console.PrintLine($"Team member: {summoner.DisplayName}");
-    }
+    var summoner = await client.Summoners.GetSummonerAsync(teamMember);
+    Console.PrintLine($"Team member: {summoner.DisplayName}");
 }
+
 ```
 
 ## Notice from [Riot Games][riot]

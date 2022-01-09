@@ -41,6 +41,39 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             Enums = enums;
         }
 
+        protected override void AddEndpoint(EndpointDefinition? endpoint)
+        {
+            base.AddEndpoint(endpoint);
+
+            if (endpoint == null)
+                return;
+
+            // Maybe we have a basic interface and can add an overlaod.
+            if (endpoint.Identifier.StartsWith("Get") && endpoint.RequestPathParameters != null && endpoint.RequestPathParameters.Count == 1)
+            {
+                var parameter = endpoint.RequestPathParameters.Single();
+
+                if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", parameter.Value + "?", parameter.Key.ToPascalCase(), out string interfaceIdentifier))
+                {
+                    string methodIdentifier = endpoint.Identifier;
+                    string parameterIdentifier = interfaceIdentifier[1..].RemoveEnd("Id");
+
+                    if (endpoint.Identifier.Contains("By"))
+                    {
+                        var methodIdentifierParts = methodIdentifier.Split("By");
+                        methodIdentifier = methodIdentifierParts[0];
+                        parameterIdentifier = methodIdentifierParts[1];
+                    }
+
+                    var method = PublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                        ReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                        new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
+
+                    Class = Class.AddMembers(method);
+                }
+            }
+        }
+
         private void _addGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
         {
             foreach (var group in groupedPaths.Where(g => g.Key != null))

@@ -22,7 +22,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     internal class LeagueClientEndpointsGenerator : OpenApiEndpointGeneratorBase<LcuPathObject, LcuMethodObject, LcuMethodObject, LcuMethodObject, LcuParameterObject, LcuSchemaObject>
     {
         protected const string LEAGUECLIENT_CLASS_IDENTIFIER = "LeagueClient";
-        protected string HttpClientIdentifier = "HttpClient";
 
         public readonly string ClassName;
 
@@ -41,10 +40,17 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public virtual void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
         {
+            // Root group
             var nullGroup = groupedPaths.FirstOrDefault(g => g.Key == null);
 
             if (nullGroup != null)
                 AddPathsAsEndpoints(nullGroup);
+
+            //var lolGroups = groupedPaths.Where(g => g is { Key: not null, Key: not "lol-tft" } && g.Key.StartsWith("lol-"));
+
+            //var tftGroups = groupedPaths.Single(g => g is { Key: not null, Key: "lol-tft" });
+
+            //groupedPaths = groupedPaths.Where(g => g is { Key: not null, Key: not "lol-tft" } && !g.Key.StartsWith("lol-"));
 
             foreach (var group in groupedPaths.Where(g => g.Key != null))
             {
@@ -79,7 +85,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     }
                 }
 
-                var moduleGenerator = new LeagueClientModuleGenerator(className ?? group.Key.RemoveChars('{', '}').ToPascalCase(), Enums, methodVersionSuffix: versionSuffix);
+                var moduleGenerator = new LeagueClientModuleGenerator((className ?? group.Key.RemoveChars('{', '}').ToPascalCase())
+                    //.FixGamePrefixes()
+                    , Enums, methodVersionSuffix: versionSuffix, addHttpClientField: true);
 
                 moduleGenerator.AddPathsAsEndpoints(group);
                 _moduleProperties.Add(moduleGenerator.FieldAndProperty);
@@ -114,7 +122,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 else
                     path = "\"" + path + "\"";
 
-            return new EndpointDefinition("Get" + nameFromPath, returnType, HttpClientIdentifier, baseMethod, typeArgument, path, null, pathParameters);
+            return new EndpointDefinition("Get" + nameFromPath, returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters);
         }
 
         protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(LcuMethodObject postMethodObject, string path, LcuPathObject pathObject)
@@ -182,20 +190,19 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             protected bool MethodVersionSuffix;
             protected Dictionary<string, string?[]>? VersionsByPaths = null;
 
-            public LeagueClientModuleGenerator(string moduleName, string[] enums, bool methodVersionSuffix) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
+            public LeagueClientModuleGenerator(string moduleName, string[] enums, bool methodVersionSuffix, bool addHttpClientField) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
             {
                 ModuleName = moduleName.ToPascalCase();
                 MethodVersionSuffix = methodVersionSuffix;
 
-                FieldDeclarationSyntax parentField = FieldHelper.CreatePrivateField(LEAGUECLIENT_CLASS_IDENTIFIER, "_parent");
-                ClassDeclaration = ClassDeclaration.AddMembers(parentField);
-                HttpClientIdentifier = "_parent." + HttpClientIdentifier;
+                FieldDeclarationSyntax httpClientField = FieldHelper.CreateInternalReadOnlyField("LeagueClientHttpClient", "HttpClient");
+                ClassDeclaration = ClassDeclaration.AddMembers(httpClientField);
 
                 string fieldName = "_" + moduleName.ToCamelCase();
                 _fieldDeclaration = FieldHelper.CreatePrivateField(ClassName, fieldName);
                 _propertyDeclaration = PropertyHelper.CreateFieldBackedPublicReadOnlyProperty(ClassName, ModuleName, fieldName, "this");
 
-                ClassDeclaration = ClassDeclaration.AddMembers(ClassHelper.CreateInternalConstructor(ClassName, LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient", "_parent"));                            
+                ClassDeclaration = ClassDeclaration.AddMembers(ClassHelper.CreateInternalConstructor(ClassName, LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient"));
             }
 
             public override void AddPathsAsEndpoints(Paths paths)

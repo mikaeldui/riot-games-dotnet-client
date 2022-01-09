@@ -85,6 +85,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (neededDtoSuffixes.Contains(identifier))
                     identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false);
 
+                identifier = identifier
+                    //.FixGamePrefixes()
+                    ;
+
                 _addDto(identifier, schema.Value);
             }
         }

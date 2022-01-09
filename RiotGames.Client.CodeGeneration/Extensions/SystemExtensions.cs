@@ -36,6 +36,12 @@ namespace RiotGames.Client.CodeGeneration
             return input;
         }
 
+        public static string ReplaceStart(this string input, string original, string replacement) =>
+            input.StartsWith(original) ? replacement + input.RemoveStart(original) : input;
+
+        public static string ReplaceEnd(this string input, string original, string replacement) =>
+            input.EndsWith(original) ? input.RemoveEnd(original) + replacement : input;
+
         /// <summary> Makes the string look like "ThisIsAString".</summary>
         public static string ToPascalCase(this string input)
         {
@@ -77,6 +83,8 @@ namespace RiotGames.Client.CodeGeneration
         public static bool IsLower(this char input) => input.ToString() == input.ToString().ToLower();
 
         public static bool IsScreaming(this string input) => input.All(c => c.ToString() == c.ToString().ToUpper());
+
+        public static string StartWith(this string input, string start) => input.StartsWith(start) ? input : start + input;
 
         public static string EndWith(this string input, string end) => input.EndsWith(end) ? input : input + end;
     }

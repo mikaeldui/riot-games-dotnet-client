@@ -25,5 +25,27 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         }
 
         public void Dispose() => HttpClient.Dispose();
+
+        public partial class LeagueOfLegendsClient : LeagueClient
+        {
+            /// <summary>
+            /// Use if you don't need <see cref="LeagueClient"/> endpoints and <see cref="TeamfightTacticsClient"/> endpoints.
+            /// </summary>
+            public LeagueOfLegendsClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+            {
+
+            }
+        }
+
+        public partial class TeamfightTacticsClient : LeagueClient
+        {
+            /// <summary>
+            /// Use if you don't need <see cref="LeagueClient"/> endpoints and <see cref="LeagueOfLegendsClient"/> endpoints.
+            /// </summary>
+            public TeamfightTacticsClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+            {
+
+            }
+        }
     }
 }

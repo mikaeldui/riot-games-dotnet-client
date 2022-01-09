@@ -37,5 +37,8 @@ namespace RiotGames.Client.CodeGeneration
 
         public static NamespaceDeclarationSyntax AddSystemDynamicUsing(this NamespaceDeclarationSyntax @namespace) =>
             @namespace.AddUsing("System.Dynamic");
+
+        public static FieldDeclarationSyntax AddModifier(this FieldDeclarationSyntax fieldDeclaration, SyntaxKind modifier) =>
+            fieldDeclaration.AddModifiers(SF.Token(modifier));
     }
 }

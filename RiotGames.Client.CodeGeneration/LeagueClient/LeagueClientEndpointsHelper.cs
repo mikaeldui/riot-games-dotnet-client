@@ -19,7 +19,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public static string GetNameFromPath(string path, bool? isPlural)
         {
-            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
+            var parts = path
+                //.ReplaceStart("/lol-", "/").ReplaceStart("/Tft", "/TeamfightTactics")
+                .Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
 
             if (parts[1].StartsWith('v') && char.IsDigit(parts[1][1]))
             {

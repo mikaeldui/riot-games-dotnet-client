@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +29,10 @@ namespace RiotGames.Client.CodeGeneration
         public static ClassDeclarationSyntax CreatePublicClassWithBaseType(string @class, string baseType) =>
             CreatePublicClass(@class).AddBaseType(baseType);
 
-        public static ConstructorDeclarationSyntax CreateInternalConstructor(string className, string parameterType, string parameterIdentifier, string fieldIdentifier) =>
+        public static ConstructorDeclarationSyntax CreateInternalConstructor(string className, string parameterType, string parameterIdentifier, string fieldIdentifier, string? parameterProperty = null) =>
             SF.ConstructorDeclaration(className)
                 .AddParameterListParameters(ParameterHelper.CreateParameter(parameterType, parameterIdentifier))
-                .WithBody(SF.Block(SF.ParseStatement($"{fieldIdentifier} = {parameterIdentifier};")))
+                .WithBody(SF.Block(SF.ParseStatement($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};")))
                 .AddModifiers(SF.Token(SyntaxKind.InternalKeyword));
     }
 
@@ -52,17 +53,30 @@ namespace RiotGames.Client.CodeGeneration
             CreateAttribute(identifier).WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($"(\"{stringArgument}\")"));
     }
 
+    [DebuggerStepThrough]
     internal static class FieldHelper
     {
-        public static FieldDeclarationSyntax CreatePrivateField(string type, string identifier) =>
+        public static FieldDeclarationSyntax CreateField(string typeName, string identifier) =>
             SF.FieldDeclaration(
-                    SF.VariableDeclaration(
-                        SF.ParseTypeName(type),
-                        SF.SeparatedList(new[] { SF.VariableDeclarator(SF.Identifier(identifier.StartsWith('_') ? identifier : '_' + identifier)) })
-                    ))
-                    .AddModifiers(SF.Token(SyntaxKind.PrivateKeyword));
+                SF.VariableDeclaration(
+                    SF.ParseTypeName(typeName),
+                    SF.SeparatedList(new[] { SF.VariableDeclarator(SF.Identifier(identifier)) })
+                ));
+
+        public static FieldDeclarationSyntax CreatePrivateField(string typeName, string identifier) =>
+            CreateField(typeName, identifier.StartWith("_")).AddModifier(SyntaxKind.PrivateKeyword);
+
+        public static FieldDeclarationSyntax CreatePrivateReadOnlyField(string typeName, string identifier) =>
+            CreatePrivateField(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
+
+        public static FieldDeclarationSyntax CreateInternalField(string typeName, string identifier) =>
+            CreateField(typeName, identifier).AddModifier(SyntaxKind.InternalKeyword);
+
+        public static FieldDeclarationSyntax CreateInternalReadOnlyField(string typeName, string identifier) =>
+            CreateInternalField(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
     }
 
+    [DebuggerStepThrough]
     internal static class PropertyHelper
     {
         public static PropertyDeclarationSyntax CreatePublicProperty(string typeName, string identifier) =>

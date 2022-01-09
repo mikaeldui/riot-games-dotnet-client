@@ -11,18 +11,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
     internal static class LeagueClientModelsHelper
     {
-        public static readonly IReadOnlyDictionary<(string typeName, string identifier), string> BasicInterfaces =
-            new Dictionary<(string typeName, string identifier), string>()
-            {
-                { ("string?", "Puuid"), "IPuuid" },
-                { ("long?", "SummonerId"), "ISummonerId" },
-                { ("long?", "AccountId"), "IAccountId" },
-                { ("long?", "PlayerId"), "IPlayerId" },
-                { ("int?", "ChampionId"), "IChampionId" },
-                { ("long?", "GameId"), "IGameId" },
-                { ("int?", "MapId"), "IMapId" }
-            };
-
         [DebuggerStepThrough]
         internal static string FixGamePrefixes(this string input) =>
             input.RemoveStart("Lol").ReplaceStart("Tft", "TeamfightTactics");

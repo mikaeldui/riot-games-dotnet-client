@@ -61,7 +61,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                     //typeName += "?"; // Make nullable
 
-                    if (LeagueClientModelsHelper.BasicInterfaces.TryGetValue((typeName, propertyIdentifier), out string? @interface))
+                    // TODO: fix client name
+                    if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", typeName, propertyIdentifier, out string? @interface))
                         @class = @class.AddBaseType(@interface);
 
                     return _simpleProperty(typeName, propertyIdentifier, jsonProperty);
@@ -85,10 +86,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key);
                 if (neededDtoSuffixes.Contains(identifier))
                     identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false);
-
-                identifier = identifier
-                    //.FixGamePrefixes()
-                    ;
 
                 _addDto(identifier, schema.Value);
             }

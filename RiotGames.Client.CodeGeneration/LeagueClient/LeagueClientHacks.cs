@@ -17,6 +17,65 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public static void Activate() => Console.WriteLine("Hacks activated!");
 
+        public static readonly IReadOnlyDictionary<string, string> ParameterIdentifierTypos = new Dictionary<string, string>
+        {
+            //{ "encryptedPUUID", "encryptedPuuid" }
+        };
+
+        public static readonly IReadOnlyDictionary<string, string> PathParameterIdentifierTypos =
+            ParameterIdentifierTypos.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
+
+        public static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> BasicInterfaces =
+            new Dictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>>
+            {
+                {
+                    "LeagueClient", new Dictionary<(string typeName, string identifier), string>
+                    {
+                        { ("long", "SummonerId"), "ISummonerId" },
+                        { ("string", "Puuid"), "IPuuid" },
+                        { ("long", "AccountId"), "IAccountId" },
+                        { ("long", "PlayerId"), "IPlayerId" },
+                        { ("int", "ChampionId"), "IChampionId" },
+                        { ("long", "GameId"), "IGameId" },
+                        { ("int", "MapId"), "IMapId" }
+                    }
+                },
+                //{
+                //    "LeagueOfLegends", new Dictionary<(string typeName, string identifier), string>
+                //    {
+                //        { ("string", "LeagueId"), "ILeagueOfLegendsLeagueId" },
+                //        { ("string", "MatchId"), "ILeagueOfLegendsMatchId" },
+                //        { ("int", "TournamentId"), "ILeagueOfLegendsTournamentId" }
+                //    }
+                //},
+                //{
+                //    "TeamfightTactics", new Dictionary<(string typeName, string identifier), string>
+                //    {
+                //        { ("string", "LeagueId"), "ITeamfightTacticsLeagueId" },
+                //        { ("string", "MatchId"), "ITeamfightTacticsMatchId" }
+                //    }
+                //}
+            };
+
+        /// <param name="client">Either "LeagueClient", "LeagueOfLegends" or "TeamfightTactics"</param>
+        public static bool TryGetBasicInterfaceIdentifier(
+            this IReadOnlyDictionary<string, IReadOnlyDictionary<(string typeName, string identifier), string>> basicInterfaces,
+            string client, string propertyTypeName, string propertyIdentifier, out string interfaceIdentifier)
+        {
+#pragma warning disable CS8601 // Possible null reference assignment.
+            // Start with game-specific interface
+            if (basicInterfaces.TryGetValue(client.ToString(), out var clientBasicInterfaces)
+                && clientBasicInterfaces.TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
+                return true;
+            // If not found, then maybe there's a Riot interface that could be used
+            else if (LeagueClientHacks.BasicInterfaces["LeagueClient"].TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
+                return true;
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+            return false;
+        }
+
+
         public static readonly IReadOnlyDictionary<string, string> ReservedIdentifiers = new Dictionary<string, string>
         {
             {"namespace", "@namespace" },

@@ -24,6 +24,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     internal class LeagueClientEndpointsGenerator : OpenApiEndpointGeneratorBase<LcuPathObject, LcuMethodObject, LcuMethodObject, LcuMethodObject, LcuParameterObject, LcuSchemaObject>
     {
         protected const string LEAGUECLIENT_CLASS_IDENTIFIER = "LeagueClient";
+        protected const string LEAGUECLIENTBASE_CLASS_IDENTIFIER = "LeagueClientBase";
 
         public readonly string ClassName;
 
@@ -76,8 +77,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 }
 
                 var moduleGenerator = new LeagueClientModuleGenerator((className ?? group.Key.RemoveChars('{', '}').ToPascalCase())
-                    //.FixGamePrefixes()
-                    , Enums, methodVersionSuffix: versionSuffix, generateConstructor: true);
+                    .FixGamePrefixes(), Enums, methodVersionSuffix: versionSuffix, generateConstructor: true);
 
                 moduleGenerator.AddPathsAsEndpoints(group);
                 _moduleProperties.Add(moduleGenerator.FieldAndProperty);
@@ -95,22 +95,16 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 AddPathsAsEndpoints(nullGroup);
 
             {
-                string moduleName = "LeagueOfLegendsClient";
-
-                string fieldName = "_" + moduleName.ToCamelCase();
-                var fieldDeclaration = PrivateFieldDeclaration(moduleName, fieldName);
-                var propertyDeclaration = FieldBackedPublicReadOnlyPropertyDeclaration(moduleName, "LeagueOfLegends", fieldName, "this");
-
                 var lolGroups = groupedPaths.Where(g => g is { Key: not null, Key: not "lol-tft" } && g.Key.StartsWith("lol-"));
                 var generator = new LeagueClientEndpointsGenerator("LeagueOfLegendsClient", Enums, true);
                 generator.Class = generator.Class.AddMembers(
                     InternalConstructorDeclaration("LeagueOfLegendsClient")
                     .WithBody(Block())
-                    .WithParameter(LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient")
+                    .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
                     .WithBaseConstructorInitializer("leagueClient.HttpClient"));
                 generator._addGroupsAsNestedClassesWithEndpoints(lolGroups);
                 generator._addNestedMembersToClass();
-                Class = Class.AddMembers(fieldDeclaration, propertyDeclaration, generator.Class);
+                Class = Class.AddMembers(generator.Class);
             }
 
             {
@@ -119,10 +113,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 generator.Class = generator.Class.AddMembers(
                     InternalConstructorDeclaration("TeamfightTacticsClient")
                     .WithBody(Block())
-                    .WithParameter(LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient")
+                    .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
                     .WithBaseConstructorInitializer("leagueClient.HttpClient"));
                 generator.AddPathsAsEndpoints(tftPaths);
-                Class = Class.AddMembers(generator.FieldAndProperty);
                 Class = Class.AddMembers(generator.Class.AddModifiers(Token(SyntaxKind.PartialKeyword)));
             }
 
@@ -239,7 +232,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     FieldDeclarationSyntax httpClientField = InternalReadOnlyFieldDeclaration("LeagueClientHttpClient", "HttpClient");
                     Class = Class.AddMembers(httpClientField);
 
-                    var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient");
+                    var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient");
                     Class = Class.AddMembers(constructor);
                 }
 

@@ -9,8 +9,6 @@ jobs:
       url: https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018?version=${{ steps.version.outputs.version }}
     steps:
 
-      - uses: actions/checkout@v2
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -20,12 +18,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: nupkg
-
-      - name: Get Package Version
-        uses: mikaeldui/actions/nuget-package-version@main
-        id: version
         
       - name: Push
-        uses: ./.github/actions/dotnet-push
-        with:
+        uses: mikaeldui/actions/dotnet-push@main
+s        with:
           GITHUB_TOKEN: ${{ github.token }}

@@ -7,11 +7,11 @@
     <RootNamespace>RiotGames</RootNamespace>
     <PackageId>MikaelDui.RiotGames.Client</PackageId>
     <Authors>Mikael Dúi Bolinder</Authors>
-    <Description>An unofficial .NET client for Riot Games.</Description>
+    <Description>An unofficial .NET client for Riot Games and their games League of Legends, Legends of Runeterra, Teamfight Tactics and Valorant.</Description>
     <PackageProjectUrl>https://github.com/mikaeldui/riot-games-dotnet-client</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
-    <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; Teamfight Tactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient;</PackageTags>
+    <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; TeamfightTactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient;</PackageTags>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <PackageIcon>RiotGames-270x270.png</PackageIcon>
   </PropertyGroup>

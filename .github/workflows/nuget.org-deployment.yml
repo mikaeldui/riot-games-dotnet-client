@@ -13,18 +13,22 @@ jobs:
       url: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+
       - name: Download NuGet Package Artifact
         uses: actions/download-artifact@v2
         with:
           name: nupkg
+
       - name: Get Package Version
+        uses: mikaeldui/actions/nuget-package-version@main
         id: version
-        uses: ./.github/actions/nuget-package-version
+        
       - name: Push to NuGet.org
-        uses: ./.github/actions/dotnet-push
+        uses: mikaeldui/actions/dotnet-push@main
         with:
           NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}

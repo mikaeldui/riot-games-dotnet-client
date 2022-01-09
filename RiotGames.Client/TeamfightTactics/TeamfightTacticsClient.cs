@@ -9,12 +9,10 @@ namespace RiotGames.TeamfightTactics
         /// </summary>
         public TeamfightTacticsClient(string apiKey, RegionalRoute region) : base(apiKey, region)
         {
-
         }
 
         public TeamfightTacticsClient(string apiKey, PlatformRoute platform) : base(apiKey, platform)
         {
-
         }
     }
 }

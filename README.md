@@ -99,8 +99,7 @@ You can use the [`LeagueClient`](https://github.com/mikaeldui/riot-games-dotnet-
 
 ```C#
 using RiotGames.LeagueOfLegends.LeagueClient;
-
-using LeagueClient.LeagueOfLegendsClient client = new()
+using LeagueClient.LeagueOfLegendsClient client = new();
 
 var session = await client.LChampSelect.GetSessionAsync();
 foreach(var teamMember in session.MyTeam)

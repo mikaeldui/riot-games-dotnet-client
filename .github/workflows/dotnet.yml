@@ -32,7 +32,7 @@ jobs:
       run: echo "::set-output name=version::12.1.1"
 
     - name: Generate SemVer Suffix
-      uses: mikaeldui/actions/nuget-generate-semver-suffix@main
+      uses: mikaeldui/actions/nupkg/semver-suffix@main
       id: semver
 
     - name: Concat Versions
@@ -77,7 +77,7 @@ jobs:
       
     - name: 'Pack & Publish Artifact'
       if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-      uses: mikaeldui/actions/dotnet-pack-and-publish-artifact@main
+      uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
       with:
         version: ${{ steps.version.outputs.version }}
         project_directory: ./RiotGames.Client
@@ -85,7 +85,7 @@ jobs:
   nuget-org:
     name: 'NuGet.org'
     if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/nuget.org-deployment.yml@main
+    uses: mikaeldui/workflows/nupkg/nuget.org-deploy.yml@main
     needs: build
     secrets:
       NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
@@ -93,13 +93,13 @@ jobs:
   github-packages:
     name: 'GitHub Packages'
     if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/github-packages-deployment.yml@main
+    uses: mikaeldui/workflows/nupkg/github-packages-deploy.yml@main
     needs: build
 
   github-release:
     name: 'GitHub Release'
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    uses: mikaeldui/riot-games-dotnet-client/.github/workflows/github-release.yml@main
+    uses: mikaeldui/workflows/nupkg/github-release.yml@main
     needs: [nuget-org, github-packages]
 
   github-pull-request-comment:
@@ -115,7 +115,7 @@ jobs:
           name: nupkg
 
       - name: Package Version
-        uses: mikaeldui/actions/nuget-package-version@main
+        uses: mikaeldui/actions/nupkg/version@main
         id: version
         
       - name: Comment PR
@@ -127,7 +127,7 @@ jobs:
 
             Using **Package Manager Console** (non-floating version):
 
-                PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ inputs.version }}-pull-request.${{ github.event.pull_request.number }}
+                PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ steps.version.outputs.version }}-pull-request.${{ github.event.pull_request.number }}
 
             Using the **.NET CLI** (floating version):
 

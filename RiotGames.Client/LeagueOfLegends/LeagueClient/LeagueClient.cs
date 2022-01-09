@@ -15,6 +15,11 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         private const string LEAGUECLIENT_USERNAME = "riot";
         internal readonly LeagueClientHttpClient HttpClient;
 
+        internal LeagueClient(LeagueClientHttpClient httpClient)
+        {
+            HttpClient = httpClient;
+        }
+
         public LeagueClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
         {
             LeagueClientLockfile lockfile = lockfilePath == LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH

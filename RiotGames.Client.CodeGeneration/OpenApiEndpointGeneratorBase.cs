@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
 namespace RiotGames.Client.CodeGeneration
 {
@@ -17,14 +19,14 @@ namespace RiotGames.Client.CodeGeneration
         where TParameter : OpenApiParameterObject
         where TSchema : OpenApiSchemaObject
     {
-        protected ClassDeclarationSyntax ClassDeclaration;
+        protected ClassDeclarationSyntax Class;
 
         protected OpenApiEndpointGeneratorBase(string className, bool partialClass = false)
         {
             if (partialClass)
-                ClassDeclaration = ClassHelper.CreatePublicPartialClass(className);
+                Class = PublicPartialClassDeclaration(className);
             else
-                ClassDeclaration = ClassHelper.CreatePublicClass(className);
+                Class = PublicClassDeclaration(className);
         }
 
         protected virtual void AddEndpoint(EndpointDefinition? endpoint)
@@ -38,11 +40,11 @@ namespace RiotGames.Client.CodeGeneration
 
             StatementSyntax bodyStatement;
             if (endpoint.RequestValueType == null)
-                bodyStatement = StatementHelper.ReturnAwait(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);
+                bodyStatement = ReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);
             else
-                bodyStatement = StatementHelper.ReturnAwait(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
+                bodyStatement = ReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
 
-            ClassDeclaration = ClassDeclaration.AddPublicAsyncTask(endpoint.ReturnTypeName, endpoint.Identifier.EndWith("Async"), bodyStatement, endpoint.RequestPathParameters);
+            Class = Class.AddPublicAsyncTask(endpoint.ReturnTypeName, endpoint.Identifier.EndWith("Async"), bodyStatement, endpoint.RequestPathParameters);
         }
 
         public virtual void AddPathAsEndpoints(KeyValuePair<string, TPathObject> path)
@@ -91,9 +93,9 @@ namespace RiotGames.Client.CodeGeneration
                 {
                     specificMethod = "SystemType";
                     if (returnType.StartsWith("dynamic"))
-                        typeArgument = StatementHelper.TypeArgument("ExpandoObject[]");
+                        typeArgument = TypeArgumentStatement("ExpandoObject[]");
                     else
-                        typeArgument = StatementHelper.TypeArgument(returnType);
+                        typeArgument = TypeArgumentStatement(returnType);
                 }
                 else
                     specificMethod = "Array";
@@ -102,7 +104,7 @@ namespace RiotGames.Client.CodeGeneration
                 specificMethod = "SystemType";
 
                 if (returnType == "dynamic")
-                    typeArgument = StatementHelper.TypeArgument("ExpandoObject");
+                    typeArgument = TypeArgumentStatement("ExpandoObject");
             }
 
             return "Get" + specificMethod + "Async";

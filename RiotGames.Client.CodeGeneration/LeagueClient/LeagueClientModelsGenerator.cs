@@ -9,7 +9,8 @@ using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
@@ -22,7 +23,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public LeagueClientModelsGenerator()
         {
-            _namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+            _namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
         }
 
         private void _addDto(string identifier, LcuComponentSchemaObject schema)
@@ -31,12 +32,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             if (schema.Enum != null)
             {
-                member = EnumHelper.CreatePublicEnum(identifier, schema.Enum.ToPascalCase())
+                member = PublicEnumDeclaration(identifier, schema.Enum.ToPascalCase())
                     .AddJsonStringEnumAttribute();
             }
             else
             {
-                var @class = ClassHelper.CreatePublicClassWithBaseType(identifier, $"LeagueClientObject");
+                var @class = PublicClassDeclarationWithBaseType(identifier, $"LeagueClientObject");
 
                 var properties = schema.Properties.Select(kv =>
                 {
@@ -107,7 +108,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
         {
-            var property = PropertyHelper.CreatePublicProperty(typeName, identifier);
+            var property = PublicPropertyDeclaration(typeName, identifier);
 
             if (jsonProperty != null)
             {

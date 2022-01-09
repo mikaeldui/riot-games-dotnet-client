@@ -7,132 +7,110 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace RiotGames.Client.CodeGeneration
 {
     using SF = SyntaxFactory;
 
-    internal static class NamespaceHelper
-    {
-        public static NamespaceDeclarationSyntax CreateNamespaceDeclaration(params string[] @namespace) =>
-            SF.NamespaceDeclaration(SF.ParseName(string.Join('.', @namespace))).NormalizeWhitespace();
-    }
-
-    internal static class ClassHelper
-    {
-        public static ClassDeclarationSyntax CreatePublicClass(string @class) =>
-            SF.ClassDeclaration(@class).AddModifiers(SF.Token(SyntaxKind.PublicKeyword));
-
-        public static ClassDeclarationSyntax CreatePublicPartialClass(string @class) =>
-            SF.ClassDeclaration(@class).AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.PartialKeyword));
-
-        public static ClassDeclarationSyntax CreatePublicClassWithBaseType(string @class, string baseType) =>
-            CreatePublicClass(@class).AddBaseType(baseType);
-
-        public static ConstructorDeclarationSyntax CreateInternalConstructor(string className, string parameterType, string parameterIdentifier, string fieldIdentifier, string? parameterProperty = null) =>
-            SF.ConstructorDeclaration(className)
-                .AddParameterListParameters(ParameterHelper.CreateParameter(parameterType, parameterIdentifier))
-                .WithBody(SF.Block(SF.ParseStatement($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};")))
-                .AddModifiers(SF.Token(SyntaxKind.InternalKeyword));
-    }
-
-    internal static class EnumHelper
-    {
-        public static EnumDeclarationSyntax CreatePublicEnum(string identifier, params string[] members) =>
-            SF.EnumDeclaration(SF.Identifier(identifier))
-                .AddModifiers(SF.Token(SyntaxKind.PublicKeyword))
-                .AddMembers(members.Select(m => SF.EnumMemberDeclaration(SF.Identifier(m))).ToArray());
-    }
-
-    internal static class AttributeHelper
-    {
-        public static AttributeSyntax CreateAttribute(string identifier) =>
-            SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(identifier));
-
-        public static AttributeSyntax CreateAttribute(string identifier, string stringArgument) =>
-            CreateAttribute(identifier).WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($"(\"{stringArgument}\")"));
-    }
-
     [DebuggerStepThrough]
-    internal static class FieldHelper
+    internal static class CodeAnalysisHelper
     {
-        public static FieldDeclarationSyntax CreateField(string typeName, string identifier) =>
+        public static NamespaceDeclarationSyntax NamespaceDeclaration(params string[] @namespace) =>
+            SF.NamespaceDeclaration(ParseName(string.Join('.', @namespace))).NormalizeWhitespace();
+
+        public static ClassDeclarationSyntax PublicClassDeclaration(string identifier) =>
+            ClassDeclaration(identifier).AddModifiers(Token(SyntaxKind.PublicKeyword));
+
+        public static ClassDeclarationSyntax PublicPartialClassDeclaration(string identifier) =>
+            ClassDeclaration(identifier).AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.PartialKeyword));
+
+        public static ClassDeclarationSyntax PublicClassDeclarationWithBaseType(string identifier, string baseTypeName) =>
+            PublicClassDeclaration(identifier).AddBaseType(baseTypeName);
+
+        public static ConstructorDeclarationSyntax ConstructorDeclaration(string identifier, string parameterType, string parameterIdentifier) =>
+            SF.ConstructorDeclaration(identifier).WithParameter(parameterType, parameterIdentifier);
+
+        public static ConstructorDeclarationSyntax InternalConstructorDeclaration(string identifier) =>
+            SF.ConstructorDeclaration(identifier).WithModifier(SyntaxKind.InternalKeyword);
+
+        public static ConstructorDeclarationSyntax InternalConstructorDeclaration(string identifier, string parameterType, string parameterIdentifier, string fieldIdentifier, string? parameterProperty = null) =>
+            ConstructorDeclaration(identifier, parameterType, parameterIdentifier)
+                .WithBody($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};")
+                .AddModifiers(Token(SyntaxKind.InternalKeyword));
+
+        public static EnumDeclarationSyntax PublicEnumDeclaration(string identifier, params string[] members) =>
+            EnumDeclaration(Identifier(identifier))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword))
+                .AddMembers(members.Select(m => EnumMemberDeclaration(Identifier(m))).ToArray());
+
+        public static AttributeSyntax Attribute(string identifier) =>
+            SyntaxFactory.Attribute(IdentifierName(identifier));
+
+        public static AttributeSyntax Attribute(string identifier, string stringArgument) =>
+            Attribute(identifier).WithArgumentList(ParseAttributeArgumentList($"(\"{stringArgument}\")"));
+
+        public static FieldDeclarationSyntax FieldDeclaration(string typeName, string identifier) =>
             SF.FieldDeclaration(
-                SF.VariableDeclaration(
-                    SF.ParseTypeName(typeName),
-                    SF.SeparatedList(new[] { SF.VariableDeclarator(SF.Identifier(identifier)) })
+                VariableDeclaration(
+                    ParseTypeName(typeName),
+                    SeparatedList(new[] { VariableDeclarator(Identifier(identifier)) })
                 ));
 
-        public static FieldDeclarationSyntax CreatePrivateField(string typeName, string identifier) =>
-            CreateField(typeName, identifier.StartWith("_")).AddModifier(SyntaxKind.PrivateKeyword);
+        public static FieldDeclarationSyntax PrivateFieldDeclaration(string typeName, string identifier) =>
+            FieldDeclaration(typeName, identifier.StartWith("_")).AddModifier(SyntaxKind.PrivateKeyword);
 
-        public static FieldDeclarationSyntax CreatePrivateReadOnlyField(string typeName, string identifier) =>
-            CreatePrivateField(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
+        public static FieldDeclarationSyntax PrivateReadOnlyFieldDeclaration(string typeName, string identifier) =>
+            PrivateFieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
 
-        public static FieldDeclarationSyntax CreateInternalField(string typeName, string identifier) =>
-            CreateField(typeName, identifier).AddModifier(SyntaxKind.InternalKeyword);
+        public static FieldDeclarationSyntax InternalFieldDeclaration(string typeName, string identifier) =>
+            FieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.InternalKeyword);
 
-        public static FieldDeclarationSyntax CreateInternalReadOnlyField(string typeName, string identifier) =>
-            CreateInternalField(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
-    }
+        public static FieldDeclarationSyntax InternalReadOnlyFieldDeclaration(string typeName, string identifier) =>
+            InternalFieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
 
-    [DebuggerStepThrough]
-    internal static class PropertyHelper
-    {
-        public static PropertyDeclarationSyntax CreatePublicProperty(string typeName, string identifier) =>
-            SF.PropertyDeclaration(SF.ParseTypeName(typeName), identifier)
-                .AddModifiers(SF.Token(SyntaxKind.PublicKeyword))
+        public static PropertyDeclarationSyntax PublicPropertyDeclaration(string typeName, string identifier) =>
+            PropertyDeclaration(ParseTypeName(typeName), identifier)
+                .AddModifiers(Token(SyntaxKind.PublicKeyword))
                 .AddAccessorListAccessors(
-                    SF.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SF.Token(SyntaxKind.SemicolonToken)),
-                    SF.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SF.Token(SyntaxKind.SemicolonToken)));
+                    AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                    AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
 
-        public static PropertyDeclarationSyntax CreateFieldBackedPublicReadOnlyProperty(string typeName, string identifier, string fieldIdentifier, string? typeConstructorArgument = null) =>
-            SF.PropertyDeclaration(SF.ParseTypeName(typeName), SF.Identifier(identifier))
-                .AddModifiers(SF.Token(SyntaxKind.PublicKeyword))
+        public static PropertyDeclarationSyntax FieldBackedPublicReadOnlyPropertyDeclaration(string typeName, string identifier, string fieldIdentifier, string? typeConstructorArgument = null) =>
+            PropertyDeclaration(ParseTypeName(typeName), Identifier(identifier))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword))
                 .AddAccessorListAccessors(
-                    SF.AccessorDeclaration(
+                    AccessorDeclaration(
                         SyntaxKind.GetAccessorDeclaration,
-                        SF.Block(SF.ParseStatement($"if ({fieldIdentifier} == null)\n{fieldIdentifier} = new {typeName}({typeConstructorArgument});\n\nreturn {fieldIdentifier};"))));
-    }
+                        Block(ParseStatement($"if ({fieldIdentifier} == null)\n{fieldIdentifier} = new {typeName}({typeConstructorArgument});\n\nreturn {fieldIdentifier};"))));
 
-    internal static class MethodHelper
-    {
-        public static MethodDeclarationSyntax PublicAsyncTask(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
+        public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
         {
-            var methodDeclaration = SF.MethodDeclaration(
-                SF.ParseTypeName("Task" + StatementHelper.TypeArgument(returnType)), 
+            var methodDeclaration = MethodDeclaration(
+                ParseTypeName("Task" + TypeArgumentStatement(returnType)), 
                 methodName.EndWith("Async"))
-                .AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.AsyncKeyword))
-                .WithBody(SF.Block(bodyStatement));
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.AsyncKeyword))
+                .WithBody(Block(bodyStatement));
 
             if (parameters != null)
                 methodDeclaration = methodDeclaration.AddParameterListParameters(parameters.ToParameters());
 
             return methodDeclaration;
         }
-    }
 
-    internal static class ParameterHelper
-    {
-        public static ParameterSyntax CreateParameter(string typeName, string identifier) =>
-            SF.Parameter(SF.Identifier(identifier)).WithType(SF.ParseTypeName(typeName));
+        public static ParameterSyntax Parameter(string typeName, string identifier) =>
+            SF.Parameter(Identifier(identifier)).WithType(ParseTypeName(typeName));
 
-        public static ParameterSyntax[] ToParameters(this IEnumerable<KeyValuePair<string, string>> parameters) =>
-            parameters.Select(p => CreateParameter(p.Value, p.Key)).ToArray();
-    }
+        public static string TypeArgumentStatement(string returnType) => $"<{returnType}>";
 
-    internal static class StatementHelper
-    {
-        public static string TypeArgument(string returnType) => $"<{returnType}>";
+        public static string TypeArgumentStatement(string valueType, string returnType) => $"<{valueType}, {returnType}>";
 
-        public static string TypeArgument(string valueType, string returnType) => $"<{valueType}, {returnType}>";
-
-        public static StatementSyntax ReturnAwait(string? objectName, string methodName, string? typeArgument, params string[] arguments)
+        public static StatementSyntax ReturnAwaitStatement(string? objectName, string methodName, string? typeArgument, params string[] arguments)
         {
             if (objectName == null)
-                return SF.ParseStatement($"return await {methodName}{typeArgument}({string.Join(", ", arguments)});");
+                return ParseStatement($"return await {methodName}{typeArgument}({string.Join(", ", arguments)});");
 
-            return SF.ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");
+            return ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");
         }
     }
 }

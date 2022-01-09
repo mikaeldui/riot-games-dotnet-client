@@ -8,6 +8,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel.RiotApi;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
@@ -57,11 +59,11 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                         parameterIdentifier = methodIdentifierParts[1];
                     }
 
-                    var method = MethodHelper.PublicAsyncTask(endpoint.ReturnTypeName, methodIdentifier,
-                        StatementHelper.ReturnAwait(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                    var method = PublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                        ReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
                         new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
 
-                    ClassDeclaration = ClassDeclaration.AddMembers(method);
+                    Class = Class.AddMembers(method);
                 }
             }
         }
@@ -78,7 +80,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
 
             string returnType = responseSchema.GetTypeName();
-            string? typeArgument = StatementHelper.TypeArgument(returnType.Remove("[]"));
+            string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
 
             string httpClientMethod = GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 
@@ -109,10 +111,10 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             // Ensure we don't get RiotGames.RiotGames.
             var namespaceIdentifier = new string[] { "RiotGames", _client.ToString() }.Distinct().ToArray();
 
-            var @namespace = NamespaceHelper.CreateNamespaceDeclaration(namespaceIdentifier);
+            var @namespace = NamespaceDeclaration(namespaceIdentifier);
 
             // Add the class to the namespace.
-            @namespace = @namespace.AddMembers(ClassDeclaration);
+            @namespace = @namespace.AddMembers(Class);
 
             // Normalize and get code as string.
             return @namespace

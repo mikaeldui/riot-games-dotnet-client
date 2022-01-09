@@ -4,6 +4,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MingweiSamuel;
 using MingweiSamuel.RiotApi;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
 namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 {
@@ -22,14 +24,14 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             // Ensure we don't get RiotGames.RiotGames.
             var @namespace = new string[] { "RiotGames", client.ToString() }.Distinct().ToArray();
 
-            _namespace = NamespaceHelper.CreateNamespaceDeclaration(@namespace);
+            _namespace = NamespaceDeclaration(@namespace);
         }
 
         public void AddDto(Schema schema)
         {
             var schemaObject = schema.Value;
             var className = RiotApiModelsHelper.GetTypeNameFromRef(schema.Key);
-            var classDeclaration = ClassHelper.CreatePublicClassWithBaseType(className, $"{_client}Object");
+            var classDeclaration = PublicClassDeclarationWithBaseType(className, $"{_client}Object");
 
             var properties = schemaObject.Properties.Select(kv =>
             {
@@ -79,7 +81,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
         private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
         {
-            var property = PropertyHelper.CreatePublicProperty(typeName, identifier);
+            var property = PublicPropertyDeclaration(typeName, identifier);
 
             if (jsonProperty != null)
             {

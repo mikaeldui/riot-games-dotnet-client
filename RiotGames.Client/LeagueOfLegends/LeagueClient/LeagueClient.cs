@@ -9,21 +9,56 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     /// <summary>
     /// You can use it to communicate with the League Client. Didn't want to name it LeagueClientClient.
     /// </summary>
-    public partial class LeagueClient : IDisposable
+    public partial class LeagueClient : LeagueClientBase
     {
-        //internal const string LEAGUECLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
-        private const string LEAGUECLIENT_USERNAME = "riot";
-        internal readonly LeagueClientHttpClient HttpClient;
-
-        public LeagueClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
+        internal LeagueClient(LeagueClientHttpClient httpClient) : base(httpClient)
         {
-            LeagueClientLockfile lockfile = lockfilePath == LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH
-                ? LeagueClientLockfile.FromProcess(processName)
-                : LeagueClientLockfile.FromPath(lockfilePath);
-
-            HttpClient = new LeagueClientHttpClient(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
         }
 
-        public void Dispose() => HttpClient.Dispose();
+        public LeagueClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+        {
+        }
+
+        private LeagueOfLegendsClient? _leagueOfLegendsClient;
+        public LeagueOfLegendsClient LeagueOfLegends
+        {
+            get
+            {
+                if (_leagueOfLegendsClient == null)
+                    _leagueOfLegendsClient = new LeagueOfLegendsClient(this); return _leagueOfLegendsClient;
+            }
+        }
+
+        private TeamfightTacticsClient? _teamfightTactics;
+        public TeamfightTacticsClient TeamfightTactics
+        {
+            get
+            {
+                if (_teamfightTactics == null)
+                    _teamfightTactics = new TeamfightTacticsClient(this); return _teamfightTactics;
+            }
+        }
+
+        public partial class LeagueOfLegendsClient : LeagueClientBase
+        {
+            /// <summary>
+            /// Use if you don't need <see cref="LeagueClient"/> endpoints and <see cref="TeamfightTacticsClient"/> endpoints.
+            /// </summary>
+            public LeagueOfLegendsClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+            {
+
+            }
+        }
+
+        public partial class TeamfightTacticsClient : LeagueClientBase
+        {
+            /// <summary>
+            /// Use if you don't need <see cref="LeagueClient"/> endpoints and <see cref="LeagueOfLegendsClient"/> endpoints.
+            /// </summary>
+            public TeamfightTacticsClient(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+            {
+
+            }
+        }
     }
 }

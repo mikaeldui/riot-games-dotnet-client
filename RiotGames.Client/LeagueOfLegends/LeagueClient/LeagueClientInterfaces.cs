@@ -8,36 +8,36 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
 {
     public interface ISummonerId
     {
-        public long? SummonerId { get; set; }
+        public long SummonerId { get; set; }
     }
 
     public interface IPuuid
     {
-        public string? Puuid { get; set; }
+        public string Puuid { get; set; }
     }
 
     public interface IAccountId
     {
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
     }
 
     public interface IPlayerId
     {
-        public long? PlayerId { get; set; }
+        public long PlayerId { get; set; }
     }
 
     public interface IChampionId
     {
-        public int? ChampionId { get; set; }
+        public int ChampionId { get; set; }
     }
 
     public interface IGameId
     {
-        public long? GameId { get; set; }
+        public long GameId { get; set; }
     }
 
     public interface IMapId
     {
-        public int? MapId { get; set; }
+        public int MapId { get; set; }
     }
 }

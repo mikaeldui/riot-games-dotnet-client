@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using MingweiSamuel;
 using MingweiSamuel.Lcu;
 using System.Diagnostics;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient
 {
@@ -22,7 +24,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     internal class LeagueClientEndpointsGenerator : OpenApiEndpointGeneratorBase<LcuPathObject, LcuMethodObject, LcuMethodObject, LcuMethodObject, LcuParameterObject, LcuSchemaObject>
     {
         protected const string LEAGUECLIENT_CLASS_IDENTIFIER = "LeagueClient";
-        protected string HttpClientIdentifier = "HttpClient";
+        protected const string LEAGUECLIENTBASE_CLASS_IDENTIFIER = "LeagueClientBase";
 
         public readonly string ClassName;
 
@@ -39,13 +41,41 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             Enums = enums;
         }
 
-        public virtual void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
+        protected override void AddEndpoint(EndpointDefinition? endpoint)
         {
-            var nullGroup = groupedPaths.FirstOrDefault(g => g.Key == null);
+            base.AddEndpoint(endpoint);
 
-            if (nullGroup != null)
-                AddPathsAsEndpoints(nullGroup);
+            if (endpoint == null)
+                return;
 
+            // Maybe we have a basic interface and can add an overlaod.
+            if (endpoint.Identifier.StartsWith("Get") && endpoint.RequestPathParameters != null && endpoint.RequestPathParameters.Count == 1)
+            {
+                var parameter = endpoint.RequestPathParameters.Single();
+
+                if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", parameter.Value + "?", parameter.Key.ToPascalCase(), out string interfaceIdentifier))
+                {
+                    string methodIdentifier = endpoint.Identifier;
+                    string parameterIdentifier = interfaceIdentifier[1..].RemoveEnd("Id");
+
+                    if (endpoint.Identifier.Contains("By"))
+                    {
+                        var methodIdentifierParts = methodIdentifier.Split("By");
+                        methodIdentifier = methodIdentifierParts[0];
+                        parameterIdentifier = methodIdentifierParts[1];
+                    }
+
+                    var method = PublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                        ReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                        new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
+
+                    Class = Class.AddMembers(method);
+                }
+            }
+        }
+
+        private void _addGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
+        {
             foreach (var group in groupedPaths.Where(g => g.Key != null))
             {
                 bool versionSuffix = false;
@@ -69,9 +99,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     else
                     {
                         // Separate modules
-                        foreach(var versionedModule in versioned)
+                        foreach (var versionedModule in versioned)
                         {
-                            AddGroupsAsNestedClassesWithEndpoints(versionedModule.GroupByModule(), 
+                            _addGroupsAsNestedClassesWithEndpoints(versionedModule.GroupByModule(),
                                 group.Key.RemoveChars('{', '}').ToPascalCase() + versionedModule.Key?.ToUpper());
                         }
 
@@ -79,13 +109,52 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     }
                 }
 
-                var moduleGenerator = new LeagueClientModuleGenerator(className ?? group.Key.RemoveChars('{', '}').ToPascalCase(), Enums, methodVersionSuffix: versionSuffix);
+                var moduleGenerator = new LeagueClientModuleGenerator((className ?? group.Key.RemoveChars('{', '}').ToPascalCase())
+                    .FixGamePrefixes(), Enums, methodVersionSuffix: versionSuffix, generateConstructor: true);
 
                 moduleGenerator.AddPathsAsEndpoints(group);
                 _moduleProperties.Add(moduleGenerator.FieldAndProperty);
-                _moduleClasses.Add(moduleGenerator.ClassDeclaration);
+                _moduleClasses.Add(moduleGenerator.Class);
                 Console.WriteLine($"League Client: Generated client module for module {moduleGenerator.ModuleName}.");
             }
+        }
+
+        public virtual void AddGroupsAsNestedClassesWithEndpoints(IEnumerable<IGrouping<string?, Path>> groupedPaths, string? className = null)
+        {
+            // Root group
+            var nullGroup = groupedPaths.FirstOrDefault(g => g.Key == null);
+
+            if (nullGroup != null)
+                AddPathsAsEndpoints(nullGroup);
+
+            {
+                var lolGroups = groupedPaths.Where(g => g is { Key: not null, Key: not "lol-tft" } && g.Key.StartsWith("lol-"));
+                var generator = new LeagueClientEndpointsGenerator("LeagueOfLegendsClient", Enums, true);
+                generator.Class = generator.Class.AddMembers(
+                    InternalConstructorDeclaration("LeagueOfLegendsClient")
+                    .WithBody(Block())
+                    .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
+                    .WithBaseConstructorInitializer("leagueClient.HttpClient"));
+                generator._addGroupsAsNestedClassesWithEndpoints(lolGroups);
+                generator._addNestedMembersToClass();
+                Class = Class.AddMembers(generator.Class);
+            }
+
+            {
+                var tftPaths = groupedPaths.Single(g => g is { Key: "lol-tft" });
+                var generator = new LeagueClientModuleGenerator("TeamfightTactics", Enums, false, false);
+                generator.Class = generator.Class.AddMembers(
+                    InternalConstructorDeclaration("TeamfightTacticsClient")
+                    .WithBody(Block())
+                    .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
+                    .WithBaseConstructorInitializer("leagueClient.HttpClient"));
+                generator.AddPathsAsEndpoints(tftPaths);
+                Class = Class.AddMembers(generator.Class.AddModifiers(Token(SyntaxKind.PartialKeyword)));
+            }
+
+            groupedPaths = groupedPaths.Where(g => g is { Key: not null, Key: not "lol-tft" } && !g.Key.StartsWith("lol-"));
+
+            _addGroupsAsNestedClassesWithEndpoints(groupedPaths, className);
         }
 
         protected override EndpointDefinition? GetMethodObjectToEndpointDefinition(LcuMethodObject getMethodObject, string path, LcuPathObject pathObject)
@@ -101,7 +170,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             Dictionary<string, string>? pathParameters = ToPathParameters(getMethodObject?.Parameters);
 
             string returnType = responseSchema.GetTypeName();
-            string? typeArgument = StatementHelper.TypeArgument(returnType.Remove("[]"));
+            string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
             var baseMethod = Enums.Contains(returnType) ? "GetEnumAsync" : GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 
             if (pathParameters != null)
@@ -114,7 +183,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 else
                     path = "\"" + path + "\"";
 
-            return new EndpointDefinition("Get" + nameFromPath, returnType, HttpClientIdentifier, baseMethod, typeArgument, path, null, pathParameters);
+            return new EndpointDefinition("Get" + nameFromPath, returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters);
         }
 
         protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(LcuMethodObject postMethodObject, string path, LcuPathObject pathObject)
@@ -132,16 +201,20 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return ClientHelper.GetNameFromPath(path, isArrayResponse);
         }
 
-        public override string GenerateCode()
+        private void _addNestedMembersToClass()
         {
             var nestedMembers = _moduleProperties.SelectMany(ps => ps).Select(p => (MemberDeclarationSyntax)p).Concat(_moduleClasses).ToArray();
 
-            ClassDeclaration = ClassDeclaration.AddMembers(nestedMembers);
+            Class = Class.AddMembers(nestedMembers);
+        }
 
-            var @namespace = NamespaceHelper.CreateNamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+        public override string GenerateCode()
+        {
+            _addNestedMembersToClass();
+            var @namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
             @namespace = @namespace.AddSystemDynamicUsing();
 
-            @namespace = @namespace.AddMembers(ClassDeclaration);
+            @namespace = @namespace.AddMembers(Class);
 
             // Normalize and get code as string.
             return @namespace
@@ -182,20 +255,23 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             protected bool MethodVersionSuffix;
             protected Dictionary<string, string?[]>? VersionsByPaths = null;
 
-            public LeagueClientModuleGenerator(string moduleName, string[] enums, bool methodVersionSuffix) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
+            public LeagueClientModuleGenerator(string moduleName, string[] enums, bool methodVersionSuffix, bool generateConstructor) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
             {
                 ModuleName = moduleName.ToPascalCase();
                 MethodVersionSuffix = methodVersionSuffix;
 
-                FieldDeclarationSyntax parentField = FieldHelper.CreatePrivateField(LEAGUECLIENT_CLASS_IDENTIFIER, "_parent");
-                ClassDeclaration = ClassDeclaration.AddMembers(parentField);
-                HttpClientIdentifier = "_parent." + HttpClientIdentifier;
+                if (generateConstructor)
+                {
+                    FieldDeclarationSyntax httpClientField = InternalReadOnlyFieldDeclaration("LeagueClientHttpClient", "HttpClient");
+                    Class = Class.AddMembers(httpClientField);
+
+                    var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient");
+                    Class = Class.AddMembers(constructor);
+                }
 
                 string fieldName = "_" + moduleName.ToCamelCase();
-                _fieldDeclaration = FieldHelper.CreatePrivateField(ClassName, fieldName);
-                _propertyDeclaration = PropertyHelper.CreateFieldBackedPublicReadOnlyProperty(ClassName, ModuleName, fieldName, "this");
-
-                ClassDeclaration = ClassDeclaration.AddMembers(ClassHelper.CreateInternalConstructor(ClassName, LEAGUECLIENT_CLASS_IDENTIFIER, "leagueClient", "_parent"));                            
+                _fieldDeclaration = PrivateFieldDeclaration(ClassName, fieldName);
+                _propertyDeclaration = FieldBackedPublicReadOnlyPropertyDeclaration(ClassName, ModuleName, fieldName, "this");
             }
 
             public override void AddPathsAsEndpoints(Paths paths)

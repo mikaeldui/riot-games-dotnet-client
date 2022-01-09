@@ -13,6 +13,10 @@ jobs:
 
       - name: Package Version
         uses: mikaeldui/actions/nuget-package-version@main
+        id: version      
+      
+      - name: Get Package Version
+        uses: mikaeldui/actions/nuget-package-version@main
         id: version
 
       - name: Create tag

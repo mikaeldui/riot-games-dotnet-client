@@ -40,6 +40,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
@@ -50,17 +55,12 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-
     - name: 'Code Generation: Restore dependencies'
       working-directory: ./RiotGames.Client.CodeGeneration
       run: dotnet restore
     - name: 'Code Generation: Run'    
       working-directory: ./RiotGames.Client.CodeGeneration
-      run: dotnet run --configuration Release --no-restore
+      run: dotnet run --configuration Release --no-restore /p:UseSharedCompilation=false
 
     - name: 'Set Riot Games API Version'
       id: riot_api_vars
@@ -71,7 +71,7 @@ jobs:
       run: dotnet restore
     - name: 'Riot Games Client: Build'  
       working-directory: ./RiotGames.Client
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore /p:UseSharedCompilation=false
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

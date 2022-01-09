@@ -59,7 +59,7 @@ foreach(var player in leaderboards.Players)
 using RiotGames.TeamfightTactics;
 using TeamfightTacticsClient client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1);
 
-var leagueEntries = await client.GetLeagueEntiresAsync("some-summoner-ID");
+var leagueEntries = await client.GetLeagueEntriesAsync("some-summoner-ID");
 foreach(var entry in leagueEntries)
     Console.PrintLine($"Player #{entry.SummonerName}: {player.LeaguePoints} LP");
 
@@ -95,7 +95,7 @@ foreach(var player in lorLeaderboards.Players)
 
 ```
 
-### Getting the current League of Legends champ select
+### Getting the current [League of Legends][lol] champ select
 You can use the [`LeagueClient`](https://github.com/mikaeldui/riot-games-dotnet-client/blob/main/RiotGames.Client/LeagueOfLegends/LeagueClient/LeagueClient.cs) to communicate directly with the League Client (aka LCU).
 
 ```C#

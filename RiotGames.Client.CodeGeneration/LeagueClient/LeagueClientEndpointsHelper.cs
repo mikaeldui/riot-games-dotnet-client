@@ -21,7 +21,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         {
             var parts = path
                 //.ReplaceStart("/lol-", "/").ReplaceStart("/Tft", "/TeamfightTactics")
-                .Split('/', StringSplitOptions.RemoveEmptyEntries).Replace("{plugin}", "plugin").Where(s => !s.StartsWith('{')).ToArray();
+                .Split('/', StringSplitOptions.RemoveEmptyEntries);
+            parts.Replace("{plugin}", "plugin");
+            parts = parts.Where(s => !s.StartsWith('{')).ToArray();
 
             if (parts[1].StartsWith('v') && char.IsDigit(parts[1][1]))
             {

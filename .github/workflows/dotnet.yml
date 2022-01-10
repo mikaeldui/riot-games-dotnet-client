@@ -46,37 +46,8 @@ jobs:
   github-pull-request-comment:
     name: 'GitHub Pull Request Comment'
     if: ${{ github.event_name == 'pull_request' }}
+    uses: mikaeldui/actions/.github/workflows/github-pull-request-comment.yml@main
     needs: [nuget-org, github-packages]
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Download NuGet Package
-        uses: actions/download-artifact@v2
-        with:
-          name: nupkg
-
-      - name: Package Version
-        uses: mikaeldui/actions/nupkg/info@main
-        id: package
-        
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v1        
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: |
-            You can install the NuGet Package for this pull request from [NuGet.org][nuget.org] or [GitHub Packages][github-packages] using either of these commands:
-
-            Using the **Package Manager Console** (non-floating version):
-
-                PM> Install-Package ${{ steps.package.outputs.name }} --Version ${{ steps.package.outputs.version }}
-
-            Using the **.NET CLI** (floating version):
-
-                dotnet add package ${{ steps.package.outputs.name }} --version *-pull-request.${{ github.event.pull_request.number }}
-
-            Using a PackageReference (floating version):
-
-                <PackageReference Include="${{ steps.package.outputs.name }}" Version="*-pull-request.${{ github.event.pull_request.number }}" />
-
-            [github-packages]: ${{ needs.github-packages.outputs.url }}
-            [nuget.org]: ${{ needs.nuget-org.outputs.url }}
+    with:
+      github_packages_url: ${{ needs.github-packages.outputs.url }}
+      nuget_org_url: ${{ needs.nuget-org.outputs.url }}

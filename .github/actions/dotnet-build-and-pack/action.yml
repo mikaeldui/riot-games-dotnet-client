@@ -1,0 +1,74 @@
+name: .NET Build & Pack 
+runs:
+  using: "composite"
+  steps:
+  
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+      # Version
+
+    - name: Set Riot Games API Version
+      id: riot_api_version
+      run: echo "::set-output name=version::12.1.1"
+      shell: bash
+
+    - name: Generate SemVer Suffix
+      uses: mikaeldui/actions/nupkg/semver-suffix@main
+      id: semver
+
+    - name: Concat Versions
+      id: version
+      run: echo "::set-output name=version::${{ steps.riot_api_version.outputs.version }}.${{ github.run_number }}${{ steps.semver.outputs.suffix }}"
+      shell: bash
+
+      # Code Generation
+
+    - name: 'Code Generation: Restore dependencies'
+      working-directory: ./RiotGames.Client.CodeGeneration
+      run: dotnet restore
+      shell: bash
+
+    - name: 'Code Generation: Run'    
+      working-directory: ./RiotGames.Client.CodeGeneration
+      run: dotnet run --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
+      shell: bash
+
+      # Riot Games Client
+
+    - name: 'Riot Games Client: Restore dependencies'
+      working-directory: ./RiotGames.Client
+      run: dotnet restore
+      shell: bash
+
+    - name: 'Riot Games Client: Build'  
+      working-directory: ./RiotGames.Client
+      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
+      shell: bash
+
+      # Tests
+
+    - name: 'Tests: Restore dependencies'
+      working-directory: ./RiotGames.Client.Tests
+      run: dotnet restore
+      shell: bash
+
+    - name: 'Tests: Build' 
+      working-directory: ./RiotGames.Client.Tests
+      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
+      shell: bash
+
+    - name: 'Tests: Run Tests'   
+      working-directory: ./RiotGames.Client.Tests
+      run: dotnet test --configuration Release --no-build
+      shell: bash
+
+      # Pack & Publish
+      
+    - name: 'Pack & Publish Artifact'
+      uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
+      with:
+        version: ${{ steps.version.outputs.version }}
+        project_directory: ./RiotGames.Client

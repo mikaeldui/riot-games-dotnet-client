@@ -17,70 +17,8 @@ jobs:
     name: 'Build & Pack'
     runs-on: ubuntu-latest
     steps:
-
     - uses: actions/checkout@v2
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-
-      # Version
-
-    - name: Set Riot Games API Version
-      id: riot_api_version
-      run: echo "::set-output name=version::12.1.1"
-
-    - name: Generate SemVer Suffix
-      uses: mikaeldui/actions/nupkg/semver-suffix@main
-      id: semver
-
-    - name: Concat Versions
-      id: version
-      run: echo "::set-output name=version::${{ steps.riot_api_version.outputs.version }}.${{ github.run_number }}${{ steps.semver.outputs.suffix }}"
-
-      # Code Generation
-
-    - name: 'Code Generation: Restore dependencies'
-      working-directory: ./RiotGames.Client.CodeGeneration
-      run: dotnet restore
-
-    - name: 'Code Generation: Run'    
-      working-directory: ./RiotGames.Client.CodeGeneration
-      run: dotnet run --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
-
-      # Riot Games Client
-
-    - name: 'Riot Games Client: Restore dependencies'
-      working-directory: ./RiotGames.Client
-      run: dotnet restore
-
-    - name: 'Riot Games Client: Build'  
-      working-directory: ./RiotGames.Client
-      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
-
-      # Tests
-
-    - name: 'Tests: Restore dependencies'
-      working-directory: ./RiotGames.Client.Tests
-      run: dotnet restore
-
-    - name: 'Tests: Build' 
-      working-directory: ./RiotGames.Client.Tests
-      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
-
-    - name: 'Tests: Run Tests'   
-      working-directory: ./RiotGames.Client.Tests
-      run: dotnet test --configuration Release --no-build
-
-      # Pack & Publish
-      
-    - name: 'Pack & Publish Artifact'
-      if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
-      uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
-      with:
-        version: ${{ steps.version.outputs.version }}
-        project_directory: ./RiotGames.Client
+    - uses: ./.github/actions/dotnet-build-and-pack
 
   nuget-org:
     name: 'NuGet.org'
@@ -101,6 +39,9 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     uses: mikaeldui/actions/.github/workflows/github-release.yml@main
     needs: [nuget-org, github-packages]
+    with:
+      github_packages_url: ${{ needs.github-packages.outputs.url }}
+      nuget_org_url: ${{ needs.nuget-org.outputs.url }}
 
   github-pull-request-comment:
     name: 'GitHub Pull Request Comment'
@@ -115,27 +56,27 @@ jobs:
           name: nupkg
 
       - name: Package Version
-        uses: mikaeldui/actions/nupkg/version@main
-        id: version
+        uses: mikaeldui/actions/nupkg/info@main
+        id: package
         
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1        
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            You can install [the NuGet Package for this pull request from NuGet.org][nuget.org-package] or [GitHub Packages][github-package] using either of these commands:
+            You can install the NuGet Package for this pull request from [NuGet.org][nuget.org] or [GitHub Packages][github-packages] using either of these commands:
 
-            Using **Package Manager Console** (non-floating version):
+            Using the **Package Manager Console** (non-floating version):
 
-                PM> Install-Package MikaelDui.RiotGames.Client --Version ${{ steps.version.outputs.version }}-pull-request.${{ github.event.pull_request.number }}
+                PM> Install-Package ${{ steps.package.outputs.name }} --Version ${{ steps.package.outputs.version }}
 
             Using the **.NET CLI** (floating version):
 
-                dotnet add package MikaelDui.RiotGames.Client --version *-pull-request.${{ github.event.pull_request.number }}
+                dotnet add package ${{ steps.package.outputs.name }} --version *-pull-request.${{ github.event.pull_request.number }}
 
             Using a PackageReference (floating version):
 
-                <PackageReference Include="MikaelDui.RiotGames.Client" Version="*-pull-request.${{ github.event.pull_request.number }}" />
+                <PackageReference Include="${{ steps.package.outputs.name }}" Version="*-pull-request.${{ github.event.pull_request.number }}" />
 
-            [github-package]: https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018?version=${{ steps.version.outputs.version }}
-            [nuget.org-package]: https://www.nuget.org/packages/MikaelDui.RiotGames.Client/${{ steps.version.outputs.version }}
+            [github-packages]: ${{ needs.github-packages.outputs.url }}
+            [nuget.org]: ${{ needs.nuget-org.outputs.url }}

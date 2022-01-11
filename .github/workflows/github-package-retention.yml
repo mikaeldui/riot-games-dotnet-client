@@ -1,0 +1,9 @@
+name: GitHub Packages Retention
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 5,17 * * *'
+jobs:
+  retention:
+    name: "Package Retention"
+    uses: mikaeldui/actions/.github/workflows/github-packages-retention.yml@main

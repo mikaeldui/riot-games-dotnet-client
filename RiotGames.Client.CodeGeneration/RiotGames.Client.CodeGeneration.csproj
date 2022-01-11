@@ -12,6 +12,7 @@
     <PackageReference Include="Humanizer.Core" Version="*" />
     <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="*" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="*" />
+    <PackageReference Include="MikaelDui.CodeAnalysis.CSharp.Extensions" Version="*" />
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
   </ItemGroup>
 

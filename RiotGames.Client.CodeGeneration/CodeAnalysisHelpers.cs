@@ -20,13 +20,13 @@ namespace RiotGames.Client.CodeGeneration
             SF.NamespaceDeclaration(ParseName(string.Join('.', @namespace))).NormalizeWhitespace();
 
         public static ClassDeclarationSyntax PublicClassDeclaration(string identifier) =>
-            ClassDeclaration(identifier).AddModifiers(Token(SyntaxKind.PublicKeyword));
+            ClassDeclaration(identifier).WithModifier(SyntaxKind.PublicKeyword);
 
         public static ClassDeclarationSyntax PublicPartialClassDeclaration(string identifier) =>
-            ClassDeclaration(identifier).AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.PartialKeyword));
+            ClassDeclaration(identifier).WithModifiers(SyntaxKind.PublicKeyword, SyntaxKind.PartialKeyword);
 
         public static ClassDeclarationSyntax PublicClassDeclarationWithBaseType(string identifier, string baseTypeName) =>
-            PublicClassDeclaration(identifier).AddBaseType(baseTypeName);
+            PublicClassDeclaration(identifier).WithBaseType(baseTypeName);
 
         public static ConstructorDeclarationSyntax ConstructorDeclaration(string identifier, string parameterType, string parameterIdentifier) =>
             SF.ConstructorDeclaration(identifier).WithParameter(parameterType, parameterIdentifier);
@@ -36,12 +36,11 @@ namespace RiotGames.Client.CodeGeneration
 
         public static ConstructorDeclarationSyntax InternalConstructorDeclaration(string identifier, string parameterType, string parameterIdentifier, string fieldIdentifier, string? parameterProperty = null) =>
             ConstructorDeclaration(identifier, parameterType, parameterIdentifier)
-                .WithBody($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};")
-                .AddModifiers(Token(SyntaxKind.InternalKeyword));
+                .WithModifier(SyntaxKind.InternalKeyword)
+                .WithBody($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};");
 
         public static EnumDeclarationSyntax PublicEnumDeclaration(string identifier, params string[] members) =>
-            EnumDeclaration(Identifier(identifier))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword))
+            EnumDeclaration(Identifier(identifier)).WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
                 .AddMembers(members.Select(m => EnumMemberDeclaration(Identifier(m))).ToArray());
 
         public static AttributeSyntax Attribute(string identifier) =>
@@ -58,42 +57,37 @@ namespace RiotGames.Client.CodeGeneration
                 ));
 
         public static FieldDeclarationSyntax PrivateFieldDeclaration(string typeName, string identifier) =>
-            FieldDeclaration(typeName, identifier.StartWith("_")).AddModifier(SyntaxKind.PrivateKeyword);
+            FieldDeclaration(typeName, identifier.StartWith("_")).WithModifier(SyntaxKind.PrivateKeyword);
 
         public static FieldDeclarationSyntax PrivateReadOnlyFieldDeclaration(string typeName, string identifier) =>
             PrivateFieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
 
         public static FieldDeclarationSyntax InternalFieldDeclaration(string typeName, string identifier) =>
-            FieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.InternalKeyword);
+            FieldDeclaration(typeName, identifier).WithModifier(SyntaxKind.InternalKeyword);
 
         public static FieldDeclarationSyntax InternalReadOnlyFieldDeclaration(string typeName, string identifier) =>
             InternalFieldDeclaration(typeName, identifier).AddModifier(SyntaxKind.ReadOnlyKeyword);
 
         public static PropertyDeclarationSyntax PublicPropertyDeclaration(string typeName, string identifier) =>
             PropertyDeclaration(ParseTypeName(typeName), identifier)
-                .AddModifiers(Token(SyntaxKind.PublicKeyword))
+                .WithModifier(SyntaxKind.PublicKeyword)
                 .AddAccessorListAccessors(
                     AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                     AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
 
         public static PropertyDeclarationSyntax FieldBackedPublicReadOnlyPropertyDeclaration(string typeName, string identifier, string fieldIdentifier, string? typeConstructorArgument = null) =>
             PropertyDeclaration(ParseTypeName(typeName), Identifier(identifier))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword))
-                .AddAccessorListAccessors(
-                    AccessorDeclaration(
-                        SyntaxKind.GetAccessorDeclaration,
-                        Block(ParseStatement($"if ({fieldIdentifier} == null)\n{fieldIdentifier} = new {typeName}({typeConstructorArgument});\n\nreturn {fieldIdentifier};"))));
+                .WithModifier(SyntaxKind.PublicKeyword)
+                .WithAccessor(SyntaxKind.GetAccessorDeclaration, $"if ({fieldIdentifier} == null)\n{fieldIdentifier} = new {typeName}({typeConstructorArgument});\n\nreturn {fieldIdentifier};");
 
         public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
         {
-            var methodDeclaration = MethodDeclaration(
-                ParseTypeName("Task" + TypeArgumentStatement(returnType)), 
-                methodName.EndWith("Async"))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.AsyncKeyword))
-                .WithBody(Block(bodyStatement));
+            var methodDeclaration = MethodDeclaration(ParseTypeName("Task" + TypeArgumentStatement(returnType)), methodName.EndWith("Async"))
+                .WithModifiers(SyntaxKind.PublicKeyword, SyntaxKind.AsyncKeyword)
+                .WithBody(bodyStatement.ToBlock());
 
             if (parameters != null)
-                methodDeclaration = methodDeclaration.AddParameterListParameters(parameters.ToParameters());
+                methodDeclaration = methodDeclaration.AddParameterListParameters(parameters.ToParameters().ToArray());
 
             return methodDeclaration;
         }

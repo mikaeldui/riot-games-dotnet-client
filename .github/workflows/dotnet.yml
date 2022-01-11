@@ -42,12 +42,3 @@ jobs:
     with:
       github_packages_url: ${{ needs.github-packages.outputs.url }}
       nuget_org_url: ${{ needs.nuget-org.outputs.url }}
-
-  github-pull-request-comment:
-    name: 'GitHub Pull Request Comment'
-    if: ${{ github.event_name == 'pull_request' }}
-    uses: mikaeldui/actions/.github/workflows/github-pull-request-comment.yml@main
-    needs: [nuget-org, github-packages]
-    with:
-      github_packages_url: ${{ needs.github-packages.outputs.url }}
-      nuget_org_url: ${{ needs.nuget-org.outputs.url }}

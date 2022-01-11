@@ -22,7 +22,7 @@ jobs:
 
   nuget-org:
     name: 'NuGet.org'
-    if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') }}
+    if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'pull_request' || (startsWith(github.ref, 'refs/heads/features') && github.event_name == 'push') }}
     uses: mikaeldui/actions/.github/workflows/nuget.org-deploy.yml@main
     needs: build
     secrets:

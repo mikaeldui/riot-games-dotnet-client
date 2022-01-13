@@ -9,10 +9,9 @@ runs:
 
       # Version
 
-    - name: Set Riot Games API Version
-      id: riot_api_version
-      run: echo "::set-output name=version::12.1.1"
-      shell: bash
+    - name: Data Dragon Version
+      uses: mikaeldui/actions/riot-games/league-of-legends/data-dragon/version@main
+      id: data-dragon
 
     - name: Generate SemVer Suffix
       uses: mikaeldui/actions/nupkg/semver-suffix@main
@@ -20,7 +19,7 @@ runs:
 
     - name: Concat Versions
       id: version
-      run: echo "::set-output name=version::${{ steps.riot_api_version.outputs.version }}.${{ github.run_number }}${{ steps.semver.outputs.suffix }}"
+      run: echo "::set-output name=version::${{ steps.data-dragon.outputs.version }}.${{ github.run_number }}${{ steps.semver.outputs.suffix }}"
       shell: bash
 
       # Code Generation
@@ -70,4 +69,3 @@ runs:
       uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
       with:
         version: ${{ steps.version.outputs.version }}
-        project_directory: ./RiotGames.Client

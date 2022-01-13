@@ -18,20 +18,14 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         public static string GetTypeName(this OpenApiComponentPropertyObject property)
         {
             if (property.Ref != null)
-                return OpenApiComponentHelper.GetTypeNameFromRef(property.Ref)
-                    //.FixGamePrefixes()
-                    ;
+                return OpenApiComponentHelper.GetTypeNameFromRef(property.Ref);
 
-            return OpenApiComponentHelper.GetTypeNameFromString(property.Format ?? property.Type)
-                //.FixGamePrefixes()
-                ;
+            return OpenApiComponentHelper.GetTypeNameFromString(property.Format ?? property.Type);
         }
 
         public static string GetTypeName(this OpenApiSchemaObject schema)
         {
-            return OpenApiComponentHelper.GetTypeName(schema)
-                //.FixGamePrefixes()
-                ;
+            return OpenApiComponentHelper.GetTypeName(schema);
         }
     }
 }

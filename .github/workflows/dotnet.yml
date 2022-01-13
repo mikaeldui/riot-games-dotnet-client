@@ -23,19 +23,19 @@ jobs:
       name: 'Build & Pack'
 
   nuget-org:
-    name: 'Push to NuGet.org'
+    name: 'NuGet.org'
     uses: mikaeldui/actions/.github/workflows/nuget.org-deploy.yml@main
     needs: build
     secrets:
       NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
 
   github-packages:
-    name: 'Push to GitHub Packages'
+    name: 'GitHub Packages'
     uses: mikaeldui/actions/.github/workflows/github-packages-deploy.yml@main
     needs: build
 
   github-release:
-    name: 'Create GitHub Release'
+    name: 'GitHub Release'
     uses: mikaeldui/actions/.github/workflows/github-release.yml@main
     needs: [nuget-org, github-packages]
     with:

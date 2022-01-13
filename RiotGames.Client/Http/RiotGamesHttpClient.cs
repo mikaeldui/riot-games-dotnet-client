@@ -13,7 +13,6 @@ namespace RiotGames
         {
             var client = UserAgent.From(typeof(RiotGamesHttpClient<TObjectBase>).GetTypeInfo().Assembly);
             client.Name = "MikaelDui.RiotGames.Client";
-            client.Comments.Add("+https://github.com/mikaeldui/riot-games-dotnet-client");
 
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly != null)

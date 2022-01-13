@@ -7,20 +7,33 @@ namespace RiotGames
 {
     internal class RiotGamesHttpClient<TObjectBase> : IDisposable
     {
-        private static readonly string? VERSION = typeof(RiotGamesHttpClient<>).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
+        private static readonly string USER_AGENT;
+
+        static RiotGamesHttpClient()
+        {
+            var client = UserAgent.From(typeof(RiotGamesHttpClient<TObjectBase>).GetTypeInfo().Assembly);
+            client.Name = "MikaelDui.RiotGames.Client";
+            client.Comments.Add("+https://github.com/mikaeldui/riot-games-dotnet-client");
+
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly != null)
+                client.DependentProduct = UserAgent.From(entryAssembly);
+
+            USER_AGENT = client.ToString();
+        }
 
         internal HttpClient HttpClient;
 
         internal protected RiotGamesHttpClient()
         {
             HttpClient = new HttpClient();
-            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"MikaelDui.RiotGames.Client/{VERSION} (https://github.com/mikaeldui/riot-games-dotnet-client)");
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", USER_AGENT);
         }
 
         internal protected RiotGamesHttpClient(HttpClientHandler httpClientHandler)
         {
             HttpClient = new HttpClient(httpClientHandler);
-            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"MikaelDui.RiotGames.Client/{VERSION} (https://github.com/mikaeldui/riot-games-dotnet-client)");
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", USER_AGENT);
         }
 
         internal async Task<TResult?> GetAsync<TResult>(string? requestUri)

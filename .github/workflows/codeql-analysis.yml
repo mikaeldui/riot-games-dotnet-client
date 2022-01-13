@@ -39,11 +39,16 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
+      
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      uses: mikaeldui/actions/dotnet/setup@main
+
+    - name: 'Code Generation: Restore dependencies'
+      run: dotnet restore
+
+    - name: 'Set Riot Games API Version'
+      id: riot_api_vars
+      run: echo "::set-output name=version::12.1.1"
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -55,20 +60,10 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    - name: 'Code Generation: Restore dependencies'
-      working-directory: ./RiotGames.Client.CodeGeneration
-      run: dotnet restore
     - name: 'Code Generation: Run'    
       working-directory: ./RiotGames.Client.CodeGeneration
       run: dotnet run --configuration Release --no-restore /p:UseSharedCompilation=false
 
-    - name: 'Set Riot Games API Version'
-      id: riot_api_vars
-      run: echo "::set-output name=version::12.1.1"
-
-    - name: 'Riot Games Client: Restore dependencies'
-      working-directory: ./RiotGames.Client
-      run: dotnet restore
     - name: 'Riot Games Client: Build'  
       working-directory: ./RiotGames.Client
       run: dotnet build --configuration Release --no-restore /p:UseSharedCompilation=false

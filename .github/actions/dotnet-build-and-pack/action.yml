@@ -1,12 +1,11 @@
 name: .NET Build & Pack 
+description: 'Builds the code generator and generates code then builds the client library and tests it and then pushes it'
 runs:
   using: "composite"
-  steps:
-  
+  steps:  
+
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      uses: mikaeldui/actions/dotnet/setup@main
 
       # Version
 

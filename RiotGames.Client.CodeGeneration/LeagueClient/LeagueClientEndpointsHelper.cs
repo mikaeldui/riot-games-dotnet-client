@@ -40,9 +40,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (isPlural != null)
                 {
                     if (isPlural == true)
-                        return name.Pluralize();
+                        return name.Pluralize(false);
                     else
-                        return name.Singularize();
+                        return name.Singularize(false);
                 }
 
                 return name;
@@ -75,12 +75,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 var firstParts = firstPart.SplitAndRemoveEmptyEntries('-');
                 var secondParts = secondPart.SplitAndRemoveEmptyEntries('-');
 
-                if (firstParts.Any(fp => secondParts.Select(sp => sp.Singularize()).Contains(fp)))
+                if (firstParts.Any(fp => secondParts.Select(sp => sp.Singularize(false)).Contains(fp)))
                 {
                     if (isPlural != null)
                     {
-                        if (isPlural.Value) secondParts.PluralizeLast();
-                        else secondParts.SingularizeLast();
+                        if (isPlural.Value) secondParts.PluralizeLast(false);
+                        else secondParts.SingularizeLast(false);
                     }
 
                     if (firstPart == "summoner" && parts.Length > 2 && parts[2].StartsWith("by-"))
@@ -96,9 +96,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (isPlural != null)
                 {
                     if (isPlural.Value && lastPart == null)
-                        dtoParts.PluralizeLast();
+                        dtoParts.PluralizeLast(false);
                     else
-                        dtoParts.SingularizeLast();
+                        dtoParts.SingularizeLast(false);
                 }
                 secondPart = String.Join("-", dtoParts);
             }
@@ -106,13 +106,13 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (lastPart != null && isPlural != null)
                 {
                     if (isPlural.Value)
-                        lastPart = lastPart.Pluralize();
+                        lastPart = lastPart.Pluralize(false);
                     else
-                        lastPart = lastPart.Singularize();
+                        lastPart = lastPart.Singularize(false);
                 }
             }
 
-            if (firstPart == secondPart || firstPart == secondPart.Singularize())
+            if (firstPart == secondPart || firstPart == secondPart.Singularize(false))
             {
                 if (lastPart != null)
                     return firstPart._toName() + lastPart._toName();

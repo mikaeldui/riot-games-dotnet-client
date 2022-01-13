@@ -18,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      name: 'Checkout'
     - uses: ./.github/actions/dotnet-build-and-pack
+      name: 'Build & Pack'
 
   nuget-org:
     name: 'NuGet.org'

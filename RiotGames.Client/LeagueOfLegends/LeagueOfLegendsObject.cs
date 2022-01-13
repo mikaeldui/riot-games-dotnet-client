@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends
 {
-    public abstract class LeagueOfLegendsObject : RiotGamesObject
+    public abstract class LeagueOfLegendsObject : RiotGamesObject, ILeagueOfLegendsObject
     {
     }
 }

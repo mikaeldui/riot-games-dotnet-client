@@ -1,8 +1,10 @@
 ﻿using Camille.Enums;
+using System.Diagnostics;
 
 namespace RiotGames.LeagueOfLegends
 {
-    public partial class LeagueOfLegendsClient : RiotGamesClientBase<LeagueOfLegendsObject>
+    [DebuggerDisplay("Region = {_region} Platform = {_platform}")]
+    public partial class LeagueOfLegendsClient : RiotGamesClientBase<ILeagueOfLegendsObject>
     {
         /// <summary>
         /// Some endpoints need to know the platform and will throw exceptions if used.

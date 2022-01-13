@@ -169,7 +169,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             Dictionary<string, string>? pathParameters = ToPathParameters(getMethodObject?.Parameters);
 
-            string returnType = responseSchema.GetTypeName();
+            string returnType = LeagueClientEndpointsHelper.GetTypeName(responseSchema);
             string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
             var baseMethod = Enums.Contains(returnType) ? "GetEnumAsync" : GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 

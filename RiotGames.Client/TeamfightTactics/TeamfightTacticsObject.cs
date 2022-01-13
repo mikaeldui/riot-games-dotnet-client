@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.TeamfightTactics
 {
-    public abstract class TeamfightTacticsObject : RiotGamesObject
+    public abstract class TeamfightTacticsObject : RiotGamesObject, ITeamfightTacticsObject
     {
     }
 }

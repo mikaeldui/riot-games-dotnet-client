@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Valorant
 {
-    public abstract class ValorantObject : RiotGamesObject
+    public abstract class ValorantObject : RiotGamesObject, IValorantObject
     {
     }
 }

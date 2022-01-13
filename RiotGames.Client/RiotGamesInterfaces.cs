@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 namespace RiotGames
 {
     // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
-    public interface IEncryptedPuuid
+    public interface IEncryptedPuuid : IRiotGamesObject
     {
         public string EncryptedPuuid { get; set; }
     }
 
     // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
-    public interface IEncryptedAccountId
+    public interface IEncryptedAccountId : IRiotGamesObject
     {
         public string EncryptedAccountId { get; set; }
     }
 
     // See https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
-    public interface IEncryptedSummonerId
+    public interface IEncryptedSummonerId : IRiotGamesObject
     {
         public string EncryptedSummonerId { get; set; }
     }

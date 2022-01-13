@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace RiotGames.Valorant
 {
-    public interface IValorantMatchId
+    public interface IValorantObject : IRiotGamesObject
+    {
+    }
+
+    public interface IValorantMatchId : IValorantObject
     {
         public string MatchId { get; set; }
     }

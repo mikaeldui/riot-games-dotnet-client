@@ -121,6 +121,15 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return firstPart._toName() + secondPart._toName() + lastPart?._toName();
         }
 
+        public static string GetTypeName(this OpenApiSchemaObject schema)
+        {
+            var name = OpenApiComponentHelper.GetTypeName(schema);
+            if (name.EndsWith("[]"))
+                name = $"LeagueClientCollection<{name.RemoveEnd("[]")}>";
+
+            return name;
+        }
+
 
         public static string GetTypeName(this LcuParameterObject parameter)
         {

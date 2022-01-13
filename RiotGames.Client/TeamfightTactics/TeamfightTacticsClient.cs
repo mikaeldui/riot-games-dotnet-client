@@ -2,7 +2,7 @@
 
 namespace RiotGames.TeamfightTactics
 {
-    public partial class TeamfightTacticsClient : RiotGamesClientBase<TeamfightTacticsObject>
+    public partial class TeamfightTacticsClient : RiotGamesClientBase<ITeamfightTacticsObject>
     {
         /// <summary>
         /// Some endpoints need to know the platform and will throw exceptions if used.

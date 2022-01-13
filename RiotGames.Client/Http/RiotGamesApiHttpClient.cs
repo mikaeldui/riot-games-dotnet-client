@@ -12,17 +12,14 @@ namespace RiotGames
 
         internal RiotGamesApiHttpClient(string apiKey, RegionalRoute region) : this(apiKey, region.ToString().ToLower())
         {
-
         }
 
         internal RiotGamesApiHttpClient(string apiKey, PlatformRoute platform) : this(apiKey, platform.ToString().ToLower())
         {
-
         }
 
         internal RiotGamesApiHttpClient(string apiKey, ValPlatformRoute platform) : this(apiKey, platform.ToString().ToLower())
         {
-
         }
     }
 }

@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace RiotGames
 {
-    public abstract class RiotGamesObject
+    public interface IRiotGamesObject
+    {
+
+    }
+
+    public abstract class RiotGamesObject : IRiotGamesObject
     {
     }
 }

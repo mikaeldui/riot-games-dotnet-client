@@ -2,7 +2,7 @@
 
 namespace RiotGames.LegendsOfRuneterra
 {
-    public partial class LegendsOfRuneterraClient : RiotGamesClientBase<LegendsOfRuneterraObject>
+    public partial class LegendsOfRuneterraClient : RiotGamesClientBase<ILegendsOfRuneterraObject>
     {
         public LegendsOfRuneterraClient(string apiKey, RegionalRoute region) : base(apiKey, region)
         {

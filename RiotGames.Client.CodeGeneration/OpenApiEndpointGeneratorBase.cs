@@ -88,18 +88,7 @@ namespace RiotGames.Client.CodeGeneration
             string? specificMethod = null;
 
             // Current work-around, added some type specific HTTP methods.
-            if (returnType.EndsWith("[]"))
-                if (returnType.StartsWith("string") || returnType.StartsWith("dynamic") || returnType.StartsWith("int") || returnType.StartsWith("long"))
-                {
-                    specificMethod = "SystemType";
-                    if (returnType.StartsWith("dynamic"))
-                        typeArgument = TypeArgumentStatement("ExpandoObject[]");
-                    else
-                        typeArgument = TypeArgumentStatement(returnType);
-                }
-                else
-                    specificMethod = "Array";
-            else if (returnType is "int" or "string" or "bool" or "dynamic" or "long" or "double")
+            if (returnType is "int" or "string" or "bool" or "dynamic" or "long" or "double")
             {
                 specificMethod = "SystemType";
 

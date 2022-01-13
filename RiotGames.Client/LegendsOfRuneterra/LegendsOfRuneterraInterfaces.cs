@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LegendsOfRuneterra
 {
-    public interface ILegendsOfRuneterraMatchId
+    public interface ILegendsOfRuneterraObject : IRiotGamesObject
+    {
+    }
+
+    public interface ILegendsOfRuneterraMatchId : ILegendsOfRuneterraObject
     {
         public string MatchId { get; set; }
     }

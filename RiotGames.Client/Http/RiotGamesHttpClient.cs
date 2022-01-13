@@ -26,22 +26,18 @@ namespace RiotGames
         internal protected RiotGamesHttpClient()
         {
             HttpClient = new HttpClient();
-            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", USER_AGENT);
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
         internal protected RiotGamesHttpClient(HttpClientHandler httpClientHandler)
         {
             HttpClient = new HttpClient(httpClientHandler);
-            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", USER_AGENT);
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
         internal async Task<TResult?> GetAsync<TResult>(string? requestUri)
             where TResult : TObjectBase =>
             await HttpClient.GetFromJsonAsync<TResult>(requestUri);
-
-        internal async Task<TResult[]?> GetArrayAsync<TResult>(string? requestUri)
-            where TResult : TObjectBase =>
-            await HttpClient.GetFromJsonAsync<TResult[]>(requestUri);
 
         internal async Task<T> GetSystemTypeAsync<T>(string? requestUri)
         {

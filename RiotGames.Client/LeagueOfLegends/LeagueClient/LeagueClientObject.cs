@@ -1,6 +1,6 @@
 ﻿namespace RiotGames.LeagueOfLegends.LeagueClient
 {
-    public class LeagueClientObject : RiotGamesObject
+    public class LeagueClientObject : LeagueOfLegendsObject, ILeagueClientObject
     {
     }
 }

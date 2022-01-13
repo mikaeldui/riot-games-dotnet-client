@@ -79,8 +79,8 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
             string clientName = isPlatform ? "PlatformClient" : "RegionalClient";
 
-            string returnType = responseSchema.GetTypeName();
-            string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
+            string returnType = responseSchema.GetTypeName(_client);
+            string? typeArgument = TypeArgumentStatement(returnType);
 
             string httpClientMethod = GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 

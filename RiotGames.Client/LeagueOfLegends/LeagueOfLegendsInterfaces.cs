@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends
 {
-    public interface ILeagueOfLegendsLeagueId
+    public interface ILeagueOfLegendsObject : IRiotGamesObject
+    {
+    }
+
+    public interface ILeagueOfLegendsLeagueId : ILeagueOfLegendsObject
     {
         public string LeagueId { get; set; }
     }
 
-    public interface ILeagueOfLegendsMatchId
+    public interface ILeagueOfLegendsMatchId : ILeagueOfLegendsObject
     {
         public string MatchId { get; set; }
     }
 
-    public interface ILeagueOfLegendsTournamentId
+    public interface ILeagueOfLegendsTournamentId : ILeagueOfLegendsObject
     {
         public int TournamentId { get; set; }
     }

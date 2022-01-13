@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace RiotGames.TeamfightTactics
 {
-    public interface ITeamfightTacticsLeagueId
+    public interface ITeamfightTacticsObject : IRiotGamesObject
+    {
+    }
+
+    public interface ITeamfightTacticsLeagueId : ITeamfightTacticsObject
     {
         public string LeagueId { get; set; }
     }
 
-    public interface ITeamfightTacticsMatchId
+    public interface ITeamfightTacticsMatchId : ITeamfightTacticsObject
     {
         public string MatchId { get; set; }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LegendsOfRuneterra
 {
-    public abstract class LegendsOfRuneterraObject : RiotGamesObject
+    public abstract class LegendsOfRuneterraObject : RiotGamesObject, ILegendsOfRuneterraObject
     {
     }
 }

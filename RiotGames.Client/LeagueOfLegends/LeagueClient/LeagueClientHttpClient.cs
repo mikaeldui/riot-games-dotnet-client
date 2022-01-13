@@ -9,7 +9,7 @@ using System.Dynamic;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
-    internal class LeagueClientHttpClient : RiotGamesHttpClient<LeagueClientObject>
+    internal class LeagueClientHttpClient : RiotGamesHttpClient<ILeagueClientObject>
     {
         internal LeagueClientHttpClient(string username, string password, ushort port) : base(new LeagueClientHttpClientHandler())
         {

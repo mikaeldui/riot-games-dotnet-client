@@ -3,10 +3,12 @@ using RiotGames.LegendsOfRuneterra;
 using RiotGames.TeamfightTactics;
 using RiotGames.Valorant;
 using Camille.Enums;
+using System.Diagnostics;
 
 namespace RiotGames
 {
-    public partial class RiotGamesClient : RiotGamesClientBase<RiotGamesObject>
+    [DebuggerDisplay("Region = {_region} Platform = {_platform} ValPlatform = {_valPlatform}")]
+    public partial class RiotGamesClient : RiotGamesClientBase<IRiotGamesObject>
     {
         private string _apiKey;
         private ValPlatformRoute? _valPlatform;
@@ -28,7 +30,7 @@ namespace RiotGames
         /// <summary>
         /// This will set the region to the one for the platform, which might not be closest to you. For the best performance on those endpoints, use the regional constructor.
         /// </summary>
-        public RiotGamesClient(string apiKey, PlatformRoute platform, ValPlatformRoute? valPlatform = null) : base(apiKey, platform)
+        public RiotGamesClient(string apiKey, PlatformRoute platform, RegionalRoute? region = null, ValPlatformRoute? valPlatform = null) : base(apiKey, platform, region)
         {
             _apiKey = apiKey;
             _valPlatform= valPlatform;

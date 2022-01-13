@@ -45,7 +45,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     identifier = "X" + identifier;
                 }
 
-                string typeName = kv.Value.GetTypeName();
+                string typeName = kv.Value.GetTypeName(_client);
 
                 //typeName += "?"; // Make nullable
 

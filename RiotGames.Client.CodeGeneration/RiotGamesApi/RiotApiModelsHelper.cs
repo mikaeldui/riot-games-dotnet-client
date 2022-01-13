@@ -19,7 +19,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             return OpenApiComponentHelper.GetTypeNameFromRef(@ref);
         }
 
-        public static string GetTypeName(this RiotApiSchemaObject schema)
+        public static string GetTypeName(this RiotApiSchemaObject schema, Client client)
         {
             if (schema.Ref != null)
                 return GetTypeNameFromRef(schema.Ref);
@@ -29,7 +29,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 switch (schema.Type)
                 {
                     case "array":
-                        return (schema.XType.Remove("Set[").Remove("List[").TrimEnd(']')).RemoveDtoSuffix() + "[]";
+                        return $"{client}Collection<{schema.XType.RemoveStart("Set[").RemoveStart("List[").TrimEnd(']').RemoveDtoSuffix()}>";
                     case "integer":
                         if (schema.XType == null)
                             throw new Exception("Schema.XType is null for some reason.");
@@ -41,10 +41,10 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             throw new Exception("Couldn't figure out the response type.");
         }
 
-        public static string GetTypeName(this OpenApiComponentPropertyObject property)
+        public static string GetTypeName(this OpenApiComponentPropertyObject property, Client client)
         {
             if (property.Type == "array" || (property as RiotApiComponentPropertyObject)?.XType == "array")
-                return GetTypeName(property.Items) + "[]";
+                return $"{client}Collection<{GetTypeName(property.Items, client)}>";
 
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            

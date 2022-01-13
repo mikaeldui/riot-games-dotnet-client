@@ -32,6 +32,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             if (schema.Enum != null)
             {
+                if (!_usingSystemTextJsonSerialization)
+                {
+                    _usingSystemTextJsonSerialization = true;
+                    _namespace = _namespace.AddSystemTextJsonSerializationUsing();
+                }
+
                 member = PublicEnumDeclaration(identifier, schema.Enum.ToPascalCase())
                     .AddJsonStringEnumAttribute();
             }
@@ -55,7 +61,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     string typeName;
 
                     if (kv.Value.Type == "array")
-                        typeName = kv.Value.Items.GetTypeName() + "[]";
+                        typeName = $"LeagueClientCollection<{kv.Value.Items.GetTypeName()}>";
                     else
                         typeName = kv.Value.GetTypeName();
 

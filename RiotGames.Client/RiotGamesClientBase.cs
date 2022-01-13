@@ -3,7 +3,7 @@
 namespace RiotGames
 {
     public abstract class RiotGamesClientBase<TObjectBase> : IDisposable
-        where TObjectBase : RiotGamesObject
+        where TObjectBase : IRiotGamesObject
     {
         private RegionalRoute? _region;
         private PlatformRoute? _platform;
@@ -24,14 +24,15 @@ namespace RiotGames
             _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
         }
 
-        internal RiotGamesClientBase(string apiKey, PlatformRoute platform, bool createRegionalClient = true)
+        internal RiotGamesClientBase(string apiKey, PlatformRoute platform, RegionalRoute? region = null, bool createRegionalClient = true)
         {
             _platform = platform;
             _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
 
             if (createRegionalClient)
             {
-                _region = RouteUtils.ToRegional(platform);
+                if (region == null)
+                    _region = RouteUtils.ToRegional(platform);
                 _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
             }
         }

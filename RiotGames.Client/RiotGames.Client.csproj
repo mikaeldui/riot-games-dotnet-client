@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
+    <PackageReference Include="MikaelDui.Client.Base" Version="*" />
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
     <PackageReference Include="MikaelDui.Net.Http" Version="*" />
   </ItemGroup>

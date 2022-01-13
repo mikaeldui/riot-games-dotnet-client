@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
     [JsonIReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
-    public class LeagueClientCollection<TValue> : LeagueOfLegendsCollection<TValue>, ILeagueClientObject
+    public class LeagueClientCollection<TValue> : ReadOnlyCollection<TValue>, ILeagueClientObject
     {
         public LeagueClientCollection(IList<TValue> list) : base(list)
         {
@@ -16,7 +16,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     }
 
     [JsonIReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
-    public class LeagueClientDictionary<TKey, TValue> : LeagueOfLegendsDictionary<TKey, TValue>, ILeagueClientObject
+    public class LeagueClientDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ILeagueClientObject
         where TKey : notnull
     {
         public LeagueClientDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)

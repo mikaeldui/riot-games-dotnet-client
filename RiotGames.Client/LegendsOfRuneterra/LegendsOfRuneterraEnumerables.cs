@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace RiotGames.LegendsOfRuneterra
 {
     [JsonIReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
-    public class LegendsOfRuneterraCollection<TValue> : RiotGamesCollection<TValue>, ILegendsOfRuneterraObject
+    public class LegendsOfRuneterraCollection<TValue> : ReadOnlyCollection<TValue>, ILegendsOfRuneterraObject
     {
         public LegendsOfRuneterraCollection(IList<TValue> list) : base(list)
         {
@@ -16,7 +16,7 @@ namespace RiotGames.LegendsOfRuneterra
     }
 
     [JsonIReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
-    public class LegendsOfRuneterraDictionary<TKey, TValue> : RiotGamesDictionary<TKey, TValue>, ILegendsOfRuneterraObject
+    public class LegendsOfRuneterraDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ILegendsOfRuneterraObject
         where TKey : notnull
     {
         public LegendsOfRuneterraDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)

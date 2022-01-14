@@ -27,7 +27,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{65B5
 		.github\actions\dotnet-build-and-pack\action.yml = .github\actions\dotnet-build-and-pack\action.yml
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RiotGames.Client.LeagueClient.WebSockets", "RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.shproj", "{DC557719-ED6A-4165-B6C3-942DED1D6DBF}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems*{dc557719-ed6a-4165-b6c3-942ded1d6dbf}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

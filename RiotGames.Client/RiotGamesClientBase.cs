@@ -11,13 +11,6 @@ namespace RiotGames
         private RiotGamesApiHttpClient<TObjectBase>? _regionalClient;
         private RiotGamesApiHttpClient<TObjectBase>? _platformClient;
 
-        //// Will have to investigate if the RiotGamesClient can give its HttpClient to its children.
-        //internal RiotGamesClientBase(RiotHttpClient<TObjectBase>? regionalClient, RiotHttpClient<TObjectBase>? platformClient)
-        //{
-        //    _regionalClient = regionalClient;
-        //    _platformClient = platformClient;
-        //}
-
         internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
             _region = region;

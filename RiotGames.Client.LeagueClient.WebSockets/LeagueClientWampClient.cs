@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Security;
 using System.Net.WebSockets.Wamp;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
@@ -15,6 +16,22 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     /// </summary>
     public class LeagueClientWampClient : WampSubscriberClient<LeagueClientWampMessageTypeCode>
     {
+        private static readonly string USER_AGENT;
+
+        static LeagueClientWampClient()
+        {
+            var wampClient = UserAgent.From(typeof(WampSubscriberClient).GetTypeInfo().Assembly);
+            wampClient.Name = "MikaelDui.Net.WebSockets.Wamp";
+            wampClient.DependentProduct = UserAgent.From(typeof(LeagueClientWampClient).GetTypeInfo().Assembly);
+            wampClient.DependentProduct.Name = "MikaelDui.RiotGames.Client";
+
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly != null)
+                wampClient.DependentProduct.DependentProduct = UserAgent.From(entryAssembly);            
+
+            USER_AGENT = wampClient.ToString();
+        }
+
         private readonly ushort _port;
 
         public LeagueClientWampClient(string username, string password, ushort port)
@@ -22,6 +39,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             _port = port;
             Options.Credentials = new NetworkCredential(username, password);
             Options.RemoteCertificateValidationCallback = _remoteCertificateValidationCallback;
+            Options.SetRequestHeader("User-Agent", USER_AGENT);
         }
 
         private static bool _remoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors errors)

@@ -28,6 +28,10 @@ namespace RiotGames.LeagueOfLegends.LeagueClient.Tests
             {
                 var result = await client.ReceiveAsync();
                 Assert.IsNotNull(result);
+                Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Topic));
+                Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Uri.ToString()));
+                Assert.IsNotNull(result.Data);
+                Assert.AreEqual(LeagueClientWampMessageTypeCode.Event, result.MessageCode);
             }
 
             await client.CloseAsync();

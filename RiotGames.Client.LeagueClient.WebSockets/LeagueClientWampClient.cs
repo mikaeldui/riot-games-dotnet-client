@@ -21,10 +21,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         static LeagueClientWampClient()
         {
             var wampClient = UserAgent.From(typeof(WampSubscriberClient).GetTypeInfo().Assembly);
-            wampClient.Name = "MikaelDui.Net.WebSockets.Wamp";
             wampClient.DependentProduct = UserAgent.From(typeof(LeagueClientWampClient).GetTypeInfo().Assembly);
-            wampClient.DependentProduct.Name = "MikaelDui.RiotGames.Client";
-
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly != null)
                 wampClient.DependentProduct.DependentProduct = UserAgent.From(entryAssembly);            

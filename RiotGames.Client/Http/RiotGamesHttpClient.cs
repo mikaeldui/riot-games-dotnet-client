@@ -1,5 +1,6 @@
 ﻿using RiotGames.LeagueOfLegends.LeagueClient;
 using System.Dynamic;
+using System.Net;
 using System.Net.Http.Json;
 using System.Reflection;
 
@@ -12,7 +13,6 @@ namespace RiotGames
         static RiotGamesHttpClient()
         {
             var client = UserAgent.From(typeof(RiotGamesHttpClient<TObjectBase>).GetTypeInfo().Assembly);
-            client.Name = "MikaelDui.RiotGames.Client";
 
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly != null)

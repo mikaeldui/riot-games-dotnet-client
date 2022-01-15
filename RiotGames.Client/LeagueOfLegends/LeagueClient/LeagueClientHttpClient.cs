@@ -36,7 +36,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             ServerCertificateCustomValidationCallback = _serverCertificateCustomValidationCallback;
         }
 
-        private bool _serverCertificateCustomValidationCallback(HttpRequestMessage message, X509Certificate2? certificate, X509Chain? chain, SslPolicyErrors errors)
+        private static bool _serverCertificateCustomValidationCallback(HttpRequestMessage message, X509Certificate2? certificate, X509Chain? chain, SslPolicyErrors errors)
         {
             if (certificate == null) return false;
             if (errors == SslPolicyErrors.None) return true;

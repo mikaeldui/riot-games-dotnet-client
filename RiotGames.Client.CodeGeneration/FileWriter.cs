@@ -28,7 +28,7 @@ namespace RiotGames.Client.CodeGeneration
         public static void WriteLeagueClientFile(string contents, string? subClass = null)
         {
             string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
-            
+
             string? suffix = null;
             if (subClass != null)
                 suffix = "." + subClass;

@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
     <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; TeamfightTactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient;</PackageTags>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
-    <PackageIcon>RiotGames-270x270.png</PackageIcon>
+    <PackageIcon>RiotGames-256x256.png</PackageIcon>
   </PropertyGroup>
 
     <ItemGroup>
@@ -43,14 +43,19 @@
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
     <PackageReference Include="MikaelDui.Client.Base" Version="*" />
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
-    <PackageReference Include="MikaelDui.Net.Http" Version="*" />
+	<PackageReference Include="MikaelDui.Net.Http" Version="*" />
+	<PackageReference Include="MikaelDui.Net.WebSockets.Extensions" Version="*" />
+	<PackageReference Include="MikaelDui.Net.WebSockets.Wamp" Version="*" />
+	<PackageReference Include="MikaelDui.RiotGames.LeagueOfLegends.LeagueClient.LockFile" Version="*" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="RiotGames-270x270.png">
+    <None Include="..\RiotGames-256x256.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
+  <Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
 
 </Project>

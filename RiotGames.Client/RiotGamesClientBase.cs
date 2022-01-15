@@ -32,8 +32,9 @@ namespace RiotGames
             if (createRegionalClient)
             {
                 if (region == null)
-                    _region = RouteUtils.ToRegional(platform);
-                _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)_region);
+                    region = RouteUtils.ToRegional(platform);
+                _region = region;
+                _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)region);
             }
         }
 

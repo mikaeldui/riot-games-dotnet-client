@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
-    public abstract class LeagueClientBase : IDisposable
+    public abstract partial class LeagueClientBase : IDisposable
     {
         //internal const string LEAGUECLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
         private const string LEAGUECLIENT_USERNAME = "riot";
@@ -17,15 +17,24 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             HttpClient = httpClient;
         }
 
-        protected LeagueClientBase(string processName = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
+        protected LeagueClientBase(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
         {
-            LeagueClientLockfile lockfile = lockfilePath == LeagueClientLockfile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH
-                ? LeagueClientLockfile.FromProcess(processName)
-                : LeagueClientLockfile.FromPath(lockfilePath);
+            LeagueClientLockFile lockfile = lockfilePath == LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH
+                ? LeagueClientLockFile.FromProcess(processName)
+                : LeagueClientLockFile.FromPath(lockfilePath);
 
-            HttpClient = new LeagueClientHttpClient(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+            HttpClient = new(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+#if !NETSTANDARD2_0
+            WampClient = new(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+#endif
         }
 
-        public virtual void Dispose() => HttpClient.Dispose();
+        public virtual void Dispose()
+        {
+            HttpClient.Dispose();
+#if !NETSTANDARD2_0
+            WampClient?.Dispose();
+#endif
+        }
     }
 }

@@ -10,5 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.WebSocket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientWampClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientWampMessageTypeCode.cs" />
   </ItemGroup>
 </Project>

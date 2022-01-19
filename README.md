@@ -111,6 +111,11 @@ foreach(var teamMember in session.MyTeam)
 
 ```
 
+## Generated Code
+The generated code looks like this:
+
+![image](https://user-images.githubusercontent.com/3706841/150069049-e768f7f3-fa19-4eeb-8c2a-353e3e33a578.png)
+
 ## Notice from [Riot Games][riot]
 
 [Riot Games .NET Client (unofficial)][rgdc] isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing [Riot Games][riot] properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].

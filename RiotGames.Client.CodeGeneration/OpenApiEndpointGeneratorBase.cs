@@ -40,11 +40,11 @@ namespace RiotGames.Client.CodeGeneration
 
             StatementSyntax bodyStatement;
             if (endpoint.RequestValueType == null)
-                bodyStatement = ReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);
+                bodyStatement = CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);
             else
-                bodyStatement = ReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
+                bodyStatement = CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
 
-            Class = Class.AddPublicAsyncTask(endpoint.ReturnTypeName, endpoint.Identifier.EndWith("Async"), bodyStatement, endpoint.RequestPathParameters);
+            Class = Class.AddCancellablePublicAsyncTask(endpoint.ReturnTypeName, endpoint.Identifier.EndWith("Async"), bodyStatement, endpoint.RequestPathParameters);
         }
 
         public virtual void AddPathAsEndpoints(KeyValuePair<string, TPathObject> path)

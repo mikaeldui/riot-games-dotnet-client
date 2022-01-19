@@ -59,8 +59,8 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                         parameterIdentifier = methodIdentifierParts[1];
                     }
 
-                    var method = PublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
-                        ReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                    var method = CancellablePublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                        CancellableReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
                         new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
 
                     Class = Class.AddMembers(method);
@@ -73,7 +73,14 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             //if (path.Key == "/lol/match/v5/matches/{matchId}/timeline") Debugger.Break();
 
             var responseSchema = getMethodObject?.Responses?["200"]?.Content?.First().Value.Schema;
-            bool isArrayReponse = responseSchema?.Type == "array";
+
+            if (responseSchema == null)
+            {
+                Debugger.Break();
+                throw new ArgumentException("The 200 response doesn't have any schema.");
+            }
+
+            bool isArrayReponse = responseSchema.Type == "array";
             var methodIdentifier = "Get" + ClientHelper.GetNameFromPath(path, isArrayReponse);
             bool isPlatform = pathObject.XRouteEnum != "regional";
 
@@ -89,7 +96,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             // Addd quotes for C# string
             path = $"\"{path}\"";
 
-            if (pathParameters != null)
+            if (pathParameters != null && pathParameters.Any())
             {
                 // Add "$" for string interpolation.
                 path = $"${path}";
@@ -103,7 +110,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             }
 
             return new EndpointDefinition(methodIdentifier, returnType, 
-                clientName, httpClientMethod,typeArgument, path, null, pathParameters);            
+                clientName, httpClientMethod, typeArgument, path, null, pathParameters);            
         }
 
         public override string GenerateCode()
@@ -122,10 +129,10 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 .ToFullString();
         }
 
-        protected virtual Dictionary<string, string>? ToPathParameters(RiotApiParameterObject[] parameters)
+        protected virtual Dictionary<string, string>? ToPathParameters(IEnumerable<RiotApiParameterObject>? parameters)
         {
-            if (parameters == null || parameters.Length == 0)
-                return null;
+            if (parameters == null || !parameters.Any())
+                return default;
 
             if (!parameters.All(p => p.In is "path" or "header" or "query"))
                 Debugger.Break();

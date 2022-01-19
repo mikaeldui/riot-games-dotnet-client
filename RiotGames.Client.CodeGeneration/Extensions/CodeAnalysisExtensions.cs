@@ -30,5 +30,8 @@ namespace RiotGames.Client.CodeGeneration
 
         public static ClassDeclarationSyntax AddPublicAsyncTask(this ClassDeclarationSyntax @class, string returnType, string methodIdentifier, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null) =>
             @class.AddMembers(PublicAsyncTaskDeclaration(returnType, methodIdentifier, bodyStatement, parameters));
+
+        public static ClassDeclarationSyntax AddCancellablePublicAsyncTask(this ClassDeclarationSyntax @class, string returnType, string methodIdentifier, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null) =>
+            @class.AddMembers(CancellablePublicAsyncTaskDeclaration(returnType, methodIdentifier, bodyStatement, parameters));
     }
 }

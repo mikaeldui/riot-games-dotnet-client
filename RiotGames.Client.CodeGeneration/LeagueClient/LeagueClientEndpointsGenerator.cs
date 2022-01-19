@@ -65,8 +65,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                         parameterIdentifier = methodIdentifierParts[1];
                     }
 
-                    var method = PublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
-                        ReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
+                    var method = CancellablePublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                        CancellableReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
                         new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
 
                     Class = Class.AddMembers(method);

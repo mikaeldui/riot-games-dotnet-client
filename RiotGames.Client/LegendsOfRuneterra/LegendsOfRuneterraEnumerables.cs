@@ -7,19 +7,19 @@ using System.Text.Json.Serialization;
 
 namespace RiotGames.LegendsOfRuneterra
 {
-    [JsonIReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
-    public class LegendsOfRuneterraCollection<TValue> : ReadOnlyCollection<TValue>, ILegendsOfRuneterraObject
+    [JsonReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
+    public class LegendsOfRuneterraReadOnlyCollection<TValue> : ReadOnlyCollection<TValue>, ILegendsOfRuneterraObject
     {
-        public LegendsOfRuneterraCollection(IList<TValue> list) : base(list)
+        public LegendsOfRuneterraReadOnlyCollection(IList<TValue> list) : base(list)
         {
         }
     }
 
-    [JsonIReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
-    public class LegendsOfRuneterraDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ILegendsOfRuneterraObject
+    [JsonReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
+    public class LegendsOfRuneterraReadOnlyDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ILegendsOfRuneterraObject
         where TKey : notnull
     {
-        public LegendsOfRuneterraDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
+        public LegendsOfRuneterraReadOnlyDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
         {
         }
     }

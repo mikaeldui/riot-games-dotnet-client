@@ -63,28 +63,28 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 {
                     "LeagueOfLegends", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string", "LeagueId"), "ILeagueOfLegendsLeagueId" },
-                        { ("string", "MatchId"), "ILeagueOfLegendsMatchId" },
-                        { ("int", "TournamentId"), "ILeagueOfLegendsTournamentId" }
+                        { ("string", "LeagueId"), "ILeagueId" },
+                        { ("string", "MatchId"), "IMatchId" },
+                        { ("int", "TournamentId"), "ITournamentId" }
                     }
                 },
                 {
                     "LegendsOfRuneterra", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string", "MatchId"), "ILegendsOfRuneterraMatchId" }
+                        { ("string", "MatchId"), "IMatchId" }
                     }
                 },
                 {
                     "TeamfightTactics", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string", "LeagueId"), "ITeamfightTacticsLeagueId" },
-                        { ("string", "MatchId"), "ITeamfightTacticsMatchId" }
+                        { ("string", "LeagueId"), "ILeagueId" },
+                        { ("string", "MatchId"), "IMatchId" }
                     }
                 },
                 {
                     "Valorant", new Dictionary<(string typeName, string identifier), string>
                     {
-                        { ("string", "MatchId"), "IValorantMatchId" }
+                        { ("string", "MatchId"), "IMatchId" }
                     }
                 }
             };

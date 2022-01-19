@@ -35,9 +35,15 @@ namespace RiotGames
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
-        internal async Task<TResult?> GetAsync<TResult>(string? requestUri, CancellationToken cancellationToken = default)
+        internal Uri BaseAddress 
+        {
+            get => HttpClient.BaseAddress;
+            set => HttpClient.BaseAddress = value;
+        }
+
+        internal async Task<TResult> GetAsync<TResult>(string? requestUri, CancellationToken cancellationToken = default)
             where TResult : TObjectBase =>
-            await HttpClient.GetFromJsonAsync<TResult>(requestUri, cancellationToken);
+            await HttpClient.GetFromJsonAsync<TResult>(requestUri, cancellationToken) ?? throw new RiotGamesException("Nothing was returned from the API.");
 
         internal async Task<T> GetSystemTypeAsync<T>(string? requestUri, CancellationToken cancellationToken = default)
         {

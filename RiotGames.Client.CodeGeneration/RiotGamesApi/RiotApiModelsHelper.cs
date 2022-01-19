@@ -29,7 +29,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 switch (schema.Type)
                 {
                     case "array":
-                        return $"{client}Collection<{schema.XType.RemoveStart("Set[").RemoveStart("List[").TrimEnd(']').RemoveDtoSuffix()}>";
+                        return $"{client}ReadOnlyCollection<{schema.XType.RemoveStart("Set[").RemoveStart("List[").TrimEnd(']').RemoveDtoSuffix()}>";
                     case "integer":
                         if (schema.XType == null)
                             throw new Exception("Schema.XType is null for some reason.");
@@ -44,7 +44,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         public static string GetTypeName(this OpenApiComponentPropertyObject property, Client client)
         {
             if (property.Type == "array" || (property as RiotApiComponentPropertyObject)?.XType == "array")
-                return $"{client}Collection<{GetTypeName(property.Items, client)}>";
+                return $"{client}ReadOnlyCollection<{GetTypeName(property.Items, client)}>";
 
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            

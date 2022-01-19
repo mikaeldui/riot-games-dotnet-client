@@ -7,19 +7,19 @@ using System.Text.Json.Serialization;
 
 namespace RiotGames.Valorant
 {
-    [JsonIReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
-    public class ValorantCollection<TValue> : ReadOnlyCollection<TValue>, IValorantObject
+    [JsonReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
+    public class ValorantReadOnlyCollection<TValue> : ReadOnlyCollection<TValue>, IValorantObject
     {
-        public ValorantCollection(IList<TValue> list) : base(list)
+        public ValorantReadOnlyCollection(IList<TValue> list) : base(list)
         {
         }
     }
 
-    [JsonIReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
-    public class ValorantDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, IValorantObject
+    [JsonReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
+    public class ValorantReadOnlyDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, IValorantObject
         where TKey : notnull
     {
-        public ValorantDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
+        public ValorantReadOnlyDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
         {
         }
     }

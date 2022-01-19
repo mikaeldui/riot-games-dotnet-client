@@ -7,19 +7,19 @@ using System.Text.Json.Serialization;
 
 namespace RiotGames.TeamfightTactics
 {
-    [JsonIReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
-    public class TeamfightTacticsCollection<TValue> : ReadOnlyCollection<TValue>, ITeamfightTacticsObject
+    [JsonReadOnlyCollection, DebuggerDisplay("Count = {Count}")]
+    public class TeamfightTacticsReadOnlyCollection<TValue> : ReadOnlyCollection<TValue>, ITeamfightTacticsObject
     {
-        public TeamfightTacticsCollection(IList<TValue> list) : base(list)
+        public TeamfightTacticsReadOnlyCollection(IList<TValue> list) : base(list)
         {
         }
     }
 
-    [JsonIReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
-    public class TeamfightTacticsDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ITeamfightTacticsObject
+    [JsonReadOnlyDictionary, DebuggerDisplay("Count = {Count}")]
+    public class TeamfightTacticsReadOnlyDictionary<TKey, TValue> : ReadOnlyDictionary<TKey, TValue>, ITeamfightTacticsObject
         where TKey : notnull
     {
-        public TeamfightTacticsDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
+        public TeamfightTacticsReadOnlyDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
         {
         }
     }

@@ -6,10 +6,22 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends.DataDragon
 {
-    public class DataDragonClient : IDisposable
+    public partial class DataDragonClient : IDisposable
     {
-        private HttpClient _httpClient = new HttpClient();
+        public const string DATA_DRAGON_BASE_ADDRESS = "https://ddragon.leagueoflegends.com/";
 
-        public void Dispose() => _httpClient.Dispose();
+        internal RiotGamesHttpClient<IDataDragonObject> HttpClient = new();
+
+        public DataDragonClient()
+        {
+            HttpClient.BaseAddress = new Uri(DATA_DRAGON_BASE_ADDRESS);
+        }
+
+        public async Task<DataDragonRealm> GetRealmAsync(string region)
+        {
+            return await HttpClient.GetAsync<DataDragonRealm>($"/realms/{region}.json");
+        }
+
+        public void Dispose() => HttpClient.Dispose();
     }
 }

@@ -7,7 +7,7 @@ namespace RiotGames
         private RiotGamesApiHttpClient(string apiKey, string apiSubDomain)
         {
             HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Riot-Token", apiKey);
-            HttpClient.BaseAddress = new Uri($"https://{apiSubDomain}.api.riotgames.com");
+            BaseAddress = new Uri($"https://{apiSubDomain}.api.riotgames.com");
         }
 
         internal RiotGamesApiHttpClient(string apiKey, RegionalRoute region) : this(apiKey, region.ToString().ToLower())

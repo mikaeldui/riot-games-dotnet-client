@@ -111,6 +111,12 @@ foreach(var teamMember in session.MyTeam)
 
 ```
 
+## Sub-packages
+Packages used:
+- [MikaelDui.RiotGames.Core](https://github.com/mikaeldui/riot-games-dotnet-core)
+- [MikaelDui.RiotGames.LeagueOfLegends.Core](https://github.com/mikaeldui/riot-games-league-of-legends-dotnet-core)
+- [MikaelDui.RiotGames.LeagueOfLegends.LeagueClient.LockFile](https://github.com/mikaeldui/riot-games-league-of-legends-league-client-lock-file-dotnet)
+
 ## Notice from [Riot Games][riot]
 
 [Riot Games .NET Client (unofficial)][rgdc] isn't endorsed by [Riot Games][riot] and doesn't reflect the views or opinions of [Riot Games][riot] or anyone officially involved in producing or managing [Riot Games][riot] properties. [Riot Games][riot], and all associated properties are trademarks or registered trademarks of [Riot Games, Inc][riot].

@@ -6,12 +6,14 @@ on:
     - 'RiotGames.Client.CodeGeneration/**'
     - '.github/workflows/*'
     - '.github/actions/**'
+    - 'README.md'
   pull_request:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
     - '.github/workflows/*'
     - '.github/actions/**'
+    - 'README.md'
 jobs:
   build:
     name: 'Build & Pack'

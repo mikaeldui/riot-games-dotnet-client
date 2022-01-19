@@ -111,8 +111,13 @@ foreach(var teamMember in session.MyTeam)
 
 ```
 
+## Generated Code
+The generated code looks like this:
+
+![image](https://user-images.githubusercontent.com/3706841/150069049-e768f7f3-fa19-4eeb-8c2a-353e3e33a578.png)
+
 ## Sub-packages
-Packages used:
+The client includes these sub-packages:
 - [MikaelDui.RiotGames.Core](https://github.com/mikaeldui/riot-games-dotnet-core)
 - [MikaelDui.RiotGames.LeagueOfLegends.Core](https://github.com/mikaeldui/riot-games-league-of-legends-dotnet-core)
 - [MikaelDui.RiotGames.LeagueOfLegends.LeagueClient.LockFile](https://github.com/mikaeldui/riot-games-league-of-legends-league-client-lock-file-dotnet)

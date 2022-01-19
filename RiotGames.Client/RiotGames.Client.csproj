@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/mikaeldui/riot-games-dotnet-client</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/mikaeldui/riot-games-dotnet-client</RepositoryUrl>
-    <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; TeamfightTactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient;</PackageTags>
+    <PackageTags>RiotGames; LeagueOfLegends; LegendsOfRuneterra; TeamfightTactics; Valorant; LoL; LoR; TFT; LCU; LeagueClient; League of Legends; Riot Games; Legends of Runeterra; Teamfight Tactics</PackageTags>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>
     <AssemblyName>MikaelDui.RiotGames.Client</AssemblyName>

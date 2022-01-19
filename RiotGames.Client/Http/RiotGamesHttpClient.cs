@@ -35,47 +35,47 @@ namespace RiotGames
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
-        internal async Task<TResult?> GetAsync<TResult>(string? requestUri)
+        internal async Task<TResult?> GetAsync<TResult>(string? requestUri, CancellationToken cancellationToken = default)
             where TResult : TObjectBase =>
-            await HttpClient.GetFromJsonAsync<TResult>(requestUri);
+            await HttpClient.GetFromJsonAsync<TResult>(requestUri, cancellationToken);
 
-        internal async Task<T> GetSystemTypeAsync<T>(string? requestUri)
+        internal async Task<T> GetSystemTypeAsync<T>(string? requestUri, CancellationToken cancellationToken = default)
         {
             switch (Type.GetTypeCode(typeof(T)))
             {
                 case TypeCode.String:
-                    return (T)(object)await HttpClient.GetStringAsync(requestUri);                    
+                    return (T)(object)await HttpClient.GetStringAsync(requestUri, cancellationToken);                    
                 case TypeCode.Int32:
-                    return (T)(object)int.Parse(await HttpClient.GetStringAsync(requestUri));
+                    return (T)(object)int.Parse(await HttpClient.GetStringAsync(requestUri, cancellationToken));
                 case TypeCode.Int64:
-                    return (T)(object)long.Parse(await HttpClient.GetStringAsync(requestUri));
+                    return (T)(object)long.Parse(await HttpClient.GetStringAsync(requestUri, cancellationToken));
                 case TypeCode.Double:
-                    return (T)(object)double.Parse(await HttpClient.GetStringAsync(requestUri));
+                    return (T)(object)double.Parse(await HttpClient.GetStringAsync(requestUri, cancellationToken));
             }
 
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8603 // Possible null reference return.
             if (typeof(T) == typeof(string[]))
-                return (T)(object)await HttpClient.GetFromJsonAsync<string[]>(requestUri);
+                return (T)(object)await HttpClient.GetFromJsonAsync<string[]>(requestUri, cancellationToken);
 
             if (typeof(T) == typeof(int[]))
-                return (T)(object)await HttpClient.GetFromJsonAsync<int[]>(requestUri);
+                return (T)(object)await HttpClient.GetFromJsonAsync<int[]>(requestUri, cancellationToken);
 
             if (typeof(T) == typeof(ExpandoObject))
-                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri);
+                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri, cancellationToken);
 
             if (typeof(T) == typeof(ExpandoObject[]))
-                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject[]>(requestUri);
+                return (T)(object)await HttpClient.GetFromJsonAsync<ExpandoObject[]>(requestUri, cancellationToken);
 #pragma warning restore CS8603 // Possible null reference return.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             throw new NotImplementedException("This system type hasn't been implemented in GetSystemTypeAsync<T>.");
         }
 
-        internal async Task<T> GetEnumAsync<T>(string? requestUri) where T : Enum => 
-            (T)Enum.Parse(typeof(T), await HttpClient.GetStringAsync(requestUri));
+        internal async Task<T> GetEnumAsync<T>(string? requestUri, CancellationToken cancellationToken = default) where T : Enum => 
+            (T)Enum.Parse(typeof(T), await HttpClient.GetStringAsync(requestUri, cancellationToken));
 
-        internal async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value)
+        internal async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
             where TValue : TObjectBase
             where TResult : TObjectBase =>
             await HttpClient.PostAsJsonAsync<TValue, TResult>(requestUri, value);

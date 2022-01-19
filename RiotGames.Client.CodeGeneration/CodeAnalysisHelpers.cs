@@ -43,12 +43,6 @@ namespace RiotGames.Client.CodeGeneration
             EnumDeclaration(Identifier(identifier)).WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
                 .AddMembers(members.Select(m => EnumMemberDeclaration(Identifier(m))).ToArray());
 
-        public static AttributeSyntax Attribute(string identifier) =>
-            SyntaxFactory.Attribute(IdentifierName(identifier));
-
-        public static AttributeSyntax Attribute(string identifier, string stringArgument) =>
-            Attribute(identifier).WithArgumentList(ParseAttributeArgumentList($"(\"{stringArgument}\")"));
-
         public static FieldDeclarationSyntax FieldDeclaration(string typeName, string identifier) =>
             SF.FieldDeclaration(
                 VariableDeclaration(
@@ -80,16 +74,33 @@ namespace RiotGames.Client.CodeGeneration
                 .WithModifier(SyntaxKind.PublicKeyword)
                 .WithAccessor(SyntaxKind.GetAccessorDeclaration, $"if ({fieldIdentifier} == null)\n{fieldIdentifier} = new {typeName}({typeConstructorArgument});\n\nreturn {fieldIdentifier};");
 
-        public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
+        public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, params ParameterSyntax[] parameters)
         {
             var methodDeclaration = MethodDeclaration(ParseTypeName("Task" + TypeArgumentStatement(returnType)), methodName.EndWith("Async"))
                 .WithModifiers(SyntaxKind.PublicKeyword, SyntaxKind.AsyncKeyword)
                 .WithBody(bodyStatement.ToBlock());
 
             if (parameters != null)
-                methodDeclaration = methodDeclaration.AddParameterListParameters(parameters.ToParameters().ToArray());
+                methodDeclaration = methodDeclaration.AddParameterListParameters(parameters);
 
             return methodDeclaration;
+        }
+
+        public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null) =>
+            PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray());
+
+        public static MethodDeclarationSyntax CancellablePublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, params ParameterSyntax[] parameters)
+        {
+            var @params = parameters.ToList();
+
+            @params.Add(SyntaxFactory.Parameter(default, default, ParseTypeName("CancellationToken"), Identifier("cancellationToken"), EqualsValueClause(ParseExpression("default"))));
+
+            return PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, @params.ToArray());
+        }
+
+        public static MethodDeclarationSyntax CancellablePublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
+        {
+            return CancellablePublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray() ?? Array.Empty<ParameterSyntax>());
         }
 
         public static ParameterSyntax Parameter(string typeName, string identifier) =>
@@ -99,12 +110,19 @@ namespace RiotGames.Client.CodeGeneration
 
         public static string TypeArgumentStatement(string valueType, string returnType) => $"<{valueType}, {returnType}>";
 
-        public static StatementSyntax ReturnAwaitStatement(string? objectName, string methodName, string? typeArgument, params string[] arguments)
+        private static StatementSyntax ReturnAwaitStatement(string? objectName, string methodName, string? typeArgument, params string[] arguments)
         {
             if (objectName == null)
                 return ParseStatement($"return await {methodName}{typeArgument}({string.Join(", ", arguments)});");
 
             return ParseStatement($"return await {objectName}.{methodName}{typeArgument}({string.Join(", ", arguments)});");
+        }
+
+        public static StatementSyntax CancellableReturnAwaitStatement(string? objectName, string methodName, string? typeArgument, params string[] arguments)
+        {
+            var argumentsList = arguments.ToList();
+            argumentsList.Add("cancellationToken");
+            return ReturnAwaitStatement(objectName, methodName, typeArgument, argumentsList.ToArray());
         }
     }
 }

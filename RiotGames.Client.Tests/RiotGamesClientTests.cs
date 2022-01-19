@@ -18,10 +18,8 @@ namespace RiotGames.Client.Tests
         [ExpectedException(typeof(HttpRequestException))]
         public async Task TryWithBadApiKey()
         {
-            using (var europeanClient = new RiotGamesClient("bad-key", RegionalRoute.EUROPE))
-            {
-                var account = await europeanClient.GetAccountAsync("bad-puuid");
-            }
+            using RiotGamesClient europeanClient = new("bad-key", RegionalRoute.EUROPE);
+            _ = await europeanClient.GetAccountAsync("bad-puuid");
         }
     }
 }

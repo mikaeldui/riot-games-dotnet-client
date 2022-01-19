@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace RiotGames.Client.Tests
+namespace RiotGames.Tests
 {
     [TestClass]
     public class RiotGamesClientTests

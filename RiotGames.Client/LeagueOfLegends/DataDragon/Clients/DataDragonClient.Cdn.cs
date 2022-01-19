@@ -7,10 +7,22 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 {
     public partial class DataDragonClient
     {
+        private DataDragonCdnClient? _cdn;
+
+        public DataDragonCdnClient Cdn
+        {
+            get
+            {
+                if (_cdn == null)
+                    _cdn = new DataDragonCdnClient(this);
+                return _cdn;
+            }
+        }
+
         [EditorBrowsable(EditorBrowsableState.Never)]
         public class DataDragonCdnClient
         {
-            readonly DataDragonClient _parent;
+            private readonly DataDragonClient _parent;
 
             internal DataDragonCdnClient(DataDragonClient parent)
             {

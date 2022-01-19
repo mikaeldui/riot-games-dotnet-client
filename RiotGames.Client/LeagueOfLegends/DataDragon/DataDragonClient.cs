@@ -8,7 +8,7 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 {
     public partial class DataDragonClient : IDisposable
     {
-        public const string DATA_DRAGON_BASE_ADDRESS = "https://ddragon.leagueoflegends.com/";
+        public const string DATA_DRAGON_BASE_ADDRESS = "https://ddragon.leagueoflegends.com";
 
         internal RiotGamesHttpClient<IDataDragonObject> HttpClient = new();
 
@@ -19,7 +19,7 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 
         public async Task<DataDragonRealm> GetRealmAsync(string region)
         {
-            return await HttpClient.GetAsync<DataDragonRealm>($"/realms/{region}.json");
+            return await HttpClient.GetAsync<DataDragonRealm>($"/realms/{region.ToLower()}.json");
         }
 
         public void Dispose() => HttpClient.Dispose();

@@ -17,6 +17,8 @@ namespace RiotGames
             _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
         }
 
+
+
         internal RiotGamesClientBase(string apiKey, PlatformRoute platform, RegionalRoute? region = null, bool createRegionalClient = true)
         {
             _platform = platform;

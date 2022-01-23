@@ -1,23 +1,26 @@
 ﻿using Camille.Enums;
+using System.ComponentModel;
 
 namespace RiotGames
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class RiotGamesClientBase<TObjectBase> : IDisposable
         where TObjectBase : IRiotGamesObject
     {
-        private RegionalRoute? _region;
-        private PlatformRoute? _platform;
-        private ValPlatformRoute? _valPlatform;
-        private RiotGamesApiHttpClient<TObjectBase>? _regionalClient;
-        private RiotGamesApiHttpClient<TObjectBase>? _platformClient;
+        private readonly RegionalRoute? _region;
+        private readonly PlatformRoute? _platform;
+        private readonly ValPlatformRoute? _valPlatform;
+        private readonly RiotGamesApiHttpClient<TObjectBase>? _regionalClient;
+        private readonly RiotGamesApiHttpClient<TObjectBase>? _platformClient;
 
         internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
             _region = region;
+            _valPlatform = valPlatform;
             _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
+            if (valPlatform != null)
+                _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (ValPlatformRoute)valPlatform);
         }
-
-
 
         internal RiotGamesClientBase(string apiKey, PlatformRoute platform, RegionalRoute? region = null, bool createRegionalClient = true)
         {

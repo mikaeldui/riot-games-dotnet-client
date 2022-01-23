@@ -7,9 +7,9 @@ namespace RiotGames
     public abstract class RiotGamesApiHttpClient
     {
         /// <summary>
-        /// Default it "https://{0}.api.riotgames.com" where {0} is replaced by the region, e.g. "euw1".
+        /// Default it "https://{0}.api.riotgames.com/" where {0} is replaced by the region, e.g. "euw1".
         /// </summary>
-        public static string BaseAddressFormat { get; set; } = "https://{0}.api.riotgames.com";
+        public static string BaseAddressFormat { get; set; } = "https://{0}.api.riotgames.com/";
 
         private RiotGamesApiHttpClient()
         {

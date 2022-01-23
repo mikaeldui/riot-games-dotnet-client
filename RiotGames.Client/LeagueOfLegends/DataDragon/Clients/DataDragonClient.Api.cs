@@ -31,7 +31,7 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 
             public async Task<DataDragonCollection<string>> GetVersionsAsync()
             {
-                return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("/api/versions.json");
+                return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("api/versions.json");
             }
         }
     }

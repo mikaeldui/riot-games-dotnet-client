@@ -38,6 +38,8 @@ namespace RiotGames.Client.CodeGeneration
             //if (httpMethod == HttpMethod.Get ^ requestType == null)
             //    throw new ArgumentException("If the httpMetod is get then requestType must be null. If it is post or put then it must be set.");
 
+            endpoint.RequestUri = endpoint.RequestUri.ReplaceStart("$\"/", "$\"").ReplaceStart("\"/", "\""); // Make relative
+
             StatementSyntax bodyStatement;
             if (endpoint.RequestValueType == null)
                 bodyStatement = CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);

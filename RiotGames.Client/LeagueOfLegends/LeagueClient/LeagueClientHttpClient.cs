@@ -14,7 +14,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         internal LeagueClientHttpClient(string username, string password, ushort port) : base(new LeagueClientHttpClientHandler())
         {
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}")));
-            HttpClient.BaseAddress = new UriBuilder("https", "127.0.0.1", port).Uri;
+            HttpClient.BaseAddress = new UriBuilder("https", "127.0.0.1", port, "/").Uri;
         }
 
         public async Task<dynamic> GetDynamicAsync(string requestUri)

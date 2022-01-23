@@ -31,7 +31,7 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 
             public async Task<DataDragonCollection<string>> GetLanguagesAsync()
             {
-                return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("/cdn/languages.json");
+                return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("cdn/languages.json");
             }
         }
     }

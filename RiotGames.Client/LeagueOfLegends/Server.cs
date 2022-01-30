@@ -228,6 +228,20 @@ namespace RiotGames.LeagueOfLegends
             return server != default;
         }
 
+        /// <summary>
+        /// Tries to parse a server identifier.
+        /// </summary>
+        /// <param name="value">E.g. "euw1" or "EUNE" or "Amsterdam, Netherlands".</param>
+        /// <exception cref="ArgumentException">Thrown if the value isn't a valid server identifier.</exception>
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public static Server Parse(string value)
+        {
+            if (!TryParse(value, out Server server))
+                throw new ArgumentException("Not a valid server identifier.", nameof(value));
+
+            return server;
+        }
+
         public static implicit operator PlatformRoute(Server s) => s.Platform;
         public static implicit operator Server(PlatformRoute p) => p switch
         {

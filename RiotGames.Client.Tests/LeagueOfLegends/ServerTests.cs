@@ -12,7 +12,7 @@ namespace RiotGames.LeagueOfLegends.Tests
     public class ServerTests
     {
         [TestMethod]
-        public void Parse()
+        public void TryParse()
         {
             if (!Server.TryParse("euw", out Server server))
                 Assert.Fail("Couldn't parse euw.");
@@ -20,9 +20,23 @@ namespace RiotGames.LeagueOfLegends.Tests
             Assert.IsNotNull(server);
             Assert.AreEqual(Server.EUW, server);
 
-
             if (!Server.TryParse("euw1", out server))
                 Assert.Fail("Couldn't parse euw1.");
+
+            Assert.IsNotNull(server);
+            Assert.AreEqual(Server.EUW, server);
+        }
+
+
+        [TestMethod]
+        public void Parse()
+        {
+            var server = Server.Parse("euw");
+
+            Assert.IsNotNull(server);
+            Assert.AreEqual(Server.EUW, server);
+
+            server = Server.Parse("euw1");
 
             Assert.IsNotNull(server);
             Assert.AreEqual(Server.EUW, server);

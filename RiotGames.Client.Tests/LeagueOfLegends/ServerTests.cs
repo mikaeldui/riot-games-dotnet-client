@@ -27,7 +27,6 @@ namespace RiotGames.LeagueOfLegends.Tests
             Assert.AreEqual(Server.EUW, server);
         }
 
-
         [TestMethod]
         public void Parse()
         {

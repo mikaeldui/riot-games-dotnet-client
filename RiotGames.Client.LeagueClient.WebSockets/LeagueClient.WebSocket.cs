@@ -13,7 +13,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         internal readonly LeagueClientWampClient? WampClient;
     }
 
-    public abstract partial class LeagueClient
+    public partial class LeagueClient
     {
         /// <summary>
         /// Will be made internal soon. Open and Close it yourself.

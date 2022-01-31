@@ -62,6 +62,8 @@ runs:
       working-directory: ./RiotGames.Client.Tests
       run: dotnet test --configuration Release --no-build
       shell: bash
+      env:
+        RIOT_GAMES_API_TOKEN: ${{ secrets.RIOT_GAMES_API_TOKEN }}
 
       # Pack & Publish
       

@@ -16,8 +16,8 @@ namespace RiotGames.LeagueOfLegends
         [TestMethod]
         public async Task GetSummonerByNameAsync()
         {
-            var summoner = await Client.GetSummonerByNameAsync(SUMMONER_NAME);
-            AssertProperties(summoner);
+            // Summoner is populated by the base class with GetSummonerByNameAsync.
+            AssertProperties(SUMMONER);
         }
 
         [TestMethod]

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.LeagueOfLegends.LeagueClient.Tests
+namespace RiotGames.LeagueOfLegends.LeagueClient
 {
     [TestClass]
     public class LeagueClientWebSocketsTests

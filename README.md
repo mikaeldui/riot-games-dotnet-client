@@ -8,7 +8,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Purpose-build Open API client generator
 
-✅ Vanille C#
+✅ Vanilla C#
 
 ✅ Auto-generated overloads for CLR objects
 
@@ -18,7 +18,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ## Download
 
-You can find the latest releases [here on GitHub](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).
+You can find the latest releases [on GitHub Packages](https://github.com/mikaeldui/riot-games-dotnet-client/releases) and [on NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).
 
 To install the latest version of the package, type the following in the **package manager** console:
 

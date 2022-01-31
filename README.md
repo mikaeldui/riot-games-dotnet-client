@@ -6,9 +6,11 @@
 
 An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
 
-It features a purpose-built Open API client generator and is written with Vanilla C#.
-
-There are auto-generated overloads so that you can pass a CLR object as parameter to the clients.
+✅ Purpose-build Open API client generator
+✅ Vanille C#
+✅ Auto-generated overloads for CLR objects
+✅ Continuously tested again the live API
+✅ All tests required to be successful before deploy
 
 ## Download
 

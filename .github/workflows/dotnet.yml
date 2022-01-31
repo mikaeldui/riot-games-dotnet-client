@@ -4,14 +4,16 @@ on:
     paths:
     - 'RiotGames.Client/**'    
     - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/*'
+    - 'RiotGames.Client.Tests/**'
+    - '.github/workflows/dotnet.yml'
     - '.github/actions/**'
     - 'README.md'
   pull_request:
     paths:
     - 'RiotGames.Client/**'    
-    - 'RiotGames.Client.CodeGeneration/**'
-    - '.github/workflows/*'
+    - 'RiotGames.Client.CodeGeneration/**'    
+    - 'RiotGames.Client.Tests/**'
+    - '.github/workflows/dotnet.yml'
     - '.github/actions/**'
     - 'README.md'
 jobs:

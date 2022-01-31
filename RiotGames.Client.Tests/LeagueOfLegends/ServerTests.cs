@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.LeagueOfLegends.Tests
+namespace RiotGames.LeagueOfLegends
 {
     [TestClass]
     public class ServerTests

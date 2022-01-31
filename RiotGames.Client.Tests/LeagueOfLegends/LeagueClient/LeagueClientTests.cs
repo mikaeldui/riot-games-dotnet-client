@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RiotGames.LeagueOfLegends.LeagueClient;
 
-namespace RiotGames.Client.Tests.LeagueOfLegendsTests.LeagueClientTests
+namespace RiotGames.LeagueOfLegends.LeagueClient
 {
     [TestClass]
     public class LeagueClientTests

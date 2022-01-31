@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiotGames.LeagueOfLegends.DataDragon.Tests
+namespace RiotGames.LeagueOfLegends.DataDragon
 {
     [TestClass]
     public class DataDragonTests

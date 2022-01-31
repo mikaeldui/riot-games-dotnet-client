@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>RiotGames</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

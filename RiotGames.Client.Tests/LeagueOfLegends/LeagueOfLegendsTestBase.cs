@@ -40,14 +40,14 @@ namespace RiotGames.LeagueOfLegends
         /// </summary>
         public static string PUUID_ENCRYPTED => SUMMONER.EncryptedPuuid;
 
-        protected LeagueOfLegendsTestBase() { }
+        protected LeagueOfLegendsTestBase() { } // Because ClassInitialize doesn't work in abstract classes...
 
-        [AssemblyInitialize] // because ClassInitialize doesn't work in derived classes...
+        [AssemblyInitialize] // because ClassInitialize doesn't work in abstract classes...
         public static void Initialize(TestContext _)
         {
             if (RIOT_GAMES_API_TOKEN != String.Empty) // These tests can't be run without a valid token.
             {
-                using LeagueOfLegendsClient client = new(RIOT_GAMES_API_TOKEN, SERVER);
+                using var client = GetClient();
                 _summoner = client.GetSummonerByNameAsync(SUMMONER_NAME).Result;
             }
         }
@@ -55,7 +55,7 @@ namespace RiotGames.LeagueOfLegends
         /// <summary>
         /// Reconstructed for each and every test.
         /// </summary>
-        protected LeagueOfLegendsClient Client = new(RIOT_GAMES_API_TOKEN, SERVER);
+        protected LeagueOfLegendsClient Client = GetClient();
 
         /// <summary>
         /// If overridden, call this first if <see cref="RIOT_GAMES_API_TOKEN"/> is required.
@@ -66,10 +66,12 @@ namespace RiotGames.LeagueOfLegends
             if (RIOT_GAMES_API_TOKEN == String.Empty) // These tests can't be run without a valid token.
                 Assert.Inconclusive("RIOT_GAMES_API_TOKEN not set.");
 
-            Client = new(RIOT_GAMES_API_TOKEN, SERVER);
+            Client = GetClient();
         }
 
         [TestCleanup]
         public virtual void TearDown() => Client.Dispose();
+
+        public static LeagueOfLegendsClient GetClient() => new(RIOT_GAMES_API_TOKEN, SERVER);
     }
 }

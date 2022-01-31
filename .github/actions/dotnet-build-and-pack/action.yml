@@ -1,5 +1,9 @@
 name: .NET Build & Pack 
 description: 'Builds the code generator and generates code then builds the client library and tests it and then pushes it'
+inputs:
+  RIOT_GAMES_API_TOKEN:  # id of input
+    description: 'Token used by the tests'
+    required: false
 runs:
   using: "composite"
   steps:  
@@ -62,6 +66,8 @@ runs:
       working-directory: ./RiotGames.Client.Tests
       run: dotnet test --configuration Release --no-build
       shell: bash
+      env:
+        RIOT_GAMES_API_TOKEN: ${{ inputs.RIOT_GAMES_API_TOKEN }}
 
       # Pack & Publish
       

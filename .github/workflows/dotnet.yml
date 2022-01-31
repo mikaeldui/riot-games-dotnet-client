@@ -25,6 +25,8 @@ jobs:
       name: 'Checkout'
     - uses: ./.github/actions/dotnet-build-and-pack
       name: 'Build & Pack'
+      with:
+        RIOT_GAMES_API_TOKEN: ${{ secrets.RIOT_GAMES_API_TOKEN }}
 
   nuget-org:
     name: 'NuGet.org'

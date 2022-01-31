@@ -7,8 +7,40 @@ using System.Threading.Tasks;
 
 namespace RiotGames.LeagueOfLegends
 {
-    public class SummonerTests
+    /// <summary>
+    /// For https://developer.riotgames.com/apis#summoner-v4
+    /// </summary>
+    [TestClass]
+    public class SummonerTests : LeagueOfLegendsTestBase
     {
+        [TestMethod]
+        public async Task GetSummonerByNameAsync()
+        {
+            var summoner = await Client.GetSummonerByNameAsync(SUMMONER_NAME);
+            AssertProperties(summoner);
+        }
+
+        [TestMethod]
+        public async Task GetSummonerByAccountAsync()
+        {
+            var summoner = await Client.GetSummonerByAccountAsync(ACCOUNT_ID_ENCRTYPED);
+            AssertProperties(summoner);
+        }
+
+        [TestMethod]
+        public async Task GetSummonerByPuuidAsync()
+        {
+            var summoner = await Client.GetSummonerByPuuidAsync(PUUID_ENCRYPTED);
+            AssertProperties(summoner);
+        }
+
+        [TestMethod]
+        public async Task GetSummonerAsync()
+        {
+            var summoner = await Client.GetSummonerAsync(SUMMONER_ID_ENCRYPTED);
+            AssertProperties(summoner);
+        }
+
         public static void AssertProperties(Summoner summoner)
         {
             Assert.IsNotNull(summoner);

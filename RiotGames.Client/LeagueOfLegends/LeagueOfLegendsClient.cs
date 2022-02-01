@@ -11,12 +11,10 @@ namespace RiotGames.LeagueOfLegends
         /// </summary>
         public LeagueOfLegendsClient(string apiKey, RegionalRoute region) : base(apiKey, region)
         {
-
         }
 
-        public LeagueOfLegendsClient(string apiKey, PlatformRoute platform) : base(apiKey, platform)
+        public LeagueOfLegendsClient(string apiKey, Server server) : base(apiKey, server)
         {
-
         }
     }
 }

@@ -12,7 +12,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Auto-generated overloads for CLR objects
 
-✅ Continuously tested again the live API
+✅ Continuously tested against the live API
 
 ✅ All tests required to be successful before deploy
 

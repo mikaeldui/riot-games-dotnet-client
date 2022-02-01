@@ -38,7 +38,7 @@ You can also use a **PackageReference** to stay **up-to-date** with the **latest
 
 ```C#
 using RiotGames.LeagueOfLegends;
-using LeagueOfLegends client = new("MY-SECRET-RIOT-TOKEN", Server.NA);
+using LeagueOfLegendsClient client = new("MY-SECRET-RIOT-TOKEN", Server.NA);
 
 var summoner = await client.GetSummonerByNameAsync("Some summoner name");
 var masteries = await client.GetMasteriesAsync(summoner);

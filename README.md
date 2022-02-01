@@ -6,7 +6,7 @@
 
 An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [League of Legends][lol], [Legends of Runeterra][lor], [Teamfight Tactics][tft] and [Valorant][val].
 
-✅ Purpose-build Open API client generator
+✅ Purpose-built Open API client generator
 
 ✅ Vanilla C#
 

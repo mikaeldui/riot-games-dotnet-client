@@ -38,7 +38,7 @@ You can also use a **PackageReference** to stay **up-to-date** with the **latest
 
 ```C#
 using RiotGames.LeagueOfLegends;
-using LeagueOfLegendsClient client = new("MY-SECRET-RIOT-TOKEN", Server.NA);
+using LeagueOfLegendsClient client = new("RGAPI-SUPERSECRET", Server.NA);
 
 var summoner = await client.GetSummonerByNameAsync("Some summoner name");
 var masteries = await client.GetMasteriesAsync(summoner);
@@ -51,7 +51,7 @@ foreach(var mastery in masteries)
 
 ```C#
 using RiotGames.LegendsOfRuneterra;
-using LegendsOfRuneterraClient client = new("ABCD-ABCD-ABCD-ABCD", RegionRoute.AMERICAS);
+using LegendsOfRuneterraClient client = new("RGAPI-SUPERSECRET", RegionRoute.AMERICAS);
 
 var leaderboards = await client.GetRankedLeaderboardsAsync();
 foreach(var player in leaderboards.Players)
@@ -63,7 +63,7 @@ foreach(var player in leaderboards.Players)
 
 ```C#
 using RiotGames.TeamfightTactics;
-using TeamfightTacticsClient client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1);
+using TeamfightTacticsClient client = new("RGAPI-SUPERSECRET", PlatformRoute.NA1);
 
 var leagueEntries = await client.GetLeagueEntriesAsync("some-summoner-ID");
 foreach(var entry in leagueEntries)
@@ -75,7 +75,7 @@ foreach(var entry in leagueEntries)
 
 ```C#
 using RiotGames.Valorant;
-using ValorantClient client = new("ABCD-ABCD-ABCD-ABCD", ValPlatformRoute.EU);
+using ValorantClient client = new("RGAPI-SUPERSECRET", ValPlatformRoute.EU);
 
 var match = await client.GetMatchAsync("some-match-ID");
 foreach(var player in match.Players)
@@ -88,7 +88,7 @@ Using the [`RiotGamesClient`](https://github.com/mikaeldui/riot-games-dotnet-cli
 
 ```C#
 using RiotGames;
-using RiotGamesClient client = new("ABCD-ABCD-ABCD-ABCD", PlatformRoute.NA1, ValPlatformRoute.NA);
+using RiotGamesClient client = new("RGAPI-SUPERSECRET", PlatformRoute.NA1, ValPlatformRoute.NA);
 
 var lolSummoner = await client.LeagueOfLegends.GetSummonerByNameAsync("some-summoner-name");
 var lolMasteries = await client.LeagueOfLegends.GetMasteriesAsync(summoner);

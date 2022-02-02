@@ -24,7 +24,6 @@ namespace RiotGames.LeagueOfLegends
         {
             Assert.IsNotNull(entry);
             Assert.AreNotEqual(default, entry.Wins);
-            Assert.AreNotEqual(default, entry.LeaguePoints);
             Assert.AreNotEqual(default, entry.Losses);
             Assert.IsFalse(string.IsNullOrWhiteSpace(entry.EncryptedSummonerId));
             Assert.IsFalse(string.IsNullOrWhiteSpace(entry.LeagueId));

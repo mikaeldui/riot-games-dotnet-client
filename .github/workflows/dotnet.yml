@@ -16,6 +16,7 @@ on:
     - '.github/workflows/dotnet.yml'
     - '.github/actions/**'
     - 'README.md'
+  workflow_dispatch:
 jobs:
   build:
     name: 'Build & Pack'

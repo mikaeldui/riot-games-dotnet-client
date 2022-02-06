@@ -20,6 +20,10 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Optimized - *you call the `HttpClient` directly.*
 
+✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) - see the source code when debugging
+
+✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
+
 ## Download
 
 You can find the latest releases on [GitHub Packages](https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018) and on [NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).

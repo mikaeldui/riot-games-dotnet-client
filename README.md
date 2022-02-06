@@ -24,6 +24,10 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
 
+## Demo
+
+You can see the library running in your browser using Blazor at [masteries.quest](https://masteries.quest), which has a Cloudflare Workers proxy between the browser and Riot Games API.
+
 ## Download
 
 You can find the latest releases on [GitHub Packages](https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018) and on [NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).

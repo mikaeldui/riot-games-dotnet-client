@@ -8,19 +8,19 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Purpose-built Open API client generator
 
-✅ Vanilla C#
+✅ Vanilla C# -  Code generation done with Roslyn.
 
-✅ Auto-generated overloads for CLR objects
+✅ Auto-generated overloads for CLR objects.
 
-✅ Continuously tested against the live API
+✅ Continuously tested against the live API.
 
-✅ All tests required to be successful before deploy
+✅ All tests required to be successful before deploy.
 
-✅ Performance tested
+✅ Performance tested - the extra classes have no measurable impact.
 
-✅ Optimized - *you call the `HttpClient` directly.*
+✅ Optimized - *you call the `HttpClient` almost directly.*
 
-✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) - see the source code while debugging
+✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) - see the source code while debugging.
 
 ✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
 

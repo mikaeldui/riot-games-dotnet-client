@@ -16,6 +16,8 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ All tests required to be successful before deploy
 
+✅ Performance tested - the compiler optimizes away almost all code
+
 ## Download
 
 You can find the latest releases on [GitHub Packages](https://github.com/mikaeldui/riot-games-dotnet-client/packages/1184018) and on [NuGet.org](https://www.nuget.org/packages/MikaelDui.RiotGames.Client).

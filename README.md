@@ -16,7 +16,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ All tests required to be successful before deploy
 
-✅ Performance tested - the compiler optimizes away almost all code
+✅ Performance tested - *optimized so you call the HttpClient directly.*
 
 ## Download
 

@@ -25,9 +25,9 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
 
-❌ POST, PUT and DELETE - use other libraries for now.
+❌ POST, PUT, DELETE and queries - use other libraries for now (e.g. for RGAPI, [Camille](https://github.com/MingweiSamuel/Camille), and or LCU, [PoniLCU](https://github.com/Ponita0/PoniLCU)).
 
-❌ Game API - use other libraries for now.
+❌ Game API - use other libraries for now (e.g. [Camille](https://github.com/MingweiSamuel/Camille)).
 
 ## Demo
 

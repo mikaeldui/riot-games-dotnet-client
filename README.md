@@ -1,4 +1,5 @@
 # Riot Games .NET Client (unofficial)
+[![Daily Test (@main)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/daily-test.main.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/daily-test.main.yml)
 [![.NET](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/codeql-analysis.yml)
 
@@ -23,6 +24,10 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 ✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) - see the source code while debugging.
 
 ✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
+
+❌ POST, PUT and DELETE - use other libraries for now.
+
+❌ Game API - use other libraries for now.
 
 ## Demo
 

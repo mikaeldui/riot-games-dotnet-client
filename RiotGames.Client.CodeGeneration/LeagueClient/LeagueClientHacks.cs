@@ -13,6 +13,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         {
             ReservedPathParameters = ReservedIdentifiers.ToDictionary(kvp => "{" + kvp.Key + "}", kvp => "{" + kvp.Value + "}");
             Vocabularies.Default.AddUncountable("status");
+            Vocabularies.Default.AddUncountable("catalog");
         }
 
         public static void Activate() => Console.WriteLine("Hacks activated!");
@@ -75,7 +76,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return false;
         }
 
-
         public static readonly IReadOnlyDictionary<string, string> ReservedIdentifiers = new Dictionary<string, string>
         {
             {"namespace", "@namespace" },
@@ -125,6 +125,11 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
         public static readonly string[] EndpointTypeSuffixes = new string[]
         {
             "as-string"
+        };
+
+        public static readonly IReadOnlyDictionary<string, string> OperationMethodIdentifiers = new Dictionary<string, string>
+        {
+            {"GetLolStoreV1CatalogByInventoryType", "GetCatalogByInventoryType" }
         };
     }
 }

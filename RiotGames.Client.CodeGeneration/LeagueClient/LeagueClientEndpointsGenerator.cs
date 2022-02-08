@@ -56,6 +56,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", parameter.Value + "?", parameter.Key.ToPascalCase(), out string interfaceIdentifier))
                 {
                     string methodIdentifier = endpoint.Identifier;
+
                     string parameterIdentifier = interfaceIdentifier[1..].RemoveEnd("Id");
 
                     if (endpoint.Identifier.Contains("By"))
@@ -165,9 +166,13 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 return null; //TODO: Implement response 204.
             var responseSchema = response200.Content?.First().Value.Schema;
             bool isArrayResponse = responseSchema?.Type == "array";
-            var nameFromPath =  GetNameFromPath(path, isArrayResponse);
+            string? methodIdentifier = null;
+            if (getMethodObject?.OperationId != null && 
+                !LeagueClientHacks.OperationMethodIdentifiers.TryGetValue(getMethodObject.OperationId, out methodIdentifier))
+                methodIdentifier = GetNameFromPath(path, isArrayResponse);
 
-            Dictionary<string, string>? pathParameters = ToPathParameters(getMethodObject?.Parameters);
+            Dictionary<string, string>? pathParameters = ToPathParameters(getMethodObject.Parameters);
+            var queryParameters = ToQueryParameters(getMethodObject.Parameters);
 
             string returnType = LeagueClientEndpointsHelper.GetTypeName(responseSchema);
             string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
@@ -183,18 +188,12 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 else
                     path = "\"" + path + "\"";
 
-            return new EndpointDefinition("Get" + nameFromPath, returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters);
+            return new EndpointDefinition(methodIdentifier.StartWith("Get"), returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters, queryParameters);
         }
 
-        protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(LcuMethodObject postMethodObject, string path, LcuPathObject pathObject)
-        {
-            throw new NotImplementedException();
-        }
+        protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(LcuMethodObject postMethodObject, string path, LcuPathObject pathObject) => throw new NotImplementedException();
 
-        protected override EndpointDefinition? PutMethodObjectToEndpointDefinition(LcuMethodObject putMethodObject, string path, LcuPathObject pathObject)
-        {
-            throw new NotImplementedException();
-        }
+        protected override EndpointDefinition? PutMethodObjectToEndpointDefinition(LcuMethodObject putMethodObject, string path, LcuPathObject pathObject) => throw new NotImplementedException();
 
         protected virtual string GetNameFromPath(string path, bool isArrayResponse)
         {
@@ -240,7 +239,32 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 #pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+        }
 
+        protected virtual QueryParameter[]? ToQueryParameters(LcuParameterObject[] parameters)
+        {
+            if (parameters == null || parameters.Length == 0)
+                return null;
+
+            if (!parameters.All(p => p.In is "path" or "header" or "query"))
+                Debugger.Break();
+
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return parameters
+                .GroupBy(p => p.Name).Select(g => g.First())
+                .Where(p => p.In is "query" && p.Format != null && p.Name != null)
+                .Select(p =>
+                {
+                    if (p.Required != null && (bool)p.Required)
+                        return new QueryParameter(p.Format, p.Name);
+                    else
+                        return new OptionalQueryParameter(p.Format, p.Name);
+                }).ToArray();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
         }
 
 

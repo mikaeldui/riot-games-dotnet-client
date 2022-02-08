@@ -113,8 +113,9 @@ namespace RiotGames.Client.CodeGeneration
             public string RequestUri;
             public string? RequestValueType;
             public Dictionary<string, string>? RequestPathParameters = null;
+            public QueryParameter[]? RequestQueryParameters = null;
 
-            public EndpointDefinition(string identifier, string returnTypeName, string? httpClientIdentifier, string httpClientMethod, string httpReturnType, string requestUri, string? requestValueType, Dictionary<string, string>? requestPathParameters)
+            public EndpointDefinition(string identifier, string returnTypeName, string? httpClientIdentifier, string httpClientMethod, string httpReturnType, string requestUri, string? requestValueType, Dictionary<string, string>? requestPathParameters, QueryParameter[]? requestQueryParameters)
             {
                 Identifier = identifier;
                 ReturnTypeName = returnTypeName;
@@ -124,6 +125,7 @@ namespace RiotGames.Client.CodeGeneration
                 RequestUri = requestUri;
                 RequestValueType = requestValueType;
                 RequestPathParameters = requestPathParameters;
+                RequestQueryParameters = requestQueryParameters;
             }
         }
     }

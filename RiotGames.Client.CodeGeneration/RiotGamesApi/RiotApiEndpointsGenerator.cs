@@ -92,6 +92,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             string httpClientMethod = GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 
             var pathParameters = ToPathParameters(getMethodObject?.Parameters);
+            // TODO: Query Parameters
 
             // Addd quotes for C# string
             path = $"\"{path}\"";
@@ -110,7 +111,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             }
 
             return new EndpointDefinition(methodIdentifier, returnType, 
-                clientName, httpClientMethod, typeArgument, path, null, pathParameters);            
+                clientName, httpClientMethod, typeArgument, path, null, pathParameters, null);            
         }
 
         public override string GenerateCode()

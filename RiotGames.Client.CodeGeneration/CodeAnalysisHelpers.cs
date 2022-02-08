@@ -93,7 +93,7 @@ namespace RiotGames.Client.CodeGeneration
         {
             var @params = parameters.ToList();
 
-            @params.Add(SyntaxFactory.Parameter(default, default, ParseTypeName("CancellationToken"), Identifier("cancellationToken"), EqualsValueClause(ParseExpression("default"))));
+            @params.Add(OptionalParameter("CancellationToken", "cancellationToken"));
 
             return PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, @params.ToArray());
         }
@@ -106,6 +106,10 @@ namespace RiotGames.Client.CodeGeneration
         public static ParameterSyntax Parameter(string typeName, string identifier) =>
             SF.Parameter(Identifier(identifier)).WithType(ParseTypeName(typeName));
 
+        public static ParameterSyntax OptionalParameter(string typeName, string identifier, string defaultValue = "default") =>
+            SF.Parameter(default, default, ParseTypeName(typeName), Identifier(identifier), EqualsValueClause(ParseExpression(defaultValue)));
+
+        /// <summary>Formats it like "<{returnType}>".</summary>
         public static string TypeArgumentStatement(string returnType) => $"<{returnType}>";
 
         public static string TypeArgumentStatement(string valueType, string returnType) => $"<{valueType}, {returnType}>";

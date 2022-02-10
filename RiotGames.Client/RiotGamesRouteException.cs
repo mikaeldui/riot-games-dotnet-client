@@ -2,6 +2,9 @@
 
 namespace RiotGames
 {
+    /// <summary>
+    /// usually thrown if the required route hasn't been specified.
+    /// </summary>
     [Serializable]
     internal class RiotGamesRouteException : Exception
     {

@@ -22,7 +22,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 if (cSchema == null) return false;
                 string? @ref;
                 if (cSchema.Type == "array")
-                    @ref = cSchema.Items?.Ref;
+                    @ref = cSchema.Items?.Ref; 
                 else
                     @ref = cSchema.Ref;
                 return @ref.Remove("#/components/schemas/") == schema.Key;
@@ -39,7 +39,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     else
                         @ref = p.Value.Ref;
 
-                    return @ref?.Remove("#/components/schemas/") == schema.Key;
+                    return @ref?.Remove("#/components/schemas/") == schema.Key || p.Value?.AdditionalProperties?.Ref?.Remove("#/components/schemas/") == schema.Key;
                 })
             );
 

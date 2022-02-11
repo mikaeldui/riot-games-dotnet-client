@@ -105,7 +105,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 pathParameters.ReplaceKeys(RiotApiHacks.ParameterIdentifierTypos);
                 path = path.Replace(RiotApiHacks.PathParameterIdentifierTypos);
 
-                pathParameters.ReplaceKeys(RiotApiHacks.OldParameterIdentifiers);
+                pathParameters.ReplaceKeys(RiotApiHacks.BadParameterIdentifiers);
                 path = path.Replace(RiotApiHacks.OldPathParameterIdentifiers);
             }
 

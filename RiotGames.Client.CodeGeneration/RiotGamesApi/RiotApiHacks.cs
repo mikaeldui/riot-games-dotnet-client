@@ -107,17 +107,18 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
         }
 
         // Because Riot has yet to update their specs.
-        public static readonly IReadOnlyDictionary<string, string> OldPropertyIdentifiers = new Dictionary<string, string>
+        public static readonly IReadOnlyDictionary<string, string> BadPropertyIdentifiers = new Dictionary<string, string>
         {
             { "Puuid", "EncryptedPuuid" },
             { "AccountId", "EncryptedAccountId" },
-            { "SummonerId", "EncryptedSummonerId" }
+            { "SummonerId", "EncryptedSummonerId" },
+            { "12AssistStreakCount", "TwelveAssistStreakCount" } // And this idk.
         };
 
-        public static readonly IReadOnlyDictionary<string, string> OldParameterIdentifiers = 
-            OldPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
+        public static readonly IReadOnlyDictionary<string, string> BadParameterIdentifiers = 
+            BadPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
         
         public static readonly IReadOnlyDictionary<string, string> OldPathParameterIdentifiers = 
-            OldParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
+            BadParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
     }
 }

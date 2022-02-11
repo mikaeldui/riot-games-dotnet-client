@@ -112,7 +112,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             { "Puuid", "EncryptedPuuid" },
             { "AccountId", "EncryptedAccountId" },
             { "SummonerId", "EncryptedSummonerId" },
-            { "12AssistStreakCount", "TwelveAssistStreakCount" } // And this idk.
+            { "12AssistStreakCount", "DozenAssistStreakCount" } // And this idk.
         };
 
         public static readonly IReadOnlyDictionary<string, string> BadParameterIdentifiers = 

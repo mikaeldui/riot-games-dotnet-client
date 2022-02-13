@@ -16,6 +16,8 @@
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>
     <AssemblyName>MikaelDui.RiotGames.Client</AssemblyName>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
     <ItemGroup>
@@ -42,6 +44,7 @@
 
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All"/>
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
     <PackageReference Include="MikaelDui.Net.UserAgent" Version="*" />
 	<PackageReference Include="MikaelDui.Net.WebSockets.Extensions" Version="*" />

@@ -21,7 +21,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Optimized - *you call the `HttpClient` almost directly.*
 
-✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) - see the source code while debugging.
+✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) and Source link - see the source code while debugging.
 
 ✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
 

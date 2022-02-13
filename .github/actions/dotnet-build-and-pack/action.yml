@@ -75,3 +75,4 @@ runs:
       uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
       with:
         version: ${{ steps.version.outputs.version }}
+        relative_source_package_path: '/bin/Release/*.snupkg'

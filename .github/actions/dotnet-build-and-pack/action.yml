@@ -47,7 +47,7 @@ runs:
 
     - name: 'Riot Games Client: Build'  
       working-directory: ./RiotGames.Client
-      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
+      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }} /p:ContinuousIntegrationBuild=true
       shell: bash
 
       # Tests

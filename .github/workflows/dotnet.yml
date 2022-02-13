@@ -34,7 +34,7 @@ jobs:
     uses: mikaeldui/actions/.github/workflows/nuget.org-deploy.yml@main
     needs: build
     with:
-      snupkg: '.snupkg'
+      snupkg_artifact_name: 'snupkg'
     secrets:
       NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
 

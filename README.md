@@ -29,6 +29,11 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ❌ Game API - for that, use other libraries for now (e.g. [Camille](https://github.com/MingweiSamuel/Camille)).
 
+# Sponsors
+A big thank you for your support!
+
+[![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://jb.gg/OpenSourceSupport)
+
 ## Demo
 
 You can see the library running in your browser using Blazor at [masteries.quest](https://masteries.quest), which has a Cloudflare Workers proxy between the browser and Riot Games API.

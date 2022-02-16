@@ -32,7 +32,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 # Sponsors
 A big thank you for your support!
 
-[![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://jb.gg/OpenSourceSupport)
+[![JetBrains Logo (Main) logo](https://raw.githubusercontent.com/mikaeldui/riot-games-dotnet-client/main/sponsors/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
 
 ## Demo
 

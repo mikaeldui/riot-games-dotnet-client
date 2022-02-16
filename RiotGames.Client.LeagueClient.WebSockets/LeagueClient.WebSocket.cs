@@ -18,6 +18,6 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         /// <summary>
         /// Will be made internal soon. Open and Close it yourself.
         /// </summary>
-        public LeagueClientWampClient WasmClient => WasmClient;
+        public new LeagueClientWampClient WampClient => base.WampClient ?? throw new InvalidOperationException();
     }
 }

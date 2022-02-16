@@ -9,10 +9,7 @@ namespace RiotGames
     public class RiotGamesClientTests
     {
         [TestMethod]
-        public void ConstructTheClient()
-        {
-            _ = new RiotGamesClient("", PlatformRoute.EUW1);
-        }
+        public void ConstructTheClient() => _ = new RiotGamesClient("", PlatformRoute.EUW1);
 
         [TestMethod]
         [ExpectedException(typeof(HttpRequestException))]

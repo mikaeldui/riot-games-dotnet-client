@@ -28,12 +28,9 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
     internal class RiotApiEndpointsGenerator : OpenApiEndpointGeneratorBase<RiotApiPathObject, RiotApiMethodObject, RiotApiPostMethodObject, RiotApiPutMethodObject, RiotApiParameterObject, RiotApiSchemaObject>
     {
-        Client _client;
+        private readonly Client _client;
 
-        public RiotApiEndpointsGenerator(Client client) : base($"{client}Client", true)
-        {
-            _client = client;
-        }
+        public RiotApiEndpointsGenerator(Client client) : base($"{client}Client", true) => _client = client;
 
         protected override void AddEndpoint(EndpointDefinition? endpoint)
         {
@@ -43,29 +40,33 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 return;
 
             // Maybe we have a basic interface and can add an overlaod.
-            if (endpoint.Identifier.StartsWith("Get") && endpoint.RequestPathParameters != null && endpoint.RequestPathParameters.Count == 1)
+            if (!(endpoint.Identifier ?? throw new InvalidOperationException()).StartsWith("Get") ||
+                endpoint.RequestPathParameters == null ||
+                (endpoint.RequestPathParameters ?? throw new InvalidOperationException()).Count != 1) return;
+
+            var parameter = (endpoint.RequestPathParameters ?? throw new InvalidOperationException()).Single();
+
+            if (!(RiotApiHacks.BasicInterfaces ?? throw new InvalidOperationException()).TryGetBasicInterfaceIdentifier(
+                    _client, parameter.Value + "?",
+                    (parameter.Key ?? throw new InvalidOperationException()).ToPascalCase(),
+                    out string interfaceIdentifier)) return;
+
+            var methodIdentifier = endpoint.Identifier;
+
+            var parameterIdentifier = interfaceIdentifier[1..].RemoveStart(_client.ToString()).RemoveStart("Encrypted").RemoveEnd("Id");
+
+            if ((endpoint.Identifier ?? throw new InvalidOperationException()).Contains("By"))
             {
-                var parameter = endpoint.RequestPathParameters.Single();
-
-                if (RiotApiHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier(_client, parameter.Value + "?", parameter.Key.ToPascalCase(), out string interfaceIdentifier))
-                {
-                    string methodIdentifier = endpoint.Identifier;
-                    string parameterIdentifier = interfaceIdentifier[1..].RemoveStart(_client.ToString()).RemoveStart("Encrypted").RemoveEnd("Id");
-
-                    if (endpoint.Identifier.Contains("By"))
-                    {
-                        var methodIdentifierParts = methodIdentifier.Split("By");
-                        methodIdentifier = methodIdentifierParts[0];
-                        parameterIdentifier = methodIdentifierParts[1];
-                    }
-
-                    var method = CancellablePublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
-                        CancellableReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
-                        new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
-
-                    Class = Class.AddMembers(method);
-                }
+                var methodIdentifierParts = methodIdentifier.Split("By");
+                methodIdentifier = methodIdentifierParts[0];
+                parameterIdentifier = methodIdentifierParts[1];
             }
+
+            var method = CancellablePublicAsyncTaskDeclaration(endpoint.ReturnTypeName, methodIdentifier,
+                CancellableReturnAwaitStatement(null, (endpoint.Identifier ?? throw new InvalidOperationException()).EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + (parameter.Key ?? throw new InvalidOperationException()).ToPascalCase()),
+                new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
+
+            Class = Class.AddMembers(method);
         }
 
         protected override EndpointDefinition? GetMethodObjectToEndpointDefinition(RiotApiMethodObject getMethodObject, string path, RiotApiPathObject pathObject)
@@ -142,20 +143,14 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return parameters
                 .Where(p => p.In is not "header" and not "query")
-                .ToDictionary(p => p.Name, p => (p.Schema.XType ?? p.Schema.Type).ToLower());
+                .ToDictionary(p => p.Name, p => ((p.Schema ?? throw new InvalidOperationException()).XType ?? (p.Schema ?? throw new InvalidOperationException()).Type).ToLower());
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 #pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
         }
 
-        protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(RiotApiPostMethodObject postMethodObject, string path, RiotApiPathObject pathObject)
-        {
-            throw new NotImplementedException();
-        }
+        protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(RiotApiPostMethodObject postMethodObject, string path, RiotApiPathObject pathObject) => throw new NotImplementedException();
 
-        protected override EndpointDefinition? PutMethodObjectToEndpointDefinition(RiotApiPutMethodObject putMethodObject, string path, RiotApiPathObject pathObject)
-        {
-            throw new NotImplementedException();
-        }
+        protected override EndpointDefinition? PutMethodObjectToEndpointDefinition(RiotApiPutMethodObject putMethodObject, string path, RiotApiPathObject pathObject) => throw new NotImplementedException();
     }
 }

@@ -86,7 +86,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     if (firstPart == "summoner" && parts.Length > 2 && parts[2].StartsWith("by-"))
                         return _toName(firstPart) + _toName(parts[2]);
 
-                    return _toName(String.Join('-', secondParts));
+                    return _toName(string.Join('-', secondParts));
                 }
             }
 
@@ -100,7 +100,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     else
                         dtoParts.SingularizeLast(false);
                 }
-                secondPart = String.Join("-", dtoParts);
+                secondPart = string.Join("-", dtoParts);
             }
             {
                 if (lastPart != null && isPlural != null)
@@ -133,7 +133,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         public static string GetTypeName(this LcuParameterObject parameter)
         {
-            return OpenApiComponentHelper.GetTypeNameFromString(parameter.Format ?? parameter.Type);
+            return OpenApiComponentHelper.GetTypeNameFromString((parameter.Format ?? parameter.Type) ?? throw new InvalidOperationException());
         }
 
         private static string _toName(this string name)

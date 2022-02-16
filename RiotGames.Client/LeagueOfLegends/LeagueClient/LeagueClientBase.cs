@@ -8,14 +8,11 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
 {
     public abstract partial class LeagueClientBase : IDisposable
     {
-        //internal const string LEAGUECLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
-        private const string LEAGUECLIENT_USERNAME = "riot";
+        //internal const string LEAGUE_CLIENT_DEFAULT_PROCESS_NAME = "LeagueClient";
+        private const string LEAGUE_CLIENT_USERNAME = "riot";
         internal readonly LeagueClientHttpClient HttpClient;
 
-        internal LeagueClientBase(LeagueClientHttpClient httpClient)
-        {
-            HttpClient = httpClient;
-        }
+        internal LeagueClientBase(LeagueClientHttpClient httpClient) => HttpClient = httpClient;
 
         protected LeagueClientBase(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME, string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
         {
@@ -23,9 +20,9 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
                 ? LeagueClientLockFile.FromProcess(processName)
                 : LeagueClientLockFile.FromPath(lockfilePath);
 
-            HttpClient = new(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+            HttpClient = new LeagueClientHttpClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
 #if !NETSTANDARD2_0
-            WampClient = new(LEAGUECLIENT_USERNAME, lockfile.Password, lockfile.Port);
+            WampClient = new LeagueClientWampClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
 #endif
         }
 

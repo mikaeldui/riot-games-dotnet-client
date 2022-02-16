@@ -19,7 +19,7 @@ namespace RiotGames
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = assembly.GetManifestResourceNames().First(n => n.EndsWith(RESOURCE_NAME_PARTIAL));
 
-            using Stream? stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = assembly.GetManifestResourceStream(resourceName);
 
             if (stream == null) throw new Exception("Couldn't find the resource riotgames.pem!");
 

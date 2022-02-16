@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
+#nullable disable
+
 namespace RiotGames.LeagueOfLegends.DataDragon
 {
     public class DataDragonRealm : DataDragonObject
@@ -32,3 +34,5 @@ namespace RiotGames.LeagueOfLegends.DataDragon
         public string Sticker { get; set; }
     }
 }
+
+#nullable restore

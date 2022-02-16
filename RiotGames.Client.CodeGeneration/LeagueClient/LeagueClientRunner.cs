@@ -33,14 +33,14 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             // TODO: Maybe group them by module and put them in separate namespaces.
 
             var generator = new LeagueClientModelsGenerator();
-            generator.AddDtos(schema?.Components?.Schemas);
+            generator.AddDtos(schema?.Components?.Schemas ?? throw new InvalidOperationException());
             enums = generator.GetEnums();
             FileWriter.WriteLeagueClientModelsFile(generator.GenerateCode());
         }
 
         private static void _generateEndpoints(LcuApiOpenApiSchema schema, string[] enums)
         {
-            var groupedPaths = schema.Paths.GroupByModule();
+            var groupedPaths = (schema.Paths ?? throw new InvalidOperationException()).GroupByModule();
 
             var generator = new LeagueClientEndpointsGenerator(enums);
             generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);

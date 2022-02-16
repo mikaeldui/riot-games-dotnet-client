@@ -20,11 +20,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         public async Task<dynamic> GetDynamicAsync(string requestUri)
         {
             var result = await HttpClient.GetFromJsonAsync<ExpandoObject>(requestUri);
-
-            if (result == null)
-                throw new Exception("The HttpClient result was null!");
-
-            return result;
+            return result ?? throw new Exception("The HttpClient result was null!");
         }
     }
 

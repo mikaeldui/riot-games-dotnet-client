@@ -53,6 +53,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             return privateChain.ChainStatus.Length == 1 && privateChain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public async Task ConnectAsync() => await ConnectAsync($"wss://127.0.0.1:{_port}/");
 
         protected override WampMessage<LeagueClientWampMessageTypeCode> OnMessageReceived(LeagueClientWampMessageTypeCode messageCode, JsonElement[] elements) => messageCode switch
@@ -62,6 +63,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             _ => base.OnMessageReceived(messageCode, elements)
         };
 
+        // ReSharper disable once UnusedMember.Global
         public new async Task<LeagueClientWampEventMessage> ReceiveAsync(CancellationToken cancellationToken = default) =>
             (LeagueClientWampEventMessage)await base.ReceiveAsync(cancellationToken);
     }
@@ -77,7 +79,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
             Topic = elements[0].GetString() ?? throw new LeagueClientException("The WAMP event message didn't have any topic!");
             Data = elements[1].GetProperty("data");
             EventType = (LeagueClientWampEventType) Enum.Parse(typeof(LeagueClientWampEventType), elements[1].GetProperty("eventType").GetString());
-            Uri = new Uri(elements[1].GetProperty("uri").GetString(), UriKind.Relative);
+            Uri = new Uri(elements[1].GetProperty("uri").GetString() ?? throw new InvalidOperationException("The event message didn't have any Uri."), UriKind.Relative);
         }
 
         public string Topic { get; }

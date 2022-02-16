@@ -26,7 +26,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             string? lastPart = null;
             {                
                 firstPart = parts[0];
-                // [1] is "v1" or similiar.
+                // [1] is "v1" or similar.
                 secondPart = parts[2];
                 if (parts.Length <= 3)
                     isPlural = null;
@@ -54,7 +54,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     if (firstPart == "summoner" && parts.Length > 3 && parts[3].StartsWith("by-"))
                         return ToName(firstPart) + ToName(parts[3]);
 
-                    return ToName(String.Join('-', secondParts));
+                    return ToName(string.Join('-', secondParts));
                 }
             }
 
@@ -68,15 +68,12 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     else
                         dtoParts.SingularizeLast(false);
                 }
-                secondPart = String.Join("-", dtoParts);
+                secondPart = string.Join("-", dtoParts);
             }
             {
                 if (lastPart != null && isPlural != null)
                 {
-                    if (isPlural.Value)
-                        lastPart = lastPart.Pluralize();
-                    else
-                        lastPart = lastPart.Singularize(false);
+                    lastPart = isPlural.Value ? lastPart.Pluralize() : lastPart.Singularize(false);
                 }
             }
 
@@ -86,17 +83,11 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                     return ToName(firstPart) + ToName(lastPart);
             }
 
-            return ToName(firstPart) + ToName(secondPart) + ToName(lastPart);                
+            return ToName(firstPart) + ToName(secondPart) + (lastPart != null ? ToName(lastPart) : "");                
         }
 
-        public static string? ToName(string name)
-        {
-            if (name == null)
-                return null;
-            return name.Replace(RiotApiHacks.EndpointWordCompilations).ToPascalCase();
-        }
+        public static string ToName(string name) => name.Replace(RiotApiHacks.EndpointWordCompilations).ToPascalCase();
 
-        public static string? GetGame(this Path path) =>
-            path.Key?.SplitAndRemoveEmptyEntries('/')?.First();
+        public static string? GetGame(this Path path) => path.Key?.SplitAndRemoveEmptyEntries('/')?.First();
     }
 }

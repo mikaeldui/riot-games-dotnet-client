@@ -18,13 +18,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
     internal class LeagueClientModelsGenerator
     {
-        NamespaceDeclarationSyntax _namespace;
-        private bool _usingSystemTextJsonSerialization = false;
+        private NamespaceDeclarationSyntax _namespace;
+        private bool _usingSystemTextJsonSerialization;
 
-        public LeagueClientModelsGenerator()
-        {
-            _namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
-        }
+        public LeagueClientModelsGenerator() => _namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
 
         private void _addDto(string identifier, LcuComponentSchemaObject schema)
         {
@@ -45,7 +42,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             {
                 var @class = PublicClassDeclarationWithBaseType(identifier, $"LeagueClientObject");
 
-                var properties = schema.Properties.Select(kv =>
+                var properties = (schema.Properties ?? throw new InvalidOperationException()).Select(kv =>
                 {
                     string propertyIdentifier = kv.Key.ToPascalCase();
                     if (propertyIdentifier == identifier)
@@ -60,10 +57,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                     string typeName;
 
-                    if (kv.Value.Type == "array")
-                        typeName = $"LeagueClientCollection<{kv.Value.Items.GetTypeName()}>";
-                    else
-                        typeName = kv.Value.GetTypeName();
+                    typeName = kv.Value.Type == "array" ? $"LeagueClientCollection<{(kv.Value.Items ?? throw new InvalidOperationException()).GetTypeName()}>" : kv.Value.GetTypeName();
 
                     //typeName += "?"; // Make nullable
 

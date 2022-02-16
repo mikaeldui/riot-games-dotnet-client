@@ -23,13 +23,13 @@ namespace RiotGames
 
         internal HttpClient HttpClient;
 
-        internal protected RiotGamesHttpClient()
+        protected internal RiotGamesHttpClient()
         {
             HttpClient = new HttpClient();
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
-        internal protected RiotGamesHttpClient(HttpClientHandler httpClientHandler)
+        protected internal RiotGamesHttpClient(HttpClientHandler httpClientHandler)
         {
             HttpClient = new HttpClient(httpClientHandler);
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
@@ -41,11 +41,11 @@ namespace RiotGames
             set => HttpClient.BaseAddress = value;
         }
 
-        internal async Task<TResult> GetAsync<TResult>(string? requestUri, CancellationToken cancellationToken = default)
+        internal async Task<TResult> GetAsync<TResult>(string requestUri, CancellationToken cancellationToken = default)
             where TResult : TObjectBase =>
             await HttpClient.GetFromJsonAsync<TResult>(requestUri, cancellationToken) ?? throw new RiotGamesException("Nothing was returned from the API.");
 
-        internal async Task<T> GetSystemTypeAsync<T>(string? requestUri, CancellationToken cancellationToken = default)
+        internal async Task<T> GetSystemTypeAsync<T>(string requestUri, CancellationToken cancellationToken = default)
         {
             switch (Type.GetTypeCode(typeof(T)))
             {
@@ -78,15 +78,15 @@ namespace RiotGames
             throw new NotImplementedException("This system type hasn't been implemented in GetSystemTypeAsync<T>.");
         }
 
-        internal async Task<T> GetEnumAsync<T>(string? requestUri, CancellationToken cancellationToken = default) where T : Enum => 
+        internal async Task<T> GetEnumAsync<T>(string requestUri, CancellationToken cancellationToken = default) where T : Enum => 
             (T)Enum.Parse(typeof(T), await HttpClient.GetStringAsync(requestUri, cancellationToken));
 
-        internal async Task<TResult?> PostAsync<TValue, TResult>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
+        internal async Task<TResult?> PostAsync<TValue, TResult>(string requestUri, TValue value, CancellationToken cancellationToken = default)
             where TValue : TObjectBase
             where TResult : TObjectBase =>
             await HttpClient.PostAsJsonAsync<TValue, TResult>(requestUri, value);
 
-        internal async Task<TResult?> PutAsync<TValue, TResult>(string? requestUri, TValue value)
+        internal async Task<TResult?> PutAsync<TValue, TResult>(string requestUri, TValue value)
             where TValue : TObjectBase
             where TResult : TObjectBase =>
             await HttpClient.PutAsJsonAsync<TValue, TResult>(requestUri, value);

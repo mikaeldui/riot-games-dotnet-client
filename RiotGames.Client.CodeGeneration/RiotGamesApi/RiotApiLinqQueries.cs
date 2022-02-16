@@ -20,18 +20,14 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             {
                 var cSchema = p.Value?.Get?.Responses?["200"].Content.First().Value.Schema;
                 if (cSchema == null) return false;
-                string? @ref;
-                if (cSchema.Type == "array")
-                    @ref = cSchema.Items?.Ref; 
-                else
-                    @ref = cSchema.Ref;
-                return @ref.Remove("#/components/schemas/") == schema.Key;
+                var @ref = cSchema.Type == "array" ? cSchema.Items?.Ref : cSchema.Ref;
+                return (@ref ?? throw new InvalidOperationException()).Remove("#/components/schemas/") == schema.Key;
             });
 
         public static IEnumerable<Schema> WhereReferencesSchema(this Schemas schemas, Schema schema) =>
             schemas.Where(s =>
 
-                s.Value.Properties.Any(p =>
+                (s.Value.Properties ?? throw new InvalidOperationException()).Any(p =>
                 {
                     string? @ref;
                     if (p.Value.Type == "array")

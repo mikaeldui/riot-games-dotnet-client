@@ -61,6 +61,14 @@ runs:
       working-directory: ./RiotGames.Client.Tests
       run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
       shell: bash
+      
+    - name: 'Setup League Client'
+      id: league-client
+      uses: magisteriis/setup-league-client@main
+      with:
+        username: ${{ secrets.LOL_USERNAME }}
+        password: ${{ secrets.LOL_PASSWORD }}
+        region: EUW
 
     - name: 'Tests: Run Tests'   
       working-directory: ./RiotGames.Client.Tests

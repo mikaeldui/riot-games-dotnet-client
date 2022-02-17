@@ -4,6 +4,12 @@ inputs:
   RIOT_GAMES_API_TOKEN:  # id of input
     description: 'Token used by the tests'
     required: false
+  LOL_USERNAME:
+    description: 'Username for test account'
+    required: false
+  LOL_PASSWORD:
+    description: 'Password of test account'
+    required: false
 runs:
   using: "composite"
   steps:  
@@ -64,10 +70,11 @@ runs:
       
     - name: 'Setup League Client'
       id: league-client
+      if: inputs.LOL_USERNAME != '' && input.LOL_PASSWORD != ''
       uses: magisteriis/setup-league-client@main
       with:
-        username: ${{ secrets.LOL_USERNAME }}
-        password: ${{ secrets.LOL_PASSWORD }}
+        username: ${{ inputs.LOL_USERNAME }}
+        password: ${{ inputs.LOL_PASSWORD }}
         region: EUW
 
     - name: 'Tests: Run Tests'   

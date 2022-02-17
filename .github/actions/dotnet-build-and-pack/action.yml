@@ -70,7 +70,7 @@ runs:
       
     - name: 'Setup League Client'
       id: league-client
-      if: inputs.LOL_USERNAME != '' && input.LOL_PASSWORD != ''
+      if: inputs.LOL_USERNAME != '' && inputs.LOL_PASSWORD != ''
       uses: magisteriis/setup-league-client@main
       with:
         username: ${{ inputs.LOL_USERNAME }}

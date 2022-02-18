@@ -38,7 +38,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                 {
                     AccessorDeclaration(SyntaxKind.AddAccessorDeclaration, ParseStatement("if (" + privateEventIdentifier + " == null)\r\n" +
                         "    EventRouter.Subscribe(\"" + topic + "\",\r\n"+
-                        "(LolChampSelectChampSelectSession args) => " + privateEventIdentifier + "?.Invoke(this, args));\r\n\r\n"+
+                        "(" + typeName + " args) => " + privateEventIdentifier + "?.Invoke(this, args));\r\n\r\n"+
                         "" + privateEventIdentifier + " += value;").ToBlock()),
                     AccessorDeclaration(SyntaxKind.RemoveAccessorDeclaration, ParseStatement("" + privateEventIdentifier + " -= value;\r\n\r\n"+
                         "if (" + privateEventIdentifier + " == null)\r\n"+

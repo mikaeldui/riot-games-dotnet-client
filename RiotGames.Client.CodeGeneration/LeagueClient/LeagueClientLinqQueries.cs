@@ -25,4 +25,11 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             return jsonApiEvents.GroupBy(e => e.Key.RemoveStart("OnJsonApiEvent_").SplitAndRemoveEmptyEntries('_')[0]);
         }
     }
+
+    internal static class LeagueClientRandomExtensions
+    {
+        public static string EventToPath(this string @event) => @event.Replace("OnJsonApiEvent", "").Replace("_", "/");
+
+        public static bool EventEqualsPath(this string @event, string path) => @event.EventToPath() == path.Trim('\"');
+    }
 }

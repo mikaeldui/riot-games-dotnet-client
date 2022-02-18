@@ -198,9 +198,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             else
                 path = "\"" + path + "\"";
 
-            if (_eventGroup != null && _eventGroup.Any(e => e.Key.EndsWith(path.SplitAndRemoveEmptyEntries('/').Last().TrimEnd('\"')))) // TODO: Fix match
+            if (_eventGroup != null && _eventGroup.Any(e => e.Key.EventEqualsPath(path))) // TODO: Fix match
             {
-                var @event = _eventGroup.First(e => e.Key.EndsWith(path.SplitAndRemoveEmptyEntries('/').Last().TrimEnd('\"')));
+                var @event = _eventGroup.First(e => e.Key.EventEqualsPath(path));
                 Class = Class.AddMembers(LeagueClientEvent.RmsEvent(@event.Key, nameFromPath, returnType));
             }
 
@@ -273,8 +273,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
                 if (generateConstructor)
                 {
-                    FieldDeclarationSyntax httpClientField = InternalReadOnlyFieldDeclaration("LeagueClientHttpClient", "HttpClient");
-                    Class = Class.AddMembers(httpClientField);
+                    var httpClientField = InternalReadOnlyFieldDeclaration("LeagueClientHttpClient", "HttpClient");
+                    var eventRouterField = InternalReadOnlyFieldDeclaration("RmsEventRouter", "EventRouter");
+                    Class = Class.AddMembers(httpClientField, eventRouterField);
 
                     var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient");
                     Class = Class.AddMembers(constructor);

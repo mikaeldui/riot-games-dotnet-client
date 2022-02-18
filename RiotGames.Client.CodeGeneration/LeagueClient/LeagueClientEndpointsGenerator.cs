@@ -187,7 +187,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             else
                 path = "\"" + path + "\"";
 
-            return new EndpointDefinition(methodIdentifier.StartWith("Get"), returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters, queryParameters);
+            return new EndpointDefinition(nameFromPath.StartWith("Get"), returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters, queryParameters);
         }
 
         protected override EndpointDefinition? PostMethodObjectToEndpointDefinition(LcuMethodObject postMethodObject, string path, LcuPathObject pathObject) => throw new NotImplementedException();

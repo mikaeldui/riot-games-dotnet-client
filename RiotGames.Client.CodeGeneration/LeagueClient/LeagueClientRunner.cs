@@ -21,9 +21,13 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
             _console($"League Client: Downloaded spec file containing {schema.Paths?.Count} paths and {schema.Components?.Schemas?.Count} component schemas.");
 
-            _generateModels(schema, out string[] enums);
+            _generateModels(schema, out var enums);
 
-            _generateEndpoints(schema, enums);
+            var help = await LeagueClientHelp.DownloadAsync();
+
+            _console($"Downloaded help.json containing {help.Events.Count} events, {help.Types.Count} types and {help.Functions.Count} functions.");
+
+            _generateEndpoints(schema, enums, help.Events);
 
             // TODO: WebSockets
         }
@@ -38,12 +42,13 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             FileWriter.WriteLeagueClientModelsFile(generator.GenerateCode());
         }
 
-        private static void _generateEndpoints(LcuApiOpenApiSchema schema, string[] enums)
+        private static void _generateEndpoints(LcuApiOpenApiSchema schema, string[] enums, Dictionary<string, string> events)
         {
             var groupedPaths = (schema.Paths ?? throw new InvalidOperationException()).GroupByModule();
+            var groupedEvents = events.GroupByModule();
 
             var generator = new LeagueClientEndpointsGenerator(enums);
-            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths);
+            generator.AddGroupsAsNestedClassesWithEndpoints(groupedPaths, groupedEvents);
             var code = generator.GenerateCode();
             FileWriter.WriteLeagueClientFile(code, null);
         }

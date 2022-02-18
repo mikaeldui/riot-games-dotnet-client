@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All" />
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
     <PackageReference Include="MikaelDui.Net.UserAgent" Version="*" />
 	<PackageReference Include="MikaelDui.Net.WebSockets.Extensions" Version="*" />
@@ -63,6 +63,7 @@
     </None>
   </ItemGroup>
 
-  <Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
+	<Import Project="..\RiotGames.Messaging.Client\RiotGames.Messaging.Client.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
+	<Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
 
 </Project>

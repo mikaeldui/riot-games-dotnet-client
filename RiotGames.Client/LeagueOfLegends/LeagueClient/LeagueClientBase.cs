@@ -22,7 +22,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
 
             HttpClient = new LeagueClientHttpClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
 #if !NETSTANDARD2_0
-            WampClient = new LeagueClientWampClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
+            WampClient = new RiotGames.Messaging.RmsClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
 #endif
         }
 

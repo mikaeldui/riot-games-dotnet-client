@@ -48,6 +48,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             if (endpoint == null)
                 return;
 
+            Class = Class.AddMembers(LeagueClientEvent.RmsEvent("troll", endpoint.Identifier, endpoint.ReturnTypeName));
+
             // Maybe we have a basic interface and can add an overlaod.
             if (endpoint.Identifier.StartsWith("Get") && endpoint.RequestPathParameters != null && endpoint.RequestPathParameters.Count == 1)
             {
@@ -71,7 +73,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
 
 
-                    Class = Class.AddMembers(method).AddMembers(LeagueClientEvent.RmsEvent("troll", methodIdentifier, endpoint.ReturnTypeName));
+                    Class = Class.AddMembers(method);
                 }
             }
         }

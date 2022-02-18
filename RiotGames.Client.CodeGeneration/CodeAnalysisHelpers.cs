@@ -39,6 +39,12 @@ namespace RiotGames.Client.CodeGeneration
                 .WithModifier(SyntaxKind.InternalKeyword)
                 .WithBody($"{fieldIdentifier} = {parameterIdentifier + (parameterProperty == null ? null : '.' + parameterProperty)};");
 
+        // TODO: Write a better one
+        public static ConstructorDeclarationSyntax InternalConstructorDeclaration(string identifier, string parameterType, string parameterIdentifier, string fieldIdentifier, string? parameterProperty, string fieldIdentifier2, string parameterProperty2) =>
+            ConstructorDeclaration(identifier, parameterType, parameterIdentifier)
+                .WithModifier(SyntaxKind.InternalKeyword)
+                .WithBody($"{fieldIdentifier} = {parameterIdentifier + '.' + parameterProperty}; {fieldIdentifier2} = {parameterIdentifier + '.' + parameterProperty2};");
+
         public static EnumDeclarationSyntax PublicEnumDeclaration(string identifier, params string[] members) =>
             EnumDeclaration(Identifier(identifier)).WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
                 .AddMembers(members.Select(m => EnumMemberDeclaration(Identifier(m))).ToArray());

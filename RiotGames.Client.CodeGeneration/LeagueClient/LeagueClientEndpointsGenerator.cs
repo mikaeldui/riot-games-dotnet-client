@@ -277,7 +277,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     var eventRouterField = InternalReadOnlyFieldDeclaration("RmsEventRouter", "EventRouter");
                     Class = Class.AddMembers(httpClientField, eventRouterField);
 
-                    var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient", "HttpClient", "HttpClient");
+                    var constructor = InternalConstructorDeclaration(ClassName, LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient", 
+                        "HttpClient", "HttpClient",
+                        "EventRouter", "EventRouter");
                     Class = Class.AddMembers(constructor);
                 }
 

@@ -11,7 +11,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     [TestClass]
     public class LeagueClientTests
     {
-#if false
+#if true
         [TestMethod]
         public async Task GetChampSelectSummoner()
         {
@@ -21,13 +21,12 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
 
             //var summoner1 = await client.LolSummoner.GetSummonerAsync((long) session.MyTeam[0].SummonerId);
 
-            client.LeagueOfLegends.ChampSelect.OnTeamBoostChanged += ChampSelect_OnTeamBoostChanged;
+            client.LeagueOfLegends.ChampSelect.TeamBoostChanged += (sender, args) =>
+            {
+
+            }
         }
 
-        private void ChampSelect_OnTeamBoostChanged(LeagueClient sender, LolChampSelectTeamBoost args)
-        {
-            throw new NotImplementedException();
-        }
 #endif
     }
 }

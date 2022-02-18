@@ -12,15 +12,9 @@ namespace RiotGames.LeagueOfLegends.DataDragon
 
         internal RiotGamesHttpClient<IDataDragonObject> HttpClient = new();
 
-        public DataDragonClient()
-        {
-            HttpClient.BaseAddress = new Uri(DATA_DRAGON_BASE_ADDRESS);
-        }
+        public DataDragonClient() => HttpClient.BaseAddress = new Uri(DATA_DRAGON_BASE_ADDRESS);
 
-        public async Task<DataDragonRealm> GetRealmAsync(string region)
-        {
-            return await HttpClient.GetAsync<DataDragonRealm>($"realms/{region.ToLower()}.json");
-        }
+        public async Task<DataDragonRealm> GetRealmAsync(string region) => await HttpClient.GetAsync<DataDragonRealm>($"realms/{region.ToLower()}.json");
 
         public void Dispose() => HttpClient.Dispose();
     }

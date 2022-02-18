@@ -16,6 +16,7 @@ on:
     - '.github/workflows/dotnet.yml'
     - '.github/actions/**'
     - 'README.md'
+  workflow_dispatch:
 jobs:
   build:
     name: 'Build & Pack'
@@ -27,11 +28,15 @@ jobs:
       name: 'Build & Pack'
       with:
         RIOT_GAMES_API_TOKEN: ${{ secrets.RIOT_GAMES_API_TOKEN }}
+        LOL_USERNAME: ${{ secrets.LOL_USERNAME }}
+        LOL_PASSWORD: ${{ secrets.LOL_PASSWORD }}
 
   nuget-org:
     name: 'NuGet.org'
     uses: mikaeldui/actions/.github/workflows/nuget.org-deploy.yml@main
     needs: build
+    with:
+      snupkg_artifact_name: 'snupkg'
     secrets:
       NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
 

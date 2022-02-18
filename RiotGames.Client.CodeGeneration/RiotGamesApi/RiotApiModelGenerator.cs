@@ -49,7 +49,7 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
 
                 //typeName += "?"; // Make nullable
 
-                if (RiotApiHacks.OldPropertyIdentifiers.TryGetValue(identifier, out string? newIdentifier))
+                if (RiotApiHacks.BadPropertyIdentifiers.TryGetValue(identifier, out string? newIdentifier))
                 {
                     jsonProperty = identifier;
                     identifier = newIdentifier;

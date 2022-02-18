@@ -17,7 +17,7 @@ namespace RiotGames.Client.CodeGeneration
     {
         public static void WriteFile(RiotGamesApi.Client client, FileType fileType, string contents)
         {
-            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client");
+            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client");
 
             if (client != RiotGamesApi.Client.RiotGames)
                 folder = Path.Combine(folder, client.ToString());
@@ -27,7 +27,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static void WriteLeagueClientFile(string contents, string? subClass = null)
         {
-            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
 
             string? suffix = null;
             if (subClass != null)
@@ -38,7 +38,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static void WriteLeagueClientModelsFile(string contents)
         {
-            string folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
 
             File.WriteAllText(Path.Combine(folder, $"LeagueClientModels.g.cs"), contents);
         }
@@ -46,9 +46,7 @@ namespace RiotGames.Client.CodeGeneration
         private static string GetAssemblyDirectory()
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            if (path == null)
-                throw new Exception("No idea why executing assembly path is null.");
-            return path;
+            return path ?? throw new Exception("No idea why executing assembly path is null.");
         }
     }
 }

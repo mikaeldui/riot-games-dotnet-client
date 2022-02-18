@@ -45,11 +45,9 @@ namespace RiotGames.LeagueOfLegends
         [AssemblyInitialize] // because ClassInitialize doesn't work in abstract classes...
         public static void Initialize(TestContext _)
         {
-            if (RIOT_GAMES_API_TOKEN != String.Empty) // These tests can't be run without a valid token.
-            {
-                using var client = GetClient();
-                _summoner = client.GetSummonerByNameAsync(SUMMONER_NAME).Result;
-            }
+            if (RIOT_GAMES_API_TOKEN == string.Empty) return;
+            using var client = GetClient();
+            _summoner = client.GetSummonerByNameAsync(SUMMONER_NAME).Result;
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace RiotGames.LeagueOfLegends
         [TestInitialize]
         public virtual void Setup()
         {
-            if (RIOT_GAMES_API_TOKEN == String.Empty) // These tests can't be run without a valid token.
+            if (RIOT_GAMES_API_TOKEN == string.Empty) // These tests can't be run without a valid token.
                 Assert.Inconclusive("RIOT_GAMES_API_TOKEN not set.");
 
             Client = GetClient();

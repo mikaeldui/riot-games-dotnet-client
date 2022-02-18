@@ -16,6 +16,10 @@
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>
     <AssemblyName>MikaelDui.RiotGames.Client</AssemblyName>
+	<IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
     <ItemGroup>
@@ -42,12 +46,13 @@
 
   <ItemGroup>
     <PackageReference Include="Camille.Enums" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All" />
     <PackageReference Include="MikaelDui.Extensions" Version="*" />
     <PackageReference Include="MikaelDui.Net.UserAgent" Version="*" />
 	<PackageReference Include="MikaelDui.Net.WebSockets.Extensions" Version="*" />
 	<PackageReference Include="MikaelDui.Net.WebSockets.Wamp" Version="*" />
 	<PackageReference Include="MikaelDui.RiotGames.Core" Version="*" />
-	<PackageReference Include="MikaelDui.RiotGames.LeagueOfLegends.Core" Version="1.0.1" />
+	<PackageReference Include="MikaelDui.RiotGames.LeagueOfLegends.Core" Version="*" />
 	<PackageReference Include="MikaelDui.RiotGames.LeagueOfLegends.LeagueClient.LockFile" Version="*" />
   </ItemGroup>
 
@@ -58,6 +63,7 @@
     </None>
   </ItemGroup>
 
-  <Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
+	<Import Project="..\RiotGames.Messaging.Client\RiotGames.Messaging.Client.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
+	<Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
 
 </Project>

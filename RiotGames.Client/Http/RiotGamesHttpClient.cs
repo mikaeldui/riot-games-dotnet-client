@@ -23,13 +23,13 @@ namespace RiotGames
 
         internal HttpClient HttpClient;
 
-        internal protected RiotGamesHttpClient()
+        protected internal RiotGamesHttpClient()
         {
             HttpClient = new HttpClient();
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
         }
 
-        internal protected RiotGamesHttpClient(HttpClientHandler httpClientHandler)
+        protected internal RiotGamesHttpClient(HttpClientHandler httpClientHandler)
         {
             HttpClient = new HttpClient(httpClientHandler);
             HttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);

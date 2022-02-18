@@ -1,0 +1,17 @@
+name: Daily Test (@main)
+on:
+  schedule:
+    - cron:  '10 10 * * *'
+  workflow_dispatch:
+concurrency: rgapi
+jobs: 
+ test:
+    name: 'Build & Test'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: 'Checkout'
+    - uses: ./.github/actions/dotnet-build-and-pack
+      name: 'Build & Test'
+      with:
+        RIOT_GAMES_API_TOKEN: ${{ secrets.RIOT_GAMES_API_TOKEN }}

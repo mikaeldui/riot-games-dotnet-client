@@ -21,13 +21,8 @@ namespace RiotGames.Client.CodeGeneration
     {
         protected ClassDeclarationSyntax Class;
 
-        protected OpenApiEndpointGeneratorBase(string className, bool partialClass = false)
-        {
-            if (partialClass)
-                Class = PublicPartialClassDeclaration(className);
-            else
-                Class = PublicClassDeclaration(className);
-        }
+        protected OpenApiEndpointGeneratorBase(string className, bool partialClass = false) => 
+            Class = partialClass ? PublicPartialClassDeclaration(className) : PublicClassDeclaration(className);
 
         protected virtual void AddEndpoint(EndpointDefinition? endpoint)
         {
@@ -40,20 +35,18 @@ namespace RiotGames.Client.CodeGeneration
 
             endpoint.RequestUri = endpoint.RequestUri.ReplaceStart("$\"/", "$\"").ReplaceStart("\"/", "\""); // Make relative
 
-            StatementSyntax bodyStatement;
-            if (endpoint.RequestValueType == null)
-                bodyStatement = CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri);
-            else
-                bodyStatement = CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
+            var bodyStatement = endpoint.RequestValueType == null ? 
+                CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri) : 
+                CancellableReturnAwaitStatement(endpoint.HttpClientIdentifier, endpoint.HttpClientMethod, endpoint.HttpReturnType, endpoint.RequestUri, "value");
 
             Class = Class.AddCancellablePublicAsyncTask(endpoint.ReturnTypeName, endpoint.Identifier.EndWith("Async"), bodyStatement, endpoint.RequestPathParameters);
         }
 
         public virtual void AddPathAsEndpoints(KeyValuePair<string, TPathObject> path)
         {
-            var pathObject = path.Value;
+            var (key, pathObject) = path;
             if (pathObject.Get != null)
-                AddEndpoint(GetMethodObjectToEndpointDefinition(pathObject.Get, path.Key, pathObject));
+                AddEndpoint(GetMethodObjectToEndpointDefinition(pathObject.Get, key, pathObject));
 
             //if (pathObject.Post != null)
             //    AddEndpoint(PostMethodObjectToEndpointDefinition(pathObject.Post, path.Key, pathObject));

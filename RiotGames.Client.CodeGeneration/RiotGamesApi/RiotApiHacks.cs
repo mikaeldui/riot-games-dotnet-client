@@ -99,25 +99,23 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
                 && clientBasicInterfaces.TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
                 return true;
             // If not found, then maybe there's a Riot interface that could be used
-            else if (RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier))
-                return true;
+            return RiotApiHacks.BasicInterfaces[Client.RiotGames.ToString()].TryGetValue((propertyTypeName.RemoveEnd("?"), propertyIdentifier), out interfaceIdentifier);
 #pragma warning restore CS8601 // Possible null reference assignment.
-
-            return false;
         }
 
         // Because Riot has yet to update their specs.
-        public static readonly IReadOnlyDictionary<string, string> OldPropertyIdentifiers = new Dictionary<string, string>
+        public static readonly IReadOnlyDictionary<string, string> BadPropertyIdentifiers = new Dictionary<string, string>
         {
             { "Puuid", "EncryptedPuuid" },
             { "AccountId", "EncryptedAccountId" },
-            { "SummonerId", "EncryptedSummonerId" }
+            { "SummonerId", "EncryptedSummonerId" },
+            { "12AssistStreakCount", "DozenAssistStreakCount" } // And this idk.
         };
 
-        public static readonly IReadOnlyDictionary<string, string> OldParameterIdentifiers = 
-            OldPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
+        public static readonly IReadOnlyDictionary<string, string> BadParameterIdentifiers = 
+            BadPropertyIdentifiers.ToDictionary(kvp => kvp.Key.ToCamelCase(), kvp => kvp.Value.ToCamelCase());
         
         public static readonly IReadOnlyDictionary<string, string> OldPathParameterIdentifiers = 
-            OldParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
+            BadParameterIdentifiers.ToDictionary(kvp => $"{{{kvp.Key}}}", kvp => $"{{{kvp.Value}}}");
     }
 }

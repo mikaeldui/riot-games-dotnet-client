@@ -10,8 +10,8 @@ namespace RiotGames
     [DebuggerDisplay("Region = {_region} Platform = {_platform} ValPlatform = {_valPlatform}")]
     public partial class RiotGamesClient : RiotGamesClientBase<IRiotGamesObject>
     {
-        private string _apiKey;
-        private ValPlatformRoute? _valPlatform;
+        private readonly string _apiKey;
+        private readonly ValPlatformRoute? _valPlatform;
 
         private LeagueOfLegendsClient? _leagueOfLegends;
         private LegendsOfRuneterraClient? _legendsOfRuneterra;
@@ -47,16 +47,13 @@ namespace RiotGames
         {
             get
             {
-                if (_leagueOfLegends == null)
-                {
-                    if (Region == null)
-                        throw new RiotGamesRouteException("region");
+                if (_leagueOfLegends != null) return _leagueOfLegends;
 
-                    if (Platform == null)
-                        _leagueOfLegends = new LeagueOfLegendsClient(_apiKey, (RegionalRoute)Region);
-                    else
-                        _leagueOfLegends = new LeagueOfLegendsClient(_apiKey, (PlatformRoute)Platform);
-                }
+                if (Region == null)
+                    throw new RiotGamesRouteException("region");
+
+                _leagueOfLegends = Platform == null ? new LeagueOfLegendsClient(_apiKey, (RegionalRoute)Region) : new LeagueOfLegendsClient(_apiKey, (PlatformRoute)Platform);
+
                 return _leagueOfLegends;
             }
         }

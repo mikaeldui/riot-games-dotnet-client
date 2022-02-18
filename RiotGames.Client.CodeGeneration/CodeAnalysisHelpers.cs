@@ -80,14 +80,13 @@ namespace RiotGames.Client.CodeGeneration
                 .WithModifiers(SyntaxKind.PublicKeyword, SyntaxKind.AsyncKeyword)
                 .WithBody(bodyStatement.ToBlock());
 
-            if (parameters != null)
-                methodDeclaration = methodDeclaration.AddParameterListParameters(parameters);
+            methodDeclaration = methodDeclaration.AddParameterListParameters(parameters);
 
             return methodDeclaration;
         }
 
         public static MethodDeclarationSyntax PublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null) =>
-            PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray());
+            PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray() ?? Array.Empty<ParameterSyntax>());
 
         public static MethodDeclarationSyntax CancellablePublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, params ParameterSyntax[] parameters)
         {
@@ -98,13 +97,10 @@ namespace RiotGames.Client.CodeGeneration
             return PublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, @params.ToArray());
         }
 
-        public static MethodDeclarationSyntax CancellablePublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null)
-        {
-            return CancellablePublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray() ?? Array.Empty<ParameterSyntax>());
-        }
+        public static MethodDeclarationSyntax CancellablePublicAsyncTaskDeclaration(string returnType, string methodName, StatementSyntax bodyStatement, Dictionary<string, string>? parameters = null) => 
+            CancellablePublicAsyncTaskDeclaration(returnType, methodName, bodyStatement, parameters?.ToParameters()?.ToArray() ?? Array.Empty<ParameterSyntax>());
 
-        public static ParameterSyntax Parameter(string typeName, string identifier) =>
-            SF.Parameter(Identifier(identifier)).WithType(ParseTypeName(typeName));
+        public static ParameterSyntax Parameter(string typeName, string identifier) => SF.Parameter(Identifier(identifier)).WithType(ParseTypeName(typeName));
 
         public static ParameterSyntax OptionalParameter(string typeName, string identifier, string defaultValue = "default") =>
             SF.Parameter(default, default, ParseTypeName(typeName), Identifier(identifier), EqualsValueClause(ParseExpression(defaultValue)));

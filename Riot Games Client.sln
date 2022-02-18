@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiotGames.Client", "RiotGam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiotGames.Client.CodeGeneration", "RiotGames.Client.CodeGeneration\RiotGames.Client.CodeGeneration.csproj", "{54B3AAED-ED09-4093-8287-62A249D9496B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5E05C473-40A1-4AFE-9FFC-D1575FD6CDF6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{5E05C473-40A1-4AFE-9FFC-D1575FD6CDF6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		README.md = README.md
@@ -29,8 +29,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{65B5
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RiotGames.Client.LeagueClient.WebSockets", "RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.shproj", "{DC557719-ED6A-4165-B6C3-942DED1D6DBF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messages", "Messages", "{3A0453A3-A1EF-4384-94F5-7852DC8C9A90}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RiotGames.Messaging.Client", "RiotGames.Messaging.Client\RiotGames.Messaging.Client.shproj", "{4FD3F114-3AD4-4BCC-9040-676AED72A7CB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RiotGames.Messaging.Client\RiotGames.Messaging.Client.projitems*{4fd3f114-3ad4-4bcc-9040-676aed72a7cb}*SharedItemsImports = 13
 		RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems*{dc557719-ed6a-4165-b6c3-942ded1d6dbf}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +58,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{263FAEB0-CCF5-4128-9356-003CF1A94E6F} = {5E05C473-40A1-4AFE-9FFC-D1575FD6CDF6}
+		{65B53DE6-F6B5-4740-9C1F-D49B77320B0D} = {5E05C473-40A1-4AFE-9FFC-D1575FD6CDF6}
+		{DC557719-ED6A-4165-B6C3-942DED1D6DBF} = {3A0453A3-A1EF-4384-94F5-7852DC8C9A90}
+		{4FD3F114-3AD4-4BCC-9040-676AED72A7CB} = {3A0453A3-A1EF-4384-94F5-7852DC8C9A90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4F8469C-F8B7-4FD3-A97F-A766D9AD9A05}

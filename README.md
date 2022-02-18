@@ -1,4 +1,5 @@
 # Riot Games .NET Client (unofficial)
+[![Daily Test (@main)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/daily-test.main.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/daily-test.main.yml)
 [![.NET](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/mikaeldui/riot-games-dotnet-client/actions/workflows/codeql-analysis.yml)
 
@@ -8,13 +9,34 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 
 ✅ Purpose-built Open API client generator
 
-✅ Vanilla C#
+✅ Vanilla C# -  Code generation done with Roslyn.
 
-✅ Auto-generated overloads for CLR objects
+✅ Auto-generated overloads for CLR objects.
 
-✅ Continuously tested against the live API
+✅ Continuously tested against the live API.
 
-✅ All tests required to be successful before deploy
+✅ All tests required to be successful before deploy.
+
+✅ Performance tested - the extra classes have no measurable impact.
+
+✅ Optimized - *you call the `HttpClient` almost directly.*
+
+✅ [Embedded symbols](https://github.com/Turnerj/dotnet-library-checklist#embedding-symbols) and Source link - see the source code while debugging.
+
+✅ [Deterministic build](https://github.com/Turnerj/dotnet-library-checklist#enable-deterministic-builds) - byte-for-byte output is identical across compilations.
+
+❌ POST, PUT, DELETE and queries - for that, use other libraries for now (e.g. for RGAPI, [Camille](https://github.com/MingweiSamuel/Camille), and or LCU, [PoniLCU](https://github.com/Ponita0/PoniLCU)).
+
+❌ Game API - for that, use other libraries for now (e.g. [Camille](https://github.com/MingweiSamuel/Camille)).
+
+# Sponsors
+A big thank you for your support!
+
+[![JetBrains Logo (Main) logo](https://raw.githubusercontent.com/mikaeldui/riot-games-dotnet-client/main/sponsors/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
+
+## Demo
+
+You can see the library running in your browser using Blazor at [masteries.quest](https://masteries.quest), which has a Cloudflare Workers proxy between the browser and Riot Games API.
 
 ## Download
 

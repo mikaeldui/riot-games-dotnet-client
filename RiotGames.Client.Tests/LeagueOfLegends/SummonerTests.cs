@@ -14,7 +14,7 @@ namespace RiotGames.LeagueOfLegends
     public class SummonerTests : LeagueOfLegendsTestBase
     {
         [TestMethod]
-        public async Task GetSummonerByNameAsync()
+        public void GetSummonerByNameAsync()
         {
             // Summoner is populated by the base class with GetSummonerByNameAsync.
             AssertProperties(SUMMONER);

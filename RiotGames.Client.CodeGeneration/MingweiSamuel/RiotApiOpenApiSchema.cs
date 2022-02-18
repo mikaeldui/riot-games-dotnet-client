@@ -110,6 +110,7 @@ namespace MingweiSamuel.RiotApi
         [JsonPropertyName("x-enum")] public string? XEnum { get; set; }
         public string? Description { get; set; }
         public Dictionary<string, PropertiesObject>? Properties { get; set; }
+        public RiotApiComponentPropertyObject? AdditionalProperties { get; set; } // OACPO until it breaks.
 
         [DebuggerDisplay("Type = {Type}")]
         internal class PropertiesObject

@@ -4,6 +4,12 @@ inputs:
   RIOT_GAMES_API_TOKEN:  # id of input
     description: 'Token used by the tests'
     required: false
+  LOL_USERNAME:
+    description: 'Username for test account'
+    required: false
+  LOL_PASSWORD:
+    description: 'Password of test account'
+    required: false
 runs:
   using: "composite"
   steps:  
@@ -47,7 +53,7 @@ runs:
 
     - name: 'Riot Games Client: Build'  
       working-directory: ./RiotGames.Client
-      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }}
+      run: dotnet build --configuration Release --no-restore /p:Version=${{ steps.version.outputs.version }} /p:ContinuousIntegrationBuild=true
       shell: bash
 
       # Tests
@@ -75,3 +81,4 @@ runs:
       uses: mikaeldui/actions/nupkg/dotnet/pack-and-publish-artifact@main
       with:
         version: ${{ steps.version.outputs.version }}
+        relative_source_package_path: '/bin/Release/*.snupkg'

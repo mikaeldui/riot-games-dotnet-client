@@ -14,12 +14,6 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     internal static class LeagueClientLinqQueries
     {
         public static IEnumerable<IGrouping<string?, Path>> GroupByModule(this Paths paths) => 
-            paths.GroupBy(p =>
-                {
-                    if (p.Key.Count(c => c == '/') == 1)
-                        return null;
-
-                    return p.Key.SplitAndRemoveEmptyEntries('/')[0];
-                });
+            paths.GroupBy(p => p.Key.Count(c => c == '/') == 1 ? null : p.Key.SplitAndRemoveEmptyEntries('/')[0]);
     }
 }

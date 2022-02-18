@@ -30,8 +30,8 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         protected string[] Enums;
 
-        private List<MemberDeclarationSyntax[]> _moduleProperties = new();
-        private List<ClassDeclarationSyntax> _moduleClasses = new();
+        private readonly List<MemberDeclarationSyntax[]> _moduleProperties = new();
+        private readonly List<ClassDeclarationSyntax> _moduleClasses = new();
 
         public LeagueClientEndpointsGenerator(string[] enums) : this(LEAGUECLIENT_CLASS_IDENTIFIER, enums) { }
 
@@ -165,28 +165,27 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             if (response200 == null)
                 return null; //TODO: Implement response 204.
             var responseSchema = response200.Content?.First().Value.Schema;
-            bool isArrayResponse = responseSchema?.Type == "array";
-            string? methodIdentifier = null;
-            if (getMethodObject?.OperationId != null && 
-                !LeagueClientHacks.OperationMethodIdentifiers.TryGetValue(getMethodObject.OperationId, out methodIdentifier))
-                methodIdentifier = GetNameFromPath(path, isArrayResponse);
 
-            Dictionary<string, string>? pathParameters = ToPathParameters(getMethodObject.Parameters);
+            var isArrayResponse = responseSchema?.Type == "array";
+            var nameFromPath =  GetNameFromPath(path, isArrayResponse);
+
+            var pathParameters = ToPathParameters(getMethodObject?.Parameters);
             var queryParameters = ToQueryParameters(getMethodObject.Parameters);
 
-            string returnType = LeagueClientEndpointsHelper.GetTypeName(responseSchema);
-            string? typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
+
+            var returnType = LeagueClientEndpointsHelper.GetTypeName(responseSchema);
+            var typeArgument = TypeArgumentStatement(returnType.Remove("[]"));
             var baseMethod = Enums.Contains(returnType) ? "GetEnumAsync" : GetRiotHttpClientMethod(HttpMethod.Get, returnType, ref typeArgument);
 
             if (pathParameters != null)
-                {
-                    pathParameters.ReplaceKeys(LeagueClientHacks.ReservedIdentifiers);
+            {
+                pathParameters.ReplaceKeys(LeagueClientHacks.ReservedIdentifiers);
 
-                    // Add "$" so it can be interpolated.
-                    path = $"$\"{path.Replace(LeagueClientHacks.ReservedPathParameters)}\"";
-                }
-                else
-                    path = "\"" + path + "\"";
+                // Add "$" so it can be interpolated.
+                path = $"$\"{path.Replace(LeagueClientHacks.ReservedPathParameters)}\"";
+            }
+            else
+                path = "\"" + path + "\"";
 
             return new EndpointDefinition(methodIdentifier.StartWith("Get"), returnType, "HttpClient", baseMethod, typeArgument, path, null, pathParameters, queryParameters);
         }
@@ -195,10 +194,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         protected override EndpointDefinition? PutMethodObjectToEndpointDefinition(LcuMethodObject putMethodObject, string path, LcuPathObject pathObject) => throw new NotImplementedException();
 
-        protected virtual string GetNameFromPath(string path, bool isArrayResponse)
-        {
-            return ClientHelper.GetNameFromPath(path, isArrayResponse);
-        }
+        protected virtual string GetNameFromPath(string path, bool isArrayResponse) => ClientHelper.GetNameFromPath(path, isArrayResponse);
 
         private void _addNestedMembersToClass()
         {
@@ -223,7 +219,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
         protected virtual Dictionary<string, string>? ToPathParameters(LcuParameterObject[] parameters)
         {
-            if (parameters == null || parameters.Length == 0)
+            if (parameters.Length == 0)
                 return null;
 
             if (!parameters.All(p => p.In is "path" or "header" or "query"))
@@ -231,12 +227,10 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
 
 #pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
 #pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return parameters
                 .GroupBy(p => p.Name).Select(g => g.First())
                 .Where(p => p.In is not "header" and not "query")
                 .ToDictionary(p => p.Name, p => p.GetTypeName());
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 #pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
         }
@@ -277,7 +271,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             private readonly PropertyDeclarationSyntax _propertyDeclaration;
 
             protected bool MethodVersionSuffix;
-            protected Dictionary<string, string?[]>? VersionsByPaths = null;
+            protected Dictionary<string, string?[]>? VersionsByPaths;
 
             public LeagueClientModuleGenerator(string moduleName, string[] enums, bool methodVersionSuffix, bool generateConstructor) : base(moduleName + "Client", enums, partialClass: false) // For now, adding Client suffix.
             {

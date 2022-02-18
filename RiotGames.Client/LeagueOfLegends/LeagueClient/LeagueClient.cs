@@ -20,24 +20,10 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         }
 
         private LeagueOfLegendsClient? _leagueOfLegendsClient;
-        public LeagueOfLegendsClient LeagueOfLegends
-        {
-            get
-            {
-                if (_leagueOfLegendsClient == null)
-                    _leagueOfLegendsClient = new LeagueOfLegendsClient(this); return _leagueOfLegendsClient;
-            }
-        }
+        public LeagueOfLegendsClient LeagueOfLegends => _leagueOfLegendsClient ??= new LeagueOfLegendsClient(this);
 
         private TeamfightTacticsClient? _teamfightTactics;
-        public TeamfightTacticsClient TeamfightTactics
-        {
-            get
-            {
-                if (_teamfightTactics == null)
-                    _teamfightTactics = new TeamfightTacticsClient(this); return _teamfightTactics;
-            }
-        }
+        public TeamfightTacticsClient TeamfightTactics => _teamfightTactics ??= new TeamfightTacticsClient(this);
 
         public partial class LeagueOfLegendsClient : LeagueClientBase
         {

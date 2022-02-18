@@ -46,6 +46,15 @@ namespace RiotGames.Client.CodeGeneration.RiotGamesApi
             if (property.Type == "array" || (property as RiotApiComponentPropertyObject)?.XType == "array")
                 return $"{client}ReadOnlyCollection<{GetTypeName(property.Items, client)}>";
 
+            if (property.Type == "object" && (property as RiotApiComponentPropertyObject).XType.StartsWith("Map["))
+            {
+                var riotProperty = property as RiotApiComponentPropertyObject;
+                var types = riotProperty.XType.RemoveStart("Map[")?.RemoveEnd("]");
+                var correctedTypes = types.Split(", ").Select(t => t.RemoveDtoSuffix());
+
+                return $"{client}ReadOnlyDictionary<{correctedTypes.Join(", ")}>";
+            }
+
             if (property.Ref != null)
                 return GetTypeNameFromRef(property.Ref);            
 

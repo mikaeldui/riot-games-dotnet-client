@@ -7,16 +7,13 @@ namespace RiotGames
     public abstract class RiotGamesClientBase<TObjectBase> : IDisposable
         where TObjectBase : IRiotGamesObject
     {
-        private readonly RegionalRoute? _region;
-        private readonly PlatformRoute? _platform;
-        private readonly ValPlatformRoute? _valPlatform;
         private readonly RiotGamesApiHttpClient<TObjectBase>? _regionalClient;
         private readonly RiotGamesApiHttpClient<TObjectBase>? _platformClient;
 
         internal RiotGamesClientBase(string apiKey, RegionalRoute region, ValPlatformRoute? valPlatform = null)
         {
-            _region = region;
-            _valPlatform = valPlatform;
+            Region = region;
+            ValPlatform = valPlatform;
             _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, region);
             if (valPlatform != null)
                 _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (ValPlatformRoute)valPlatform);
@@ -24,16 +21,13 @@ namespace RiotGames
 
         internal RiotGamesClientBase(string apiKey, PlatformRoute platform, RegionalRoute? region = null, bool createRegionalClient = true)
         {
-            _platform = platform;
+            Platform = platform;
             _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
 
-            if (createRegionalClient)
-            {
-                if (region == null)
-                    region = RouteUtils.ToRegional(platform);
-                _region = region;
-                _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)region);
-            }
+            if (!createRegionalClient) return;
+            region ??= platform.ToRegional();
+            Region = region;
+            _regionalClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, (RegionalRoute)region);
         }
 
         /// <summary>
@@ -41,35 +35,19 @@ namespace RiotGames
         /// </summary>
         internal RiotGamesClientBase(string apiKey, ValPlatformRoute platform)
         {
-            _valPlatform = platform;
+            ValPlatform = platform;
             _platformClient = new RiotGamesApiHttpClient<TObjectBase>(apiKey, platform);
         }
 
-        public RegionalRoute? Region => _region;
-        public PlatformRoute? Platform => _platform;
-        public ValPlatformRoute? ValPlatform => _valPlatform;
+        public RegionalRoute? Region { get; }
 
-        internal RiotGamesApiHttpClient<TObjectBase> RegionalClient            
-        {
-            get
-            {
-                if (_regionalClient == null)
-                    throw new RiotGamesRouteException("region");
+        public PlatformRoute? Platform { get; }
 
-                return _regionalClient;
-            }        
-        }
+        public ValPlatformRoute? ValPlatform { get; }
 
-        internal RiotGamesApiHttpClient<TObjectBase> PlatformClient
-        {
-            get
-            {
-                if (_platformClient == null)
-                    throw new RiotGamesRouteException("platform");
+        internal RiotGamesApiHttpClient<TObjectBase> RegionalClient => _regionalClient ?? throw new RiotGamesRouteException("region");
 
-                return _platformClient;
-            }
-        }
+        internal RiotGamesApiHttpClient<TObjectBase> PlatformClient => _platformClient ?? throw new RiotGamesRouteException("platform");
 
         public virtual void Dispose()
         {

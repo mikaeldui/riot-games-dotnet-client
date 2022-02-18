@@ -20,15 +20,9 @@ namespace MingweiSamuel
 
         private static async Task<T> _getOpenApiSchemaAsync<T>(string uri)
         {
-            using (var client = new HttpClient())
-            {
-                var schema = await client.GetFromJsonAsync<T>(uri);
-
-                if (schema == null)
-                    throw new Exception("We didn't get any schema from the server!");
-
-                return schema;
-            }
+            using var client = new HttpClient();
+            var schema = await client.GetFromJsonAsync<T>(uri);
+            return schema ?? throw new Exception("We didn't get any schema from the server!");
         }
     }
 }

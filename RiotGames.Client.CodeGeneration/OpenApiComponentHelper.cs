@@ -10,8 +10,7 @@ namespace RiotGames.Client.CodeGeneration
 {
     internal static class OpenApiComponentHelper
     {
-        public static string RemoveDtoSuffix(this string dtoName) =>
-            dtoName.Remove("Dto").Remove("DTO");
+        public static string RemoveDtoSuffix(this string dtoName) => dtoName.Remove("Dto").Remove("DTO");
 
         public static string GetTypeNameFromRef(string @ref, bool removeDtoSuffix = true)
         {
@@ -20,13 +19,8 @@ namespace RiotGames.Client.CodeGeneration
             return (removeDtoSuffix ? @ref.RemoveDtoSuffix() : @ref).ToPascalCase();
         }
 
-        public static string GetTypeName(this OpenApiComponentPropertyObject property)
-        {
-            if (property.Ref != null)
-                return GetTypeNameFromRef(property.Ref);
-
-            return GetTypeNameFromString(property.Format ?? property.Type);
-        }
+        public static string GetTypeName(this OpenApiComponentPropertyObject property) => 
+            property.Ref != null ? GetTypeNameFromRef(property.Ref) : GetTypeNameFromString((property.Format ?? property.Type) ?? throw new InvalidOperationException());
 
         public static string GetTypeName(this OpenApiSchemaObject schema)
         {
@@ -38,7 +32,7 @@ namespace RiotGames.Client.CodeGeneration
                 switch (schema.Type)
                 {
                     case "array":
-                        return GetTypeName(schema.Items) + "[]";
+                        return GetTypeName(schema.Items ?? throw new InvalidOperationException()) + "[]";
                     case "integer":
                         return GetTypeNameFromString(schema.Format ?? "int");
                     case "number":

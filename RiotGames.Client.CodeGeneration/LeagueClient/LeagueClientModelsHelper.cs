@@ -20,12 +20,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             if (property.Ref != null)
                 return OpenApiComponentHelper.GetTypeNameFromRef(property.Ref);
 
-            return OpenApiComponentHelper.GetTypeNameFromString(property.Format ?? property.Type);
+            return OpenApiComponentHelper.GetTypeNameFromString((property.Format ?? property.Type) ?? throw new InvalidOperationException());
         }
 
-        public static string GetTypeName(this OpenApiSchemaObject schema)
-        {
-            return OpenApiComponentHelper.GetTypeName(schema);
-        }
+        public static string GetTypeName(this OpenApiSchemaObject schema) => OpenApiComponentHelper.GetTypeName(schema);
     }
 }

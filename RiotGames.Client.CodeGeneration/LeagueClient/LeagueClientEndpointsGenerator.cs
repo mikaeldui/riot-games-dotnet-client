@@ -69,7 +69,9 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                         CancellableReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null, parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
                         new Dictionary<string, string> { { parameterIdentifier.ToCamelCase(), interfaceIdentifier } });
 
-                    Class = Class.AddMembers(method);
+
+
+                    Class = Class.AddMembers(method).AddMembers(LeagueClientEvent.RmsEvent("troll", methodIdentifier, endpoint.ReturnTypeName));
                 }
             }
         }
@@ -134,7 +136,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     InternalConstructorDeclaration("LeagueOfLegendsClient")
                     .WithBody(Block())
                     .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
-                    .WithBaseConstructorInitializer("leagueClient.HttpClient"));
+                    .WithBaseConstructorInitializer("leagueClient.HttpClient", "leagueClient.EventRouter"));
                 generator._addGroupsAsNestedClassesWithEndpoints(lolGroups);
                 generator._addNestedMembersToClass();
                 Class = Class.AddMembers(generator.Class);
@@ -147,7 +149,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     InternalConstructorDeclaration("TeamfightTacticsClient")
                     .WithBody(Block())
                     .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
-                    .WithBaseConstructorInitializer("leagueClient.HttpClient"));
+                    .WithBaseConstructorInitializer("leagueClient.HttpClient", "leagueClient.EventRouter"));
                 generator.AddPathsAsEndpoints(tftPaths);
                 Class = Class.AddMembers(generator.Class.AddModifiers(Token(SyntaxKind.PartialKeyword)));
             }
@@ -204,6 +206,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             _addNestedMembersToClass();
             var @namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
             @namespace = @namespace.AddSystemDynamicUsing();
+            @namespace = @namespace.AddUsing("RiotGames.Messaging");
 
             @namespace = @namespace.AddMembers(Class);
 

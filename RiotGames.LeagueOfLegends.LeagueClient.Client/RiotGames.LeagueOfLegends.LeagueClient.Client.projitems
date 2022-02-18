@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>dc557719-ed6a-4165-b6c3-942ded1d6dbf</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>RiotGames.LeagueOfLegends.LeagueClient</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LeagueClientException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientEnumerables.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientInterfaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientModels.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClientObject.cs" />
+  </ItemGroup>
+</Project>

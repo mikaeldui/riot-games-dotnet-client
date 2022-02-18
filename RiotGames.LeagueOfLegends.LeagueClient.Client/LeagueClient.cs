@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RiotGames.Messaging;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient
 {
@@ -11,7 +12,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
     /// </summary>
     public partial class LeagueClient : LeagueClientBase
     {
-        internal LeagueClient(LeagueClientHttpClient httpClient) : base(httpClient)
+        internal LeagueClient(LeagueClientHttpClient httpClient, RmsEventRouter eventRouter) : base(httpClient, eventRouter)
         {
         }
 

@@ -27,7 +27,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static void WriteLeagueClientFile(string contents, string? subClass = null)
         {
-            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.LeagueOfLegends.LeagueClient.Client");
 
             string? suffix = null;
             if (subClass != null)
@@ -38,7 +38,7 @@ namespace RiotGames.Client.CodeGeneration
 
         public static void WriteLeagueClientModelsFile(string contents)
         {
-            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.Client/LeagueOfLegends/LeagueClient");
+            var folder = Path.Combine(GetAssemblyDirectory(), @"../../../../", "RiotGames.LeagueOfLegends.LeagueClient.Client");
 
             File.WriteAllText(Path.Combine(folder, $"LeagueClientModels.g.cs"), contents);
         }

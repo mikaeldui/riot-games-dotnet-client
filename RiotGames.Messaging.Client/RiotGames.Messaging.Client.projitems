@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Messages\RmsEventMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\RmsEventType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RmsClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RmsEventRouter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RmsTypeCode.cs" />
   </ItemGroup>
 </Project>

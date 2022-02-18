@@ -22,9 +22,16 @@ public class RmsClient : WampSubscriberClient<RmsTypeCode>
         var wampClient = UserAgent.From(typeof(WampSubscriberClient).GetTypeInfo().Assembly);
         wampClient.DependentProduct = UserAgent.From(typeof(RmsClient).GetTypeInfo().Assembly);
 
-        var entryAssembly = Assembly.GetEntryAssembly();
-        if (entryAssembly != null)
-            wampClient.DependentProduct.DependentProduct = UserAgent.From(entryAssembly);
+        try
+        {
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly != null)
+                wampClient.DependentProduct.DependentProduct = UserAgent.From(entryAssembly);
+        }
+        catch
+        {
+            // ignore
+        }
 
         USER_AGENT = wampClient.ToString();
     }
@@ -34,9 +41,12 @@ public class RmsClient : WampSubscriberClient<RmsTypeCode>
     public RmsClient(string username, string password, ushort port)
     {
         _port = port;
-        Options.Credentials = new NetworkCredential(username, password);
-        Options.RemoteCertificateValidationCallback = _remoteCertificateValidationCallback;
-        Options.SetRequestHeader("User-Agent", USER_AGENT);
+        UseClientWebSocketOptions(options =>
+        {
+            options.Credentials = new NetworkCredential(username, password);
+            options.RemoteCertificateValidationCallback = _remoteCertificateValidationCallback;
+            options.SetRequestHeader("User-Agent", USER_AGENT);
+        });
     }
 
     private static bool _remoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors errors)

@@ -198,7 +198,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
             else
                 path = "\"" + path + "\"";
 
-            if (_eventGroup != null && _eventGroup.Any(e => e.Key.EndsWith(path.SplitAndRemoveEmptyEntries('/').Last().TrimEnd('\"'))))
+            if (_eventGroup != null && _eventGroup.Any(e => e.Key.EndsWith(path.SplitAndRemoveEmptyEntries('/').Last().TrimEnd('\"')))) // TODO: Fix match
             {
                 var @event = _eventGroup.First(e => e.Key.EndsWith(path.SplitAndRemoveEmptyEntries('/').Last().TrimEnd('\"')));
                 Class = Class.AddMembers(LeagueClientEvent.RmsEvent(@event.Key, nameFromPath, returnType));

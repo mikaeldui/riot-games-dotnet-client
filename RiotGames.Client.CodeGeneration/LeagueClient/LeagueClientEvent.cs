@@ -15,7 +15,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
     {
         public static MemberDeclarationSyntax[] RmsEvent(string topic, string identifier, string typeName)
         {
-            identifier = identifier.ReplaceStart("Get", "On");
+            identifier = identifier.ReplaceStart("Get", "On").StartWith("On");
 
             var privateEventIdentifier = '_' + identifier.ToCamelCase() + "Changed";
             var publicEventIdentifier = identifier.ToPascalCase() + "Changed";

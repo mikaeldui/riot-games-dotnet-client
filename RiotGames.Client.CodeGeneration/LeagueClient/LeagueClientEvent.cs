@@ -31,17 +31,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                     )
                 ));
 
-            var publicEvent = EventFieldDeclaration(List<AttributeListSyntax>(), SyntaxKind.PublicKeyword.ToTokenList(),
-                SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
-                    SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>(new[]
-                        {
-                            SyntaxFactory.VariableDeclarator(identifier.ToPascalCase() + "Changed")
-                        }
-                    )
-                ));
-
-            var public2Event = EventDeclaration(ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
+            var publicEvent = EventDeclaration(ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
                     Identifier(publicEventIdentifier))
                 .WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
                 .WithAccessorList(AccessorList(new SyntaxList<AccessorDeclarationSyntax>(new[]
@@ -55,7 +45,7 @@ namespace RiotGames.Client.CodeGeneration.LeagueClient
                         "    EventRouter.Unsubscribe(\"" + topic + "\");\r\n").ToBlock())
                 })));
 
-            return new MemberDeclarationSyntax[] {privateEvent, public2Event};
+            return new MemberDeclarationSyntax[] {privateEvent, publicEvent};
         }
     }
 }

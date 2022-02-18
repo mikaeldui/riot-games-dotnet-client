@@ -12,4 +12,8 @@ public class RmsException : RiotGamesException
     public RmsException(string message) : base(message)
     {
     }
+
+    public RmsException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

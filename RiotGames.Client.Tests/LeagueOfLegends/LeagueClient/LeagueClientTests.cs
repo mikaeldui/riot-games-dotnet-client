@@ -17,10 +17,16 @@ namespace RiotGames.LeagueOfLegends.LeagueClient
         {
             using LeagueClient client = new();
 
-            var session = await client.LolChampSelect.GetSessionAsync();
+            //var session = await client.LolChampSelect.GetSessionAsync();
 
-            var summoner1 = await client.LolSummoner.GetSummonerAsync((long) session.MyTeam[0].SummonerId);
+            //var summoner1 = await client.LolSummoner.GetSummonerAsync((long) session.MyTeam[0].SummonerId);
+
+            client.LeagueOfLegends.ChampSelect.TeamBoostChanged += (sender, args) =>
+            {
+
+            }
         }
+
 #endif
     }
 }

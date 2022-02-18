@@ -64,6 +64,6 @@
   </ItemGroup>
 
 	<Import Project="..\RiotGames.Messaging.Client\RiotGames.Messaging.Client.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
-	<Import Project="..\RiotGames.Client.LeagueClient.WebSockets\RiotGames.Client.LeagueClient.WebSockets.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
+	<Import Project="..\RiotGames.LeagueOfLegends.LeagueClient.Client\RiotGames.LeagueOfLegends.LeagueClient.Client.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'netstandard2.0'" />
 
 </Project>

@@ -4,6 +4,12 @@ inputs:
   RIOT_GAMES_API_TOKEN:  # id of input
     description: 'Token used by the tests'
     required: false
+  LOL_USERNAME:
+    description: 'Username for test account'
+    required: false
+  LOL_PASSWORD:
+    description: 'Password of test account'
+    required: false
 runs:
   using: "composite"
   steps:  

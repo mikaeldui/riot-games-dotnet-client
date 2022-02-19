@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace RiotGames.Valorant
+namespace RiotGames.Valorant;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public abstract class ValorantObject : RiotGamesObject, IValorantObject
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public abstract class ValorantObject : RiotGamesObject, IValorantObject
-    {
-    }
 }

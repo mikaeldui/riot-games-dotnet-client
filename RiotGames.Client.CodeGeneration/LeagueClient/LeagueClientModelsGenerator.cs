@@ -1,125 +1,117 @@
-﻿using MingweiSamuel;
-using MingweiSamuel.Lcu;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Humanizer;
+﻿using Humanizer;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using MingweiSamuel.Lcu;
 using static RiotGames.Client.CodeGeneration.CodeAnalysisHelper;
 
-namespace RiotGames.Client.CodeGeneration.LeagueClient
+namespace RiotGames.Client.CodeGeneration.LeagueClient;
+
+using Schema = KeyValuePair<string, LcuComponentSchemaObject>;
+
+internal class LeagueClientModelsGenerator
 {
-    using Schema = KeyValuePair<string, LcuComponentSchemaObject>;
+    private NamespaceDeclarationSyntax _namespace;
+    private bool _usingSystemTextJsonSerialization;
 
-    internal class LeagueClientModelsGenerator
+    public LeagueClientModelsGenerator()
     {
-        private NamespaceDeclarationSyntax _namespace;
-        private bool _usingSystemTextJsonSerialization;
+        _namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+    }
 
-        public LeagueClientModelsGenerator() => _namespace = NamespaceDeclaration("RiotGames.LeagueOfLegends.LeagueClient");
+    private void _addDto(string identifier, LcuComponentSchemaObject schema)
+    {
+        MemberDeclarationSyntax member;
 
-        private void _addDto(string identifier, LcuComponentSchemaObject schema)
+        if (schema.Enum != null)
         {
-            MemberDeclarationSyntax member;
-
-            if (schema.Enum != null)
+            if (!_usingSystemTextJsonSerialization)
             {
-                if (!_usingSystemTextJsonSerialization)
+                _usingSystemTextJsonSerialization = true;
+                _namespace = _namespace.AddSystemTextJsonSerializationUsing();
+            }
+
+            member = PublicEnumDeclaration(identifier, schema.Enum.ToPascalCase())
+                .AddJsonStringEnumAttribute();
+        }
+        else
+        {
+            var @class = PublicClassDeclarationWithBaseType(identifier, "LeagueClientObject");
+
+            var properties = (schema.Properties ?? throw new InvalidOperationException()).Select(kv =>
+            {
+                var propertyIdentifier = kv.Key.ToPascalCase();
+                if (propertyIdentifier == identifier)
+                    propertyIdentifier = propertyIdentifier.Pluralize();
+
+                string? jsonProperty = null;
+                if (propertyIdentifier.All(char.IsDigit))
                 {
-                    _usingSystemTextJsonSerialization = true;
-                    _namespace = _namespace.AddSystemTextJsonSerializationUsing();
+                    jsonProperty = propertyIdentifier;
+                    propertyIdentifier = "X" + propertyIdentifier;
                 }
 
-                member = PublicEnumDeclaration(identifier, schema.Enum.ToPascalCase())
-                    .AddJsonStringEnumAttribute();
-            }
-            else
-            {
-                var @class = PublicClassDeclarationWithBaseType(identifier, $"LeagueClientObject");
+                var typeName = kv.Value.Type == "array"
+                    ? $"LeagueClientCollection<{(kv.Value.Items ?? throw new InvalidOperationException()).GetTypeName()}>"
+                    : kv.Value.GetTypeName();
 
-                var properties = (schema.Properties ?? throw new InvalidOperationException()).Select(kv =>
-                {
-                    string propertyIdentifier = kv.Key.ToPascalCase();
-                    if (propertyIdentifier == identifier)
-                        propertyIdentifier = propertyIdentifier.Pluralize();
+                //typeName += "?"; // Make nullable
 
-                    string? jsonProperty = null;
-                    if (propertyIdentifier.All(char.IsDigit))
-                    {
-                        jsonProperty = propertyIdentifier;
-                        propertyIdentifier = "X" + propertyIdentifier;
-                    }
+                // TODO: fix client name
+                if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", typeName,
+                        propertyIdentifier, out var @interface))
+                    @class = @class.AddBaseType(@interface);
 
-                    string typeName;
+                return _simpleProperty(typeName, propertyIdentifier, jsonProperty);
+            }).ToArray();
 
-                    typeName = kv.Value.Type == "array" ? $"LeagueClientCollection<{(kv.Value.Items ?? throw new InvalidOperationException()).GetTypeName()}>" : kv.Value.GetTypeName();
-
-                    //typeName += "?"; // Make nullable
-
-                    // TODO: fix client name
-                    if (LeagueClientHacks.BasicInterfaces.TryGetBasicInterfaceIdentifier("LeagueClient", typeName, propertyIdentifier, out string? @interface))
-                        @class = @class.AddBaseType(@interface);
-
-                    return _simpleProperty(typeName, propertyIdentifier, jsonProperty);
-                }).ToArray();
-
-                member = @class.AddMembers(properties);
-            }
-
-
-            // Add the class to the namespace.
-            _namespace = _namespace.AddMembers(member);
+            member = @class.AddMembers(properties);
         }
 
-        public void AddDtos(IEnumerable<Schema> schemas)
+
+        // Add the class to the namespace.
+        _namespace = _namespace.AddMembers(member);
+    }
+
+    public void AddDtos(IEnumerable<Schema> schemas)
+    {
+        var neededDtoSuffixes = schemas.Select(s => OpenApiComponentHelper.GetTypeNameFromRef(s.Key))
+            .GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToArray();
+
+        foreach (var (@ref, schemaObject) in schemas)
         {
-            string[] neededDtoSuffixes = schemas.Select(s => OpenApiComponentHelper.GetTypeNameFromRef(s.Key))
-                .GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToArray();
+            var identifier = OpenApiComponentHelper.GetTypeNameFromRef(@ref);
+            if (neededDtoSuffixes.Contains(identifier))
+                identifier = OpenApiComponentHelper.GetTypeNameFromRef(@ref, false);
 
-            foreach (var schema in schemas)
-            {
-                var identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key);
-                if (neededDtoSuffixes.Contains(identifier))
-                    identifier = OpenApiComponentHelper.GetTypeNameFromRef(schema.Key, false);
-
-                _addDto(identifier, schema.Value);
-            }
+            _addDto(identifier, schemaObject);
         }
+    }
 
-        public string GenerateCode()
-        {
-            // Normalize and get code as string.
-            return _namespace.NormalizeWhitespace().ToFullString();
-        }
+    public string GenerateCode()
+    {
+        // Normalize and get code as string.
+        return _namespace.NormalizeWhitespace().ToFullString();
+    }
 
-        public string[] GetEnums() =>
-            _namespace.Members
-            .Where(m => m.GetType() == typeof(EnumDeclarationSyntax))
-            .Select(m => (EnumDeclarationSyntax)m)
+    public string[] GetEnums()
+    {
+        return _namespace.Members
+            .OfType<EnumDeclarationSyntax>()
             .Select(e => e.Identifier.ToString()).ToArray();
+    }
 
-        private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
-        {
-            var property = PublicPropertyDeclaration(typeName, identifier);
+    private PropertyDeclarationSyntax _simpleProperty(string typeName, string identifier, string? jsonProperty = null)
+    {
+        var property = PublicPropertyDeclaration(typeName, identifier);
 
-            if (jsonProperty != null)
-            {
-                // We need to add this namespace for the attribute.
-                if (!_usingSystemTextJsonSerialization)
-                {
-                    _usingSystemTextJsonSerialization = true;
-                    _namespace = _namespace.AddSystemTextJsonSerializationUsing();
-                }
+        if (jsonProperty == null) return property;
 
-                property = property.AddJsonPropertyNameAttribute(jsonProperty);
-            }
+        // We need to add this namespace for the attribute.
+        if (_usingSystemTextJsonSerialization) return property.AddJsonPropertyNameAttribute(jsonProperty);
 
-            return property;
-        }
+        _usingSystemTextJsonSerialization = true;
+        _namespace = _namespace.AddSystemTextJsonSerializationUsing();
+
+        return property.AddJsonPropertyNameAttribute(jsonProperty);
     }
 }

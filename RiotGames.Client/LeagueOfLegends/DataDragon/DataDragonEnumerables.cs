@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json.Serialization;
 
-namespace RiotGames.LeagueOfLegends.DataDragon
+namespace RiotGames.LeagueOfLegends.DataDragon;
+
+[JsonReadOnlyCollection]
+[DebuggerDisplay("Count = {Count}")]
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class DataDragonCollection<TValue> : LeagueOfLegendsReadOnlyCollection<TValue>, IDataDragonObject
 {
-    [JsonReadOnlyCollection, DebuggerDisplay("Count = {Count}"), EditorBrowsable(EditorBrowsableState.Never)]
-    public class DataDragonCollection<TValue> : LeagueOfLegendsReadOnlyCollection<TValue>, IDataDragonObject
+    public DataDragonCollection(IList<TValue> list) : base(list)
     {
-        public DataDragonCollection(IList<TValue> list) : base(list)
-        {
-        }
     }
 }

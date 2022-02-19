@@ -1,18 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RiotGames.LeagueOfLegends
+namespace RiotGames.LeagueOfLegends;
+
+[TestClass]
+public class LeagueOfLegendsClientTests : LeagueOfLegendsTestBase
 {
-    [TestClass]
-    public class LeagueOfLegendsClientTests : LeagueOfLegendsTestBase
+    [TestMethod]
+    public void Construct()
     {
-        [TestMethod]
-        public void Construct()
-        {
-            // Done in test base class...
-        }
+        // Done in test base class...
     }
 }

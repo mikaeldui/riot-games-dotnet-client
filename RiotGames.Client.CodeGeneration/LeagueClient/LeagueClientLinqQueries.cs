@@ -1,4 +1,4 @@
-﻿using MingweiSamuel;
+using MingweiSamuel;
 using MingweiSamuel.Lcu;
 
 namespace RiotGames.Client.CodeGeneration.LeagueClient;

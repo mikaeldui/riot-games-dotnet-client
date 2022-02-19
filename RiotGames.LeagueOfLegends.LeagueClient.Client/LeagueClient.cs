@@ -1,4 +1,4 @@
-﻿using RiotGames.Messaging;
+using RiotGames.Messaging;
 
 namespace RiotGames.LeagueOfLegends.LeagueClient;
 

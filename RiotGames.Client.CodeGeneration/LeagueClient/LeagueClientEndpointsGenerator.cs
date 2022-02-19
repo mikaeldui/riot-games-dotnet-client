@@ -79,8 +79,7 @@ internal class LeagueClientEndpointsGenerator : OpenApiEndpointGeneratorBase<Lcu
                     CancellableReturnAwaitStatement(null, endpoint.Identifier.EndWith("Async"), null,
                         parameterIdentifier.ToCamelCase() + '.' + parameter.Key.ToPascalCase()),
                     new Dictionary<string, string> {{parameterIdentifier.ToCamelCase(), interfaceIdentifier}});
-
-
+                    
                 Class = Class.AddMembers(method);
             }
         }
@@ -178,6 +177,7 @@ internal class LeagueClientEndpointsGenerator : OpenApiEndpointGeneratorBase<Lcu
                     .WithBody(Block())
                     .WithParameter(LEAGUECLIENTBASE_CLASS_IDENTIFIER, "leagueClient")
                     .WithBaseConstructorInitializer("leagueClient.HttpClient", "leagueClient.EventRouter"));
+
             generator.AddPathsAsEndpoints(tftPaths);
             Class = Class.AddMembers(generator.Class.AddModifiers(Token(SyntaxKind.PartialKeyword)));
         }

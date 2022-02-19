@@ -1,4 +1,4 @@
-﻿namespace RiotGames.LeagueOfLegends.LeagueClient;
+namespace RiotGames.LeagueOfLegends.LeagueClient;
 
 public interface ILeagueClientObject : ILeagueOfLegendsObject
 {

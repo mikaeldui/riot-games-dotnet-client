@@ -1,4 +1,4 @@
-﻿using System.Dynamic;
+using System.Dynamic;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.Security;

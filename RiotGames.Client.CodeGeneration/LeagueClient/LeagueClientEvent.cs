@@ -1,51 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace RiotGames.Client.CodeGeneration.LeagueClient
+namespace RiotGames.Client.CodeGeneration.LeagueClient;
+
+internal static class LeagueClientEvent
 {
-    internal static class LeagueClientEvent
+    public static MemberDeclarationSyntax[] RmsEvent(string topic, string identifier, string typeName)
     {
-        public static MemberDeclarationSyntax[] RmsEvent(string topic, string identifier, string typeName)
-        {
-            identifier = identifier.RemoveStart("Get");
+        identifier = identifier.RemoveStart("Get");
 
-            var privateEventIdentifier = '_' + identifier.ToCamelCase() + "Changed";
-            var publicEventIdentifier = identifier.ToPascalCase() + "Changed";
+        var privateEventIdentifier = '_' + identifier.ToCamelCase() + "Changed";
+        var publicEventIdentifier = identifier.ToPascalCase() + "Changed";
 
 
-            var privateEvent = EventFieldDeclaration(List<AttributeListSyntax>(), SyntaxKind.PrivateKeyword.ToTokenList(),
-                SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
-                    SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>(new[]
-                        {
-                            SyntaxFactory.VariableDeclarator(privateEventIdentifier)
-                        }
-                    )
-                ));
+        var privateEvent = EventFieldDeclaration(List<AttributeListSyntax>(), SyntaxKind.PrivateKeyword.ToTokenList(),
+            VariableDeclaration(
+                ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
+                SeparatedList(new[]
+                    {
+                        VariableDeclarator(privateEventIdentifier)
+                    }
+                )
+            ));
 
-            var publicEvent = EventDeclaration(ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
-                    Identifier(publicEventIdentifier))
-                .WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
-                .WithAccessorList(AccessorList(new SyntaxList<AccessorDeclarationSyntax>(new[]
-                {
-                    AccessorDeclaration(SyntaxKind.AddAccessorDeclaration, ParseStatement("if (" + privateEventIdentifier + " == null)\r\n" +
-                        "    EventRouter.Subscribe(\"" + topic + "\",\r\n"+
-                        "(" + typeName + " args) => " + privateEventIdentifier + "?.Invoke(this, args));\r\n\r\n"+
-                        "" + privateEventIdentifier + " += value;").ToBlock()),
-                    AccessorDeclaration(SyntaxKind.RemoveAccessorDeclaration, ParseStatement("" + privateEventIdentifier + " -= value;\r\n\r\n"+
-                        "if (" + privateEventIdentifier + " == null)\r\n"+
-                        "    EventRouter.Unsubscribe(\"" + topic + "\");\r\n").ToBlock())
-                })));
+        var publicEvent = EventDeclaration(ParseTypeName($"LeagueClientEventHandler<{typeName}>"),
+                Identifier(publicEventIdentifier))
+            .WithModifiers(SyntaxKind.PublicKeyword.ToTokenList())
+            .WithAccessorList(AccessorList(new SyntaxList<AccessorDeclarationSyntax>(new[]
+            {
+                AccessorDeclaration(SyntaxKind.AddAccessorDeclaration, ParseStatement(
+                        $"if ({privateEventIdentifier} == null) EventRouter.Subscribe(\"{topic}\", ({typeName} args) => {privateEventIdentifier}?.Invoke(this, args)); {privateEventIdentifier} += value;")
+                    .ToBlock()),
+                AccessorDeclaration(SyntaxKind.RemoveAccessorDeclaration, ParseStatement(
+                        $"{privateEventIdentifier} -= value; if ({privateEventIdentifier} == null) EventRouter.Unsubscribe(\"{topic}\"); ")
+                    .ToBlock())
+            })));
 
-            return new MemberDeclarationSyntax[] {privateEvent, publicEvent};
-        }
+        return new MemberDeclarationSyntax[] {privateEvent, publicEvent};
     }
 }

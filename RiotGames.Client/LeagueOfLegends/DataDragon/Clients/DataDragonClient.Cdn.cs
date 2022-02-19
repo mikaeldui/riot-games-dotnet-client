@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace RiotGames.LeagueOfLegends.DataDragon
+namespace RiotGames.LeagueOfLegends.DataDragon;
+
+public partial class DataDragonClient
 {
-    public partial class DataDragonClient
+    private DataDragonCdnClient? _cdn;
+
+    public DataDragonCdnClient Cdn => _cdn ??= new DataDragonCdnClient(this);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class DataDragonCdnClient
     {
-        private DataDragonCdnClient? _cdn;
+        private readonly DataDragonClient _parent;
 
-        public DataDragonCdnClient Cdn => _cdn ??= new DataDragonCdnClient(this);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public class DataDragonCdnClient
+        internal DataDragonCdnClient(DataDragonClient parent)
         {
-            private readonly DataDragonClient _parent;
+            _parent = parent;
+        }
 
-            internal DataDragonCdnClient(DataDragonClient parent) => _parent = parent;
-
-            public async Task<DataDragonCollection<string>> GetLanguagesAsync() => await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("cdn/languages.json");
+        public async Task<DataDragonCollection<string>> GetLanguagesAsync()
+        {
+            return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("cdn/languages.json");
         }
     }
 }

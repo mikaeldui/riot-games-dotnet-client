@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace RiotGames.LeagueOfLegends.DataDragon
+namespace RiotGames.LeagueOfLegends.DataDragon;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public interface IDataDragonObject
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IDataDragonObject
-    {
-    }
+}
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class DataDragonObject : IDataDragonObject
-    {
-    }
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class DataDragonObject : IDataDragonObject
+{
 }

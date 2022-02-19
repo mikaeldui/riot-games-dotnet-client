@@ -1,33 +1,38 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Concurrent;
 using System.Text.Json;
-using RiotGames.LeagueOfLegends.LeagueClient;
 
-namespace RiotGames.Messaging
+namespace RiotGames.Messaging;
+
+/// <summary>
+///     Maybe not the best name, but this class is a special RmsClient used for routing received messages to .NET events.
+/// </summary>
+public class RmsEventRouter : IDisposable
 {
-    /// <summary>
-    /// Maybe not the best name, but this class is a special RmsClient used for routing received messages to .NET events.
-    /// </summary>
-    public class RmsEventRouter : IDisposable
+    private readonly SemaphoreSlim _connectionLock = new(1, 1);
+
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new() {PropertyNameCaseInsensitive = true};
+    private readonly RmsClient _rmsClient;
+    private readonly ConcurrentDictionary<string, Action<JsonElement>> _subscriptions = new();
+    private CancellationTokenSource? _cancellationTokenSource = new();
+
+    public RmsEventRouter(string username, string password, ushort port)
     {
-        private readonly ConcurrentDictionary<string, Action<JsonElement>> _subscriptions = new();
-        private readonly SemaphoreSlim _connectionLock = new(1, 1);
-        private readonly RmsClient _rmsClient;
-        private CancellationTokenSource? _cancellationTokenSource = new();
+        _rmsClient = new RmsClient(username, password, port);
+    }
 
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+    public void Dispose()
+    {
+        _connectionLock.Dispose();
+        _rmsClient.Dispose();
+        _cancellationTokenSource?.Dispose();
+    }
 
-        public RmsEventRouter(string username, string password, ushort port)
-        {
-            _rmsClient = new RmsClient(username, password, port);
-        }
-
-        /// <summary>
-        /// Will open a connection if there isn't one.
-        /// </summary>
-        public void Subscribe<TData>(string topic, Action<TData> handler) => Task.Run(async () =>
+    /// <summary>
+    ///     Will open a connection if there isn't one.
+    /// </summary>
+    public void Subscribe<TData>(string topic, Action<TData> handler)
+    {
+        Task.Run(async () =>
         {
             await _connectionLock.WaitAsync();
             try
@@ -62,7 +67,9 @@ namespace RiotGames.Messaging
                 _connectionLock.Release();
             }
 
-            if (_subscriptions.TryAdd(topic, data => handler.Invoke(data.Deserialize<TData>(_jsonSerializerOptions) ?? throw new RmsException("Couldn't deserialize the event payload."))))
+            if (_subscriptions.TryAdd(topic,
+                    data => handler.Invoke(data.Deserialize<TData>(_jsonSerializerOptions) ??
+                                           throw new RmsException("Couldn't deserialize the event payload."))))
             {
                 await _rmsClient.SubscribeAsync(topic);
                 Console.WriteLine("Subscribed to topic: " + topic);
@@ -72,17 +79,17 @@ namespace RiotGames.Messaging
                 throw new RmsException("Couldn't add topic subscriber!");
             }
         }).ConfigureAwait(false);
+    }
 
-        /// <summary>
-        /// Will close the connection if this was the last topic.
-        /// </summary>
-        public void Unsubscribe(string topic) => Task.Run(async () =>
+    /// <summary>
+    ///     Will close the connection if this was the last topic.
+    /// </summary>
+    public void Unsubscribe(string topic)
+    {
+        Task.Run(async () =>
         {
             await _rmsClient.UnsubscribeAsync("OnJsonApiEvent_lol-champ-select_v1_session");
-            if (_subscriptions.TryRemove(topic, out _))
-            {
-                Console.WriteLine("Unsubscribed");
-            }
+            if (_subscriptions.TryRemove(topic, out _)) Console.WriteLine("Unsubscribed");
 
             await _connectionLock.WaitAsync();
             try
@@ -97,19 +104,13 @@ namespace RiotGames.Messaging
             catch (Exception ex)
             {
                 if (ex.Message.Contains("remote")) return;
-                throw new RmsException("Something unexpected happened during closure of RMS connection! See innerException.", ex);
+                throw new RmsException(
+                    "Something unexpected happened during closure of RMS connection! See innerException.", ex);
             }
             finally
             {
                 _connectionLock.Release();
             }
         }).ConfigureAwait(false);
-
-        public void Dispose()
-        {
-            _connectionLock.Dispose();
-            _rmsClient.Dispose();
-            _cancellationTokenSource?.Dispose();
-        }
     }
 }

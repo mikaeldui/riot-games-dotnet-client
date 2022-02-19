@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace RiotGames.LegendsOfRuneterra
+namespace RiotGames.LegendsOfRuneterra;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public interface ILegendsOfRuneterraObject : IRiotGamesObject
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface ILegendsOfRuneterraObject : IRiotGamesObject
-    {
-    }
+}
 
-    public interface IMatchId : ILegendsOfRuneterraObject
-    {
-        public string MatchId { get; set; }
-    }
+public interface IMatchId : ILegendsOfRuneterraObject
+{
+    public string MatchId { get; set; }
 }

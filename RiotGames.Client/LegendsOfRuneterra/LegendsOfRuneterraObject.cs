@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace RiotGames.LegendsOfRuneterra
+namespace RiotGames.LegendsOfRuneterra;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public abstract class LegendsOfRuneterraObject : RiotGamesObject, ILegendsOfRuneterraObject
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public abstract class LegendsOfRuneterraObject : RiotGamesObject, ILegendsOfRuneterraObject
-    {
-    }
 }

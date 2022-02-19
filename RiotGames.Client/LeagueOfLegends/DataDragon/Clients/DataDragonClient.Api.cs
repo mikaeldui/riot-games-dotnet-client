@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace RiotGames.LeagueOfLegends.DataDragon
+namespace RiotGames.LeagueOfLegends.DataDragon;
+
+public partial class DataDragonClient
 {
-    public partial class DataDragonClient
+    private DataDragonApiClient? _api;
+
+    public DataDragonApiClient Api => _api ??= new DataDragonApiClient(this);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class DataDragonApiClient
     {
-        private DataDragonApiClient? _api;
+        private readonly DataDragonClient _parent;
 
-        public DataDragonApiClient Api => _api ??= new DataDragonApiClient(this);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public class DataDragonApiClient
+        internal DataDragonApiClient(DataDragonClient parent)
         {
-            private readonly DataDragonClient _parent;
+            _parent = parent;
+        }
 
-            internal DataDragonApiClient(DataDragonClient parent) => _parent = parent;
-
-            public async Task<DataDragonCollection<string>> GetVersionsAsync() => await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("api/versions.json");
+        public async Task<DataDragonCollection<string>> GetVersionsAsync()
+        {
+            return await _parent.HttpClient.GetAsync<DataDragonCollection<string>>("api/versions.json");
         }
     }
 }

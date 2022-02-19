@@ -1,4 +1,5 @@
-﻿namespace RiotGames.Messaging;
+﻿// ReSharper disable UnusedMember.Global
+namespace RiotGames.Messaging;
 
 public enum RmsEventType
 {

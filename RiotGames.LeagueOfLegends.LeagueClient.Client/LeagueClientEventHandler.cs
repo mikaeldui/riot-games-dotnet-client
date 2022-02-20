@@ -6,7 +6,7 @@ public delegate void LeagueClientEventHandler<T>(object sender, LeagueClientEven
 
 public class LeagueClientEventArgs<T> : RmsEventArgs<T>
 {
-    public LeagueClientEventArgs(RmsChangeType changeType, T data) : base(changeType, data)
+    public LeagueClientEventArgs(RmsEventType eventType, T data) : base(eventType, data)
     {
     }
 }
@@ -14,6 +14,6 @@ public class LeagueClientEventArgs<T> : RmsEventArgs<T>
 internal static class LeagueClientEventExtensions
 {
     internal static void Invoke<T>(this LeagueClientEventHandler<T> eventHandler, object sender,
-        RmsChangeType changeType, T data) =>
-        eventHandler.Invoke(sender, new LeagueClientEventArgs<T>(changeType, data));
+        RmsEventType eventType, T data) =>
+        eventHandler.Invoke(sender, new LeagueClientEventArgs<T>(eventType, data));
 }

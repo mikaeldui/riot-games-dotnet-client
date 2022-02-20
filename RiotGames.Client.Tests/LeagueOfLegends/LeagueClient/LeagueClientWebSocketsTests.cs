@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,5 +35,22 @@ public class LeagueClientWebSocketsTests
         }
 
         await client.CloseAsync();
+    }
+
+    [TestMethod]
+    public async Task AnotherTest()
+    {
+        if (!IS_LEAGUE_CLIENT_RUNNING) Assert.Inconclusive("No running League Client found.");
+
+        using LeagueClient client = new();
+
+        client.LeagueOfLegends.ChampSelect.SessionChanged += (sender, eventArgs) =>
+        {
+            Console.WriteLine($"{eventArgs.EventType}: {eventArgs.Data.MyTeam[0].SummonerId}");
+
+            
+        };
+
+        await Task.Delay(100000);
     }
 }

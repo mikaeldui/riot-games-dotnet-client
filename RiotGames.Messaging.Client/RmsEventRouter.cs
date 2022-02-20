@@ -12,7 +12,7 @@ public class RmsEventRouter : IDisposable
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() {PropertyNameCaseInsensitive = true};
     private readonly RmsClient _rmsClient;
-    private readonly ConcurrentDictionary<string, Action<RmsChangeType, JsonElement>> _subscriptions = new();
+    private readonly ConcurrentDictionary<string, Action<RmsEventType, JsonElement>> _subscriptions = new();
     private CancellationTokenSource? _cancellationTokenSource = new();
 
     public RmsEventRouter(string username, string password, ushort port)
@@ -30,7 +30,7 @@ public class RmsEventRouter : IDisposable
     /// <summary>
     ///     Will open a connection if there isn't one.
     /// </summary>
-    public void Subscribe<TData>(string topic, Action<RmsChangeType, TData> handler)
+    public void Subscribe<TData>(string topic, Action<RmsEventType, TData> handler)
     {
         Task.Run(async () =>
         {
@@ -53,7 +53,7 @@ public class RmsEventRouter : IDisposable
                             Console.WriteLine("Message received");
 
                             if (!_subscriptions.TryGetValue(response.Topic, out var subscriber)) continue;
-                            subscriber?.Invoke(response.ChangeType, response.Data);
+                            subscriber?.Invoke(response.EventType, response.Data);
                         }
                     }, _cancellationTokenSource.Token).ConfigureAwait(false);
                 }

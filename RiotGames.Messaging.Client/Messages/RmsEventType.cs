@@ -2,7 +2,7 @@
 namespace RiotGames.Messaging;
 
 // TODO: Created, updated, deleted...
-public enum RmsChangeType
+public enum RmsEventType
 {
     Create,
     Update,

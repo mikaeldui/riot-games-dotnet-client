@@ -2,12 +2,12 @@
 
 public class RmsEventArgs<T> : EventArgs
 {
-    public RmsEventArgs(RmsChangeType changeType, T data)
+    public RmsEventArgs(RmsEventType eventType, T data)
     {
-        ChangeType = changeType;
+        EventType = eventType;
         Data = data;
     }
 
-    public RmsChangeType ChangeType { get; }
+    public RmsEventType EventType { get; }
     public T Data { get; }
 }

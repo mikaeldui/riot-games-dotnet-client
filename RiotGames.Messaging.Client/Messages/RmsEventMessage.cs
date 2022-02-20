@@ -7,14 +7,14 @@ namespace RiotGames.Messaging;
 /// <summary>
 ///     Will be made internal soon.
 /// </summary>
-[DebuggerDisplay("Topic = {Topic} ChangeType = {ChangeType} Uri = {Uri} : {Data}")]
+[DebuggerDisplay("Topic = {Topic} EventType = {EventType} Uri = {Uri} : {Data}")]
 public class RmsEventMessage : WampMessage<RmsTypeCode>
 {
     public RmsEventMessage(RmsTypeCode messageCode, params JsonElement[] elements) : base(messageCode, elements)
     {
         Topic = elements[0].GetString() ?? throw new RmsException("The WAMP event message didn't have any topic!");
         Data = elements[1].GetProperty("data");
-        ChangeType = Enum.Parse<RmsChangeType>(elements[1].GetProperty("changeType").GetString());
+        EventType = Enum.Parse<RmsEventType>(elements[1].GetProperty("eventType").GetString());
         Uri = new Uri(
             elements[1].GetProperty("uri").GetString() ??
             throw new RmsException("The event message didn't have any Uri."), UriKind.Relative);
@@ -28,7 +28,7 @@ public class RmsEventMessage : WampMessage<RmsTypeCode>
     /// </summary>
     public JsonElement Data { get; }
 
-    public RmsChangeType ChangeType { get; }
+    public RmsEventType EventType { get; }
 
     public Uri Uri { get; }
 }

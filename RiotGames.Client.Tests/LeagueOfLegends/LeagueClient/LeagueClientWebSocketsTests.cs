@@ -10,7 +10,7 @@ namespace RiotGames.LeagueOfLegends.LeagueClient;
 public class LeagueClientWebSocketsTests
 {
     private static readonly bool IS_LEAGUE_CLIENT_RUNNING = Process.GetProcesses()
-        .Any(p => p.ProcessName == LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME);
+        .Any(p => p.ProcessName == LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_PROCESS_NAME);
 
     [TestMethod]
     public async Task TestSomething()

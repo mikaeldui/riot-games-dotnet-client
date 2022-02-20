@@ -10,9 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\RmsException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages\RmsChangeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\RmsEventMessage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Messages\RmsEventType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RmsClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RmsEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RmsEventRouter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RmsTypeCode.cs" />
   </ItemGroup>

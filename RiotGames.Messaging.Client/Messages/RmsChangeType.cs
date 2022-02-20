@@ -1,7 +1,8 @@
 ﻿// ReSharper disable UnusedMember.Global
 namespace RiotGames.Messaging;
 
-public enum RmsEventType
+// TODO: Created, updated, deleted...
+public enum RmsChangeType
 {
     Create,
     Update,

@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LeagueClientException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LeagueClient.Process.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClientBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClientEnumerables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LeagueClientEventHandler.cs" />

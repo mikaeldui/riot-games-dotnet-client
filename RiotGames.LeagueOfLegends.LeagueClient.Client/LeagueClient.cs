@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using RiotGames.Messaging;
+// ReSharper disable UnusedMember.Global
 
 namespace RiotGames.LeagueOfLegends.LeagueClient;
 
@@ -15,8 +17,8 @@ public partial class LeagueClient : LeagueClientBase
     {
     }
 
-    public LeagueClient(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME,
-        string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
+    public LeagueClient(string processName = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_PROCESS_NAME,
+        string lockfilePath = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_LOCKFILE_PATH) : base(processName, lockfilePath)
     {
     }
 
@@ -28,8 +30,8 @@ public partial class LeagueClient : LeagueClientBase
         /// <summary>
         ///     Use if you don't need <see cref="LeagueClient" /> endpoints and <see cref="TeamfightTacticsClient" /> endpoints.
         /// </summary>
-        public LeagueOfLegendsClient(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME,
-            string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName,
+        public LeagueOfLegendsClient(string processName = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_PROCESS_NAME,
+            string lockfilePath = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_LOCKFILE_PATH) : base(processName,
             lockfilePath)
         {
         }
@@ -40,10 +42,16 @@ public partial class LeagueClient : LeagueClientBase
         /// <summary>
         ///     Use if you don't need <see cref="LeagueClient" /> endpoints and <see cref="LeagueOfLegendsClient" /> endpoints.
         /// </summary>
-        public TeamfightTacticsClient(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME,
-            string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH) : base(processName,
+        public TeamfightTacticsClient(string processName = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_PROCESS_NAME,
+            string lockfilePath = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_LOCKFILE_PATH) : base(processName,
             lockfilePath)
         {
         }
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _process?.Dispose();
     }
 }

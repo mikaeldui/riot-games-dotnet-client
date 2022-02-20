@@ -8,6 +8,7 @@ public abstract class LeagueClientBase : IDisposable
     private const string LEAGUE_CLIENT_USERNAME = "riot";
     internal readonly RmsEventRouter EventRouter;
     internal readonly LeagueClientHttpClient HttpClient;
+    protected LeagueClientLockFile LockFile;
 
     internal LeagueClientBase(LeagueClientHttpClient httpClient, RmsEventRouter eventRouter)
     {
@@ -15,15 +16,15 @@ public abstract class LeagueClientBase : IDisposable
         EventRouter = eventRouter;
     }
 
-    protected LeagueClientBase(string processName = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_PROCESS_NAME,
-        string lockfilePath = LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH)
+    protected LeagueClientBase(string processName = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_PROCESS_NAME,
+        string lockfilePath = LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_LOCKFILE_PATH)
     {
-        var lockfile = lockfilePath == LeagueClientLockFile.LEAGUECLIENT_DEFAULT_LOCKFILE_PATH
+        LockFile = lockfilePath == LeagueClientLockFile.LEAGUE_CLIENT_DEFAULT_LOCKFILE_PATH
             ? LeagueClientLockFile.FromProcess(processName)
             : LeagueClientLockFile.FromPath(lockfilePath);
 
-        HttpClient = new LeagueClientHttpClient(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
-        EventRouter = new RmsEventRouter(LEAGUE_CLIENT_USERNAME, lockfile.Password, lockfile.Port);
+        HttpClient = new LeagueClientHttpClient(LEAGUE_CLIENT_USERNAME, LockFile.Password, LockFile.Port);
+        EventRouter = new RmsEventRouter(LEAGUE_CLIENT_USERNAME, LockFile.Password, LockFile.Port);
     }
 
     public virtual void Dispose()

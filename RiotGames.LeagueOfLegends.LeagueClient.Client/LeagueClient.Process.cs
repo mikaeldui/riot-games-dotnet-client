@@ -19,6 +19,7 @@ public partial class LeagueClient
         add
         {
             _process ??= LockFile.GetProcess();
+            _process.EnableRaisingEvents = true;
 
             _process.Exited += value;
 

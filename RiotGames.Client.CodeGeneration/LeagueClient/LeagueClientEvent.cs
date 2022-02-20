@@ -31,7 +31,7 @@ internal static class LeagueClientEvent
             .WithAccessorList(AccessorList(new SyntaxList<AccessorDeclarationSyntax>(new[]
             {
                 AccessorDeclaration(SyntaxKind.AddAccessorDeclaration, ParseStatement(
-                        $"if ({privateEventIdentifier} == null) EventRouter.Subscribe(\"{topic}\", (RmsChangeType changeType, {typeName} args) => {privateEventIdentifier}?.Invoke(this, changeType, args)); {privateEventIdentifier} += value;")
+                        $"if ({privateEventIdentifier} == null) EventRouter.Subscribe(\"{topic}\", (RmsEventType eventType, {typeName} args) => {privateEventIdentifier}?.Invoke(this, eventType, args)); {privateEventIdentifier} += value;")
                     .ToBlock()),
                 AccessorDeclaration(SyntaxKind.RemoveAccessorDeclaration, ParseStatement(
                         $"{privateEventIdentifier} -= value; if ({privateEventIdentifier} == null) EventRouter.Unsubscribe(\"{topic}\"); ")

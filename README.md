@@ -32,6 +32,7 @@ An unofficial [.NET][dotnet] Client for [Riot Games][riot] and their games [Leag
 # Sponsors
 A big thank you for your support!
 
+[![Sentry Logo](https://raw.githubusercontent.com/mikaeldui/riot-games-dotnet-client/main/sponsors/sentry.svg)](https://sentry.io/for/good/)
 [![JetBrains Logo (Main) logo](https://raw.githubusercontent.com/mikaeldui/riot-games-dotnet-client/main/sponsors/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
 
 ## Demo

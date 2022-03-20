@@ -14,7 +14,7 @@ internal class LeagueClientHelp
     {
         using var client = new HttpClient();
         var schema =
-            await client.GetFromJsonAsync<LeagueClientHelp>("https://www.mingweisamuel.com/lcu-schema/lcu/help.json");
+            await client.GetFromJsonAsync<LeagueClientHelp>("https://www.mingweisamuel.com/lcu-schema/lcu/help.brief.json");
         return schema ?? throw new Exception("We didn't get any help.json from the server!");
     }
 }
